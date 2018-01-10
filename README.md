@@ -1,2 +1,2 @@
 # rpi_cluster
-My Raspberry Pi cluster project
+My Raspberry Pi cluster project.
