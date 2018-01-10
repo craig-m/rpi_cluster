@@ -1,0 +1,38 @@
+.vagrant/*
+# ------------ code ---------
+deploy/serverspec/reports/*
+code/omegapyapi/flask/
+vagrantvm/vboxphpcms/vendor/
+yarn-error.log
+node_modules/
+# ------------ python ---------
+.cache
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+*.pyc
+.env
+.venv
+env/
+venv/
+ENV/
+# ------------ Apple ---------
+*.DS_Store
+.AppleDouble
+.LSOverride
+# Icon must end with two \r
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
