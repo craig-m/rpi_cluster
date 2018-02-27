@@ -1,11 +1,20 @@
+# -- ignore --
+#
+ignore_me/*
+local_data/*
+vagrantvm/dotfiles/gnupg/*
 .vagrant/*
-# ------------ code ---------
+#
+# -- code --
 deploy/serverspec/reports/*
+deploy/ansible/.pytest_cache/
 code/omegapyapi/flask/
-vagrantvm/vboxphpcms/vendor/
+code/hugo-site/public/*
+vagrantvm/vboxphpcms/vendor/*
 yarn-error.log
 node_modules/
-# ------------ python ---------
+#
+# -- python --
 .cache
 __pycache__/
 *.py[cod]
@@ -17,7 +26,8 @@ __pycache__/
 env/
 venv/
 ENV/
-# ------------ Apple ---------
+#
+# -- Apple --
 *.DS_Store
 .AppleDouble
 .LSOverride
