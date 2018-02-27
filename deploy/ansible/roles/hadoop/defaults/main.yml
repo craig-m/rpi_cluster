@@ -1,0 +1,8 @@
+
+hadoop_user: "hdop"
+hadoop_user_dir: "/opt/hadoop"
+
+hadoop_targz: "hadoop-2.9.0.tar.gz"
+hadoop_targz_url: "http://apache.mirror.digitalpacific.com.au/hadoop/common/hadoop-2.9.0/"
+
+hadoop_targz_sha256: "8D48666F29F9ADE6ED2762B7A9EDAB177BAD2C57396F43D0FFD6A269D54F6FE1"

@@ -1,0 +1,74 @@
+require 'rake'
+require 'rspec/core/rake_task'
+require 'yaml'
+
+host = ENV['host']
+
+# properties for the host
+properties = YAML.load_file('properties.yml')
+
+#-------------------------------------------------------------------------------
+
+desc "Run serverspec on all hosts"
+task :spec => 'serverspec:all'
+# run Serverspec tests
+namespace :serverspec do
+  task :all => properties.keys.map {|key| 'serverspec:' + key.split('.')[0] }
+  properties.keys.each do |key|
+    desc "Run ServerSpec on #{key}"
+    RSpec::Core::RakeTask.new(key.split('.')[0].to_sym) do |t|
+      ENV['TARGET_HOST'] = key
+      puts "testing: #{key}"
+      # roles
+      t.pattern = 'spec/{' + properties[key][:roles].join(',') + '}/*_spec.rb'
+      # continue on host failure
+      t.fail_on_error = false
+      # reporting options
+      t.rspec_opts = "--format p --format html --out ./reports/#{key}.html --format json --out ./reports/#{key}.json"
+    end
+  end
+end
+
+#-------------------------------------------------------------------------------
+
+desc "generate report html"
+task :gen_report do
+  Rake::Task['gen_report:index'].invoke
+end
+
+namespace :gen_report do
+  task :index do
+    puts "generating index.html"
+    require 'erb'
+    timenow = Time.new
+    template = ERB.new(File.read("index.erb"))
+    html_content = template.result(binding)
+    File.open("reports/index.html", "w") do |file|
+      file.puts html_content
+    end
+  end
+end
+
+#-------------------------------------------------------------------------------
+
+task :pub_report do
+  Rake::Task['pub_report:vbox'].invoke
+  Rake::Task['pub_report:psi'].invoke
+end
+
+namespace :pub_report do
+  desc "upload reports (Vagrant)"
+  task :vbox do
+    puts "publish vbox report"
+    system "cp -av -- reports/ /var/www/html/pub/"
+    if $?.exitstatus > 0
+      puts "Failed to copy reports"
+    end
+  end
+  desc "upload reports (psi)"
+  task :psi do
+    puts "NA"
+  end
+end
+
+#-------------------------------------------------------------------------------

@@ -1,0 +1,16 @@
+---
+- debug: msg="altering /etc/hosts "
+
+
+# hosts file
+- name: etc hosts file
+  template: "src=etc-hosts.j2 dest='/etc/hosts' owner=root group=root mode=0644"
+  become: true
+  tags: [vagrantvm]
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+  become: yes

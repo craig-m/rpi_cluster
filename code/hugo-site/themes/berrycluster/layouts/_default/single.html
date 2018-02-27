@@ -1,0 +1,18 @@
+{{ if .Site.Params.debug_page_name }}
+<b>[</b>start: themes/berrycluster/layouts/_default/single.html <b>]</b>
+{{ end }}
+
+{{ partial "header" . }}
+
+<div class="content container">
+  <!-- <h1>{{ .Title }}</h1> -->
+  <article>
+  {{ .Content }}
+  </article>
+</div>
+
+{{ partial "footer" . }}
+
+{{ if .Site.Params.debug_page_name }}
+<b>[</b>end: themes/berrycluster/layouts/_default/single.html <b>]</b>
+{{ end }}

@@ -1,0 +1,54 @@
+---
+- debug: msg="rebooting {{ inventory_hostname }} "
+
+
+# log
+- name: output to rpicluster log
+  shell: logger -t rpicluster rebooting {{ inventory_hostname }}
+  tags: [maintenance]
+
+
+# reboot host
+- name: reboot host
+  shell: sleep 2 && reboot now
+  become: true
+  async: 30
+  poll: 0
+  ignore_errors: true
+
+
+# wait for host
+- name: wait for host to restart
+  wait_for:
+    host: '{{hostvars[item].ansible_host}}'
+    port: 22
+    state: started
+    delay: 30
+    timeout: 150
+  with_items: '{{play_hosts}}'
+  connection: local
+
+
+# longer pause between lanservices
+- name: wait for lanservices
+  pause:
+    seconds: 60
+  when: "'lanservices' in group_names"
+
+
+# get uptime
+- name: uptime
+  shell: uptime
+  tags: [maintenance]
+  register: rpi_my_uptime
+
+
+# show upttime
+- debug: msg="uptime {{ rpi_my_uptime }} "
+  tags: [maintenance]
+
+
+# log
+- name: output to rpicluster log
+  shell: logger -t rpicluster maintenance role host-up
+  tags: [maintenance]

@@ -1,0 +1,43 @@
+---
+# PHP server
+# https://secure.php.net/
+# https://php-fpm.org/
+- debug: msg="php7.0 fpm install "
+
+
+# install packages (if missing)
+- name: install php
+  apt: name={{ item }} state=installed
+  with_items:
+       - php7.0-fpm
+       - php7.0-gd
+       - php7.0-mcrypt
+       - php7.0-redis
+       - php7.0-mysql
+  become: yes
+  tags: [php]
+
+
+# reload config
+- name: php7.0-fpm started
+  service: name=php7.0-fpm state=started
+  become: yes
+  tags: [php]
+
+
+# Enabled on boot
+- name: php7.0-fpm enabled on boot
+  service: name=php7.0-fpm enabled=yes
+  become: yes
+  tags: [php]
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+    owner: root
+    group: root
+    mode: 0444
+  become: yes
+  tags: [php]

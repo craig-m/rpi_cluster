@@ -1,0 +1,38 @@
+---
+# LanServices misc (Omega)
+
+- name: gather facts on other hosts
+  hosts: alpha, beta, omega
+  gather_facts: True
+  roles:
+    - ansible-pre-role
+
+- name: LanServices misc (Omega)
+  hosts: omega
+  gather_facts: False
+  roles:
+    - ansible-pre-role
+    - userac
+    - base-system
+    - rpilog
+    - ssh
+    - haveged
+    - uptimed
+    - golang
+    - ntp-server
+    - nfs-server
+    - dhcp-client
+    - redis
+    - dotnet
+    - mpich
+    - docker
+    - nodejs
+    - php
+    - nginx
+    - haproxy
+
+- name: gather facts on other hosts
+  hosts: alpha, beta, omega
+  gather_facts: True
+  roles:
+    - ansible-post-role

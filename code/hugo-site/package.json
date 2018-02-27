@@ -1,0 +1,24 @@
+{
+  "name": "rpi-hugo-site",
+  "version": "0.1.0",
+  "description": "rpi admin portal",
+  "main": "index.html",
+  "scripts": {
+    "test": "true",
+    "assets-bootstrap": "cp -av -- node_modules/bootstrap/dist/ static/;",
+    "assets-jquery": "cp -av -- node_modules/jquery/dist/ static/js/",
+    "assets-fontawesome": "cp -av -- node_modules/font-awesome/ static/"
+  },
+  "author": "crgm",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "4.0.0-alpha.6",
+    "font-awesome": "^4.7.0"
+  },
+  "devDependencies": {
+    "jquery": "^3.2.1",
+    "node-sass": "^4.5.3",
+    "onchange": "^3.2.1",
+    "pm2": "^2.5.0"
+  }
+}

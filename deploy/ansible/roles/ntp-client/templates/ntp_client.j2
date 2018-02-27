@@ -1,0 +1,30 @@
+# /etc/ntp.conf - client
+# {{ ansible_managed }}
+
+#driftfile /var/lib/ntp/ntp.drift
+
+statistics loopstats peerstats clockstats
+filegen loopstats file loopstats type day enable
+filegen peerstats file peerstats type day enable
+filegen clockstats file clockstats type day enable
+
+server {{ rpi_ntp_client_1 }}
+server {{ rpi_ntp_client_2 }}
+server {{ rpi_ntp_client_3 }}
+
+{% for host in groups['compute'] %}
+{% if host != inventory_hostname %}
+peer {{ hostvars[host]['ansible_default_ipv4']['address'] }}
+{% endif %}
+{% endfor %}
+
+# By default, exchange time with everybody, but don't allow configuration.
+restrict -4 default kod notrap nomodify nopeer noquery limited
+restrict -6 default kod notrap nomodify nopeer noquery limited
+
+# Local users may interrogate the ntp server more closely.
+restrict 127.0.0.1
+restrict ::1
+
+# Needed for adding pool entries
+restrict source notrap nomodify noquery

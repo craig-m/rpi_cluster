@@ -1,0 +1,15 @@
+# {{ ansible_managed }}
+#
+server {
+  listen unix:/var/run/nginx-phpapp.sock;
+
+  root /srv/php/omegaapp;
+
+  index.php;
+
+  location ~ \.php$ {
+    include snippets/fastcgi-php.conf;
+    fastcgi_pass unix:/var/run/php5-fpm.sock;
+  }
+
+}

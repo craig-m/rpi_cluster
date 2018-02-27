@@ -1,0 +1,3 @@
+# NFS defaults
+
+rpi_nfsrv_enabled: false

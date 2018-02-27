@@ -1,0 +1,71 @@
+---
+# Log file for cluster events
+- debug: msg="rpilog "
+
+# stat rpicluster.log
+- name: check for rpicluster log
+  stat: path=/var/log/rpicluster.log
+  register: rpiclustlog
+  tags: [rpilog]
+
+
+# create rpicluster.log
+- name: create rpicluster log
+  file:
+    path: /var/log/rpicluster.log
+    state: touch
+    owner: root
+    group: adm
+    mode: 0664
+  become: yes
+  when: rpiclustlog.stat.exists == False
+  register: rpiclustlog_created
+  tags: [rpilog]
+
+
+# first line rpicluster.log
+- name: log test
+  shell: echo "first log line!" > /var/log/rpicluster.log
+  when: rpiclustlog_created.changed == True
+  become: yes
+  tags: [rpilog]
+
+
+# Logrotate scripts
+- name: logroate.d for rpicluster log
+  template:
+    src: rpilogro.j2
+    dest: /etc/logrotate.d/rpilog
+    mode: 0644
+    owner: root
+    group: root
+  become: yes
+  notify: syslog-restart
+  tags: [rpilog]
+
+
+# rsyslog rpicluster filter
+- name: rsyslog filters for rpicluster
+  copy:
+    src: 22-rpicluster.conf
+    dest: /etc/rsyslog.d/22-rpicluster.conf
+    mode: 0644
+    owner: root
+    group: root
+  become: yes
+  notify: syslog-restart
+  tags: [rpilog]
+
+
+- name: output to rpicluster log
+  shell: logger -t rpicluster rpilog test
+  changed_when: false
+  tags: [rpilog]
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+  become: yes
+  tags: [rpilog]

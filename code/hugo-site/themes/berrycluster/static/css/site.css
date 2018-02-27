@@ -1,0 +1,38 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+  min-height: 200px;
+}
+
+header {
+  background-color: #80adf7;
+  padding-top: 80px;
+}
+
+header h3 {
+  padding: 5px 20px 5px 20px;
+  color: white;
+}
+
+article {
+  padding-bottom: 80px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 100px;
+  background-color: #bfd7ff;
+  border-top: 1px solid;
+  border-color: black;
+}
+
+.footer p {
+  padding-top: 20px;
+}

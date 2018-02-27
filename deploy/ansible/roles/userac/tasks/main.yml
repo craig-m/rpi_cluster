@@ -1,0 +1,61 @@
+---
+# system users
+- debug: msg="user accounts "
+
+# to update in ansible dir run:
+#
+# source ./env/bin/activate
+# python -c "from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt(getpass.getpass())"
+
+
+# create group "sshusers" for /etc/ssh/sshd_config "AllowGroups"
+- name: add sshusers group
+  group:
+    name: sshusers
+    state: present
+  become: yes
+
+
+# Create {{ rpi_clust_user }} user on all hosts
+- name: create rpi_clust_user
+  user:
+    name: "{{ rpi_clust_user }}"
+    groups: sshusers,sudo,staff,backup
+    append: yes
+    createhome: yes
+    home: "/home/{{ rpi_clust_user }}"
+  become: yes
+
+
+# fix home dir defaults of drwxr-xr-x for {{ rpi_clust_user }} :(
+- name: fix homedir perms
+  file: path="/home/{{ rpi_clust_user }}" state=directory mode=0700
+  become: yes
+
+
+# add admin_id_rsa.pub to {{ rpi_clust_user }} authorized_key
+#- name: import ssh key
+#  authorized_key:
+#    user: "{{ rpi_clust_user }}"
+#    state: present
+#    key: "{{ lookup('file', 'files/ssh-private/admin_id_rsa.pub') }}"
+#  become: yes
+
+
+# Add SSH Pub key to ~/.ssh/authorized_keys
+- name: import ssh key
+  authorized_key:
+    user: "{{ ansible_user_id }}"
+    state: present
+    key: "{{ lookup('file', 'files/ssh-pub-user/' + item.key) }}"
+  with_items: "{{ sshpubkey }}"
+
+
+# PASSWORDS for system accounts!
+- name: update passwords
+  user:
+    name: "{{ item.user }}"
+    update_password: always
+    password: "{{ item.hash }}"
+  with_items: "{{ vault_user_pw }}"
+  become: yes

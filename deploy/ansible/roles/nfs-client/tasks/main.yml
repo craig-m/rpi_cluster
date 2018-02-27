@@ -1,0 +1,47 @@
+---
+# NFS Clients (compute)
+- debug: msg="NFS Client role "
+  tags: [nfs]
+
+
+# packages
+- name: install NFS programs
+  apt: name={{ item }} state=installed
+  with_items:
+       - nfs-common
+       - rpcbind
+  become: yes
+  retries: 1
+  tags: [nfs]
+
+
+# Create mount point
+- name: create /mnt/nfs/
+  file:
+    path: /mnt/nfs/
+    state: directory
+    mode: 0775
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+  become: yes
+  tags: [nfs]
+
+
+# mount NFS share
+- name: set mountpoints
+  mount:
+    name: /mnt/nfs/
+    src: "{{ hostvars['omega']['ansible_default_ipv4']['address'] }}:/srv/nfs_share/"
+    fstype: nfs
+    opts: defaults,rw
+    state: mounted
+  become: yes
+  tags: [nfs]
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+  become: yes
+  tags: [nfs]

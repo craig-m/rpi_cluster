@@ -1,0 +1,104 @@
+---
+# HAProxy - http://www.haproxy.org/
+- debug: msg="HAProxy install "
+  tags: [haproxy]
+
+- debug: msg="config file {{ haproxy_cfg_file }} "
+  tags: [haproxy]
+
+
+# install
+- name: install haproxy server packages
+  apt: name={{ item }} state=installed
+  with_items:
+       - haproxy
+       - haproxyctl
+  become: yes
+  retries: 1
+  tags: [haproxy]
+
+
+# ssl dir
+- name: ssl dir
+  file:
+    path: /etc/haproxy/ssl
+    state: directory
+    mode: 0760
+    owner: root
+    group: haproxy
+  become: yes
+  tags: [haproxy]
+
+
+# config
+- name: haproxy config
+  template:
+    src: cfg_{{ haproxy_cfg_file }}.j2
+    dest: /etc/haproxy/haproxy.cfg
+    owner: root
+    group: haproxy
+    mode: 0664
+    backup: yes
+  become: yes
+  notify: haproxy-restart
+  tags: [haproxy]
+
+
+# self signed cert
+- name: check for ssl cert
+  stat: path=/etc/haproxy/ssl/default_cert.pem
+  register: haproxy_ss_ssl
+  become: yes
+  tags: [haproxy]
+
+
+# enabled on boot (if flagged on)
+- name: haproxy enabled on boot
+  service: name=haproxy enabled=yes
+  become: yes
+  tags: [haproxy]
+  when: rpi_haproxy_enabled == true
+
+
+# started (if flagged on)
+- name: haproxy started
+  service: name=haproxy state=started
+  become: yes
+  tags: [haproxy]
+  when: rpi_haproxy_enabled == true
+
+
+# disabled flag - boot
+- name: haproxy disable on boot
+  service: name=haproxy enabled=no
+  become: yes
+  tags: [haproxy]
+  when: rpi_haproxy_enabled == false
+
+
+# disabled flag - stopped
+- name: haproxy stopped
+  service: name=haproxy state=stopped
+  become: yes
+  tags: [haproxy]
+  when: rpi_haproxy_enabled == false
+
+
+
+# check haproxy config file
+- name: test haproxy config file
+  shell: haproxyctl configcheck
+  register: haproxycnf_result
+  become: yes
+  changed_when: False
+  failed_when:
+    - "'Configuration file is valid' not in haproxycnf_result.stdout"
+  tags: [haproxy]
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+  become: yes
+  tags: [haproxy]

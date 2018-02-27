@@ -1,0 +1,50 @@
+---
+# install Kubernetes
+
+
+# add Kubernetes apt gpg key
+- name: Add Kubernetes apt key
+  apt_key:
+    data: "{{ lookup('file', 'apt-key.gpg') }}"
+    state: present
+  become: yes
+
+
+# kubernetes sources.list.d
+- name: copy kubernetes.list
+  copy:
+    src: kubernetes.list
+    dest: /etc/apt/sources.list.d/kubernetes.list
+    mode: 0644
+  become: yes
+  register: kubernetes_list
+
+
+# disable swap
+- name: disable swap
+  shell: /opt/cluster/bin/disable-swap.sh
+
+
+# update apt
+- name: update apt cache
+  apt: update_cache=yes
+  become: yes
+  retries: 1
+  check_mode: no
+  when: kubernetes_list.changed
+
+
+# check package installed
+- name: kubeadm packages installed
+  apt: name={{ item }} state=installed
+  with_items:
+       - kubeadm
+  become: yes
+  retries: 1
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+  become: yes

@@ -1,0 +1,101 @@
+---
+# https://packages.debian.org/sid/mpich
+# https://www.mpich.org/
+
+- debug: msg="mpich role"
+  tags: [mpich]
+
+
+# create user
+- name: create mpiuser
+  user:
+    name: mpiuser
+    shell: /bin/bash
+  become: yes
+  tags: [mpich]
+
+
+# bin folder
+- name: create /home/mpiuser/bin/
+  file:
+    path: "/home/mpiuser/bin/"
+    state: "directory"
+    mode: 0755
+    owner: mpiuser
+    group: mpiuser
+  become: true
+  tags: [mpich]
+
+
+# user ssh key pair
+- name: create mpiuser keypair
+  user:
+    name: mpiuser
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    ssh_key_file: .ssh/id_rsa
+  become: yes
+  tags: [mpich]
+
+
+# saves to /opt/cluster/backup/<host>/home/mpiuser/.ssh/
+- name: fetch the ssh public key
+  fetch:
+    src: /home/mpiuser/.ssh/id_rsa.pub
+    dest: /opt/cluster/backup
+  become: yes
+  tags: [mpich]
+
+
+# install packages
+- name: packages needed
+  apt: name={{ item }} state=installed
+  with_items:
+       - mpich
+       - mpich-doc
+       - gfortran
+  become: yes
+  retries: 1
+  tags: [mpich]
+
+
+# mpi_sample.c
+- name: copy mpi_sample.c
+  copy:
+    src: mpi_sample.c
+    dest: /home/mpiuser/mpi_sample.c
+    owner: mpiuser
+    group: mpiuser
+    mode: 0644
+  become: true
+  tags: [mpich]
+
+
+# Check mpi_sample.c
+- name: check mpi_sample
+  stat:
+    path: "/home/mpiuser/mpi_sample"
+  register: mpi_sample_c
+  changed_when: False
+  tags: [mpich]
+
+
+- name: compile mpi_sample
+  command: mpic++ -o mpi_sample mpi_sample.c
+  args:
+    chdir: /home/mpiuser/
+  when: mpi_sample_c.stat.exists == False
+  become: true
+  become_user: mpiuser
+  tags: [mpich]
+
+# mpic++ -o mpi_sample mpi_sample.c
+# mpirun -np 4 -hosts alpha.dc1.b3rry.clust0r,beta.dc1.b3rry.clust0r ~/bin/mpi_sample
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+  become: yes
+  tags: [mpich]

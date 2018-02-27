@@ -1,0 +1,26 @@
+{{ if .Site.Params.debug_page_name }}
+<b>[</b>start: themes/berrycluster/layouts/post/list.html <b>]</b>
+{{ end }}
+
+{{ partial "header" . }}
+
+<div class="content container">
+
+<h1>Posts</h1>
+
+<article>
+  {{ range .Data.Pages }}
+  <p>
+  <h5>  <a href="{{ .Permalink }}">{{ .Title }}</a></h5>
+  <i class="fa fa-calendar-o"></i> {{ .Date.Format "Mon, Jan 2, 2006" }}
+  </p>
+  {{ end }}
+</article>
+
+</div>
+
+{{ partial "footer" . }}
+
+{{ if .Site.Params.debug_page_name }}
+<b>[</b>end: themes/berrycluster/layouts/post/list.html <b>]</b>
+{{ end }}

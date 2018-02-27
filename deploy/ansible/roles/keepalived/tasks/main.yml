@@ -1,0 +1,80 @@
+---
+# Keepalived
+- debug: msg="Keepalived install "
+- debug: msg="Floating IP is  {{ rpi_loadbal_float_ip }} "
+
+
+# install packages (if missing)
+- name: install Keepalived programs
+  apt: name={{ item }} state=installed
+  with_items:
+       - keepalived
+  become: yes
+  environment:
+    # do not start Keepalived at the end of install
+    RUNLEVEL: 1
+  tags: [keepalived]
+
+
+- name: keepalived conf for Primary
+  template:
+    src: primary.j2
+    dest: /etc/keepalived/keepalived.conf
+    mode: 0644
+    owner: root
+    group: root
+  notify: keepalived_reload
+  become: yes
+  when: "'loadbal_prime' in group_names"
+  tags: [keepalived]
+
+
+- name: keepalived conf for Secondary
+  template:
+    src: secondary.j2
+    dest: /etc/keepalived/keepalived.conf
+    mode: 0644
+    owner: root
+    group: root
+  notify: keepalived_reload
+  become: yes
+  when: "'loadbal_second' in group_names"
+  tags: [keepalived]
+
+
+# enabled on boot
+- name: keepalived enabled on boot
+  service: name=keepalived enabled=yes
+  become: yes
+  register: keepalived_changed
+  tags: [keepalived]
+
+
+# started (if flagged on)
+- name: keepalived started
+  service: name=keepalived state=started
+  become: yes
+  register: keepalived_changed
+  tags: [keepalived]
+
+
+# pause
+- pause:
+    seconds: 5
+  when: keepalived_changed.changed
+  tags: [keepalived]
+
+# ping IP (todo: check result)
+- name: ping test floating IP
+  command: ping -c 3 {{ rpi_loadbal_float_ip }}
+  register: rpi_ping_float_ip
+  changed_when: false
+  tags: [keepalived]
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+  become: yes
+  tags: [keepalived]

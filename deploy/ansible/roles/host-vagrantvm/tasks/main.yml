@@ -1,0 +1,141 @@
+---
+# Tasks just for the Vagrant VM
+# Get the VM environment setup with everything to setup the cluster.
+
+- debug: msg="VagrantVM setup "
+  tags: [vagrantvm]
+
+#- debug: msg="vault vars test {{ vault_vbox_test }} "
+#  tags: [vagrantvm]
+
+
+- name: rpicluster syslog message
+  syslogger:
+    msg: "rpicluster: vagrantvm role running"
+    priority: "notice"
+    facility: "daemon"
+    log_pid: true
+  ignore_errors: True
+  changed_when: False
+  tags: [vagrantvm]
+
+
+- name: deployer ansible vagrantvm runcount
+  debug: msg="ansible {{ lookup('redis_kv', 'redis://localhost:6379,/rpi/deployer/ansible/vagrantvm/runcount') }} runs"
+  run_once: True
+  changed_when: False
+  tags: [vagrantvm]
+
+
+- name: set-chassis with hostnamectl
+  command: hostnamectl set-chassis {{ rpi_racked }}
+  become: true
+  changed_when: False
+  tags: [vagrantvm]
+
+
+# vagrant user member of adm group (to read /var/log/)
+- name: add vagrant user to adm group
+  user: name='vagrant'
+    groups=adm
+    append=yes
+  become: true
+  tags: [vagrantvm]
+
+
+# local testing user for VirtualBox VM
+- user:
+    name: vboxdev
+    groups: sshusers,staff
+    append: yes
+    createhome: yes
+    home: /home/vboxdev
+  become: true
+  tags: [vagrantvm]
+
+
+# apache
+- import_tasks: apache.yml
+  tags: [vagrantvm,apache]
+
+
+# hugo
+- import_tasks: hugo.yml
+  tags: [vagrantvm,hugo]
+
+
+# websocketd
+- import_tasks: websocketd.yml
+  tags: [vagrantvm,websocketd]
+
+
+# golang
+- import_tasks: golang.yml
+  tags: [vagrantvm,golang]
+
+
+# code
+- import_tasks: code.yml
+  tags: [vagrantvm,vagrantcode]
+
+
+# java
+- name: java
+  apt: name={{ item }} state=installed
+  with_items:
+       - openjdk-8-jdk
+       - openjdk-8-doc
+  become: yes
+  retries: 2
+  tags: [vagrantvm]
+
+
+# lan scan script
+- name: rpi_lan_nmap.sh
+  template:
+    src: rpi_lan_nmap.j2
+    dest: /opt/cluster/bin/rpi_lan_nmap.sh
+    mode: 0755
+  tags: [vagrantvm]
+
+
+# bin/psi_upload.sh
+- name: upload_to_psi.sh
+  copy:
+    src: upload_to_psi.sh
+    dest: /home/vagrant/upload_to_psi.sh
+    mode: 0775
+  changed_when: False
+  tags: [vagrantvm]
+
+
+# copy ~/fabfile.py
+#- name: fabfile.py for VagrantVM
+#  copy:
+#    src: fabfile.py
+#    dest: ~/fabfile.py
+#    mode: 0755
+#  tags: [vagrantvm]
+
+
+- name: vagrant vm redis info
+  local_action: command redis-cli INCR /rpi/deployer/ansible/vagrantvm/runcount
+  ignore_errors: False
+  check_mode: no
+  changed_when: False
+  run_once: True
+  tags: [vagrantvm]
+
+
+- name: output to rpicluster log
+  shell: logger -t rpicluster vagrantvm role ran
+  changed_when: False
+  tags: [vagrantvm]
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+  become: yes
+  tags: [keepalived]

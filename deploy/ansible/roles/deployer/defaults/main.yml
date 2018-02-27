@@ -1,0 +1,7 @@
+
+# Yarn pub key
+yarn_url: "https://raw.githubusercontent.com/yarnpkg/releases/gh-pages/debian/pubkey.gpg"
+yarn_sha: "710d786f708ac411a96731dc7d979806afb6da14ff284fc9f1a97f5c050be8ce"
+
+yarn1_url: "https://dl.yarnpkg.com/debian/pubkey.gpg"
+yarn1_sha: "710d786f708ac411a96731dc7d979806afb6da14ff284fc9f1a97f5c050be8ce"

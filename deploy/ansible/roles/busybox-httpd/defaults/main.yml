@@ -1,0 +1,11 @@
+# busybox httpd chroot vars
+
+bbhttpd_src_tmp: "/opt/cluster/temp/bbhttpd_src/"
+
+files: [
+  {src: 'bbhttpd.service'},
+  {src: 'hello'},
+  {src: 'glinder1.png'},
+  {src: 'httpd.conf'},
+  {src: 'chroot_bb.sh'}
+]

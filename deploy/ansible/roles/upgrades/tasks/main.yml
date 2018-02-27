@@ -1,0 +1,48 @@
+---
+# maintenance role
+- debug: msg="maintenance role "
+
+
+# update Apt cache
+- name: update apt cache
+  apt: update_cache=yes
+  become: yes
+  retries: 2
+  check_mode: no
+  changed_when: False
+  tags: [maintenance]
+
+
+# Upgrade all Apt packages
+- name: Upgrade all packages to the latest version
+  apt:
+    name: "*"
+    state: latest
+  retries: 2
+  become: yes
+  tags: [maintenance]
+
+
+# R-pi /boot/ firmware
+#- name: update kernel
+#  command: /usr/bin/rpi-update
+#  become: yes
+#  tags: [maintenance]
+#  when: "'vagrantvm' not in group_names"
+
+
+# systemctl daemon-reload
+- name: systemctl-daemon-reload
+  command: systemctl daemon-reload
+  become: yes
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+    owner: root
+    group: root
+    mode: 0444
+  become: yes
+  tags: [maintenance]

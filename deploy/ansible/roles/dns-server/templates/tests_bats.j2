@@ -1,0 +1,48 @@
+#!/usr/bin/env bats
+# {{ ansible_managed }}
+
+@test "host dns dns1.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {
+  run bash -c "host dns1.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}"
+  [ "$output" = "dns1.dc1.b3rry.clust0r has address {{ hostvars['alpha']['ansible_default_ipv4']['address'] }}" ]
+}
+@test "host dns alpha.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {
+  run bash -c "host alpha.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}"
+  [ "$output" = "alpha.dc1.b3rry.clust0r has address {{ hostvars['alpha']['ansible_default_ipv4']['address'] }}" ]
+}
+
+@test "host dns dns2.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {
+  run bash -c "host dns2.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}"
+  [ "$output" = "dns2.dc1.b3rry.clust0r has address {{ hostvars['beta']['ansible_default_ipv4']['address'] }}" ]
+}
+@test "host dns beta.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {
+  run bash -c "host beta.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}"
+  [ "$output" = "beta.dc1.b3rry.clust0r has address {{ hostvars['beta']['ansible_default_ipv4']['address'] }}" ]
+}
+
+@test "check_host icmp float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {
+  run bash -c "/usr/lib/nagios/plugins/check_host float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}"
+}
+
+@test "check_host icmp status.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {
+  run bash -c "/usr/lib/nagios/plugins/check_host status.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}"
+}
+
+@test "check_host icmp git.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {
+  run bash -c "/usr/lib/nagios/plugins/check_host git.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}"
+}
+
+@test "check_host icmp api.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {
+  run bash -c "/usr/lib/nagios/plugins/check_host api.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}"
+}
+
+@test "check_host icmp alpha.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {
+  run bash -c "/usr/lib/nagios/plugins/check_host  {{ hostvars['alpha']['ansible_default_ipv4']['address'] }}"
+}
+
+@test "check_host icmp beta.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {
+  run bash -c "/usr/lib/nagios/plugins/check_host  {{ hostvars['beta']['ansible_default_ipv4']['address'] }}"
+}
+
+@test "check_host icmp omega.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {
+  run bash -c "/usr/lib/nagios/plugins/check_host  {{ hostvars['omega']['ansible_default_ipv4']['address'] }}"
+}

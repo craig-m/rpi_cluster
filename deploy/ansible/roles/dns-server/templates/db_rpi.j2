@@ -1,0 +1,55 @@
+; --- Internal R-Pi cluster DNS ---
+; {{ ansible_managed }}
+; db_rpi.j2
+$TTL  604800
+@     IN  SOA   dns1.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. admin.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. (
+      2018012101    ; Serial
+          604800    ; Refresh
+          86400     ; Retry
+          2419200   ; Expire
+          604800 )  ; Negative Cache TTL
+
+; name servers - NS records
+  IN  NS  dns1.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
+  IN  NS  dns2.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
+
+; MX records
+  MX  10 mail.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
+
+; name servers
+dns1.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.  IN  A {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}
+dns2.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.  IN  A {{ rpi_failover_ip }}
+
+txttest.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "txttest "
+
+; LanService - main - this host
+{{ inventory_hostname }}.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.  IN A {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}
+
+; LanService - main - my failover
+{{ rpi_failover_hostname }}.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN A {{ rpi_failover_ip }}
+
+; LanService - misc - Omega
+omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A {{ hostvars['omega']['ansible_default_ipv4']['address'] }}
+
+; Lan Default GW
+dgw.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A {{ rpi_net_default_gw }}
+
+; LEDE WiFi
+ledewifi.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A {{ rpi_net_wifi_gw }}
+
+; Floating IP
+float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A {{ rpi_loadbal_float_ip }}
+float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "shared between delta and epsilon. "
+
+; --- Hosted sevices ---
+
+; Mail
+mail.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  CNAME omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
+
+status.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.  IN  CNAME omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
+git.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.   IN  CNAME omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
+
+www.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.   IN  CNAME float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
+api.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.   IN  CNAME float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
+
+; eof

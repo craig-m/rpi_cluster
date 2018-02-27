@@ -1,0 +1,21 @@
+---
+# tasks just for psi R-Pi
+- debug: msg="psi node setup "
+  tags: [host-psi]
+
+
+- name: output to rpicluster log
+  shell: logger -t rpicluster host-psi role ran
+  changed_when: False
+  tags: [host-psi]
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+    owner: root
+    group: root
+    mode: 0444
+  become: yes
+  tags: [host-psi]

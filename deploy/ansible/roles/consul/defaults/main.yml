@@ -1,0 +1,23 @@
+
+consulver: "1.0.1"
+consulbin: "consul_{{ consulver }}_linux_arm.zip"
+consulurl: "https://releases.hashicorp.com/consul/{{ consulver }}/{{ consulbin }}"
+consulsha: "e4cd79302b1506e082a9e79b77d66249a4f87be4ffe42268cb922d15adb7d0d0."
+
+consultempver: "0.19.4"
+consultempbin: "consul-template_{{ consultempver }}_linux_arm.zip"
+consultempurl: "https://releases.hashicorp.com/consul-template/{{ consultempver }}/{{ consultempbin }}"
+consultempsha: "2702c8cd0f6bb24d3be1993cc80aad5a4a5ce4291dc339d82fa605ea98605cc8"
+
+# overridden by host vars
+rpi_conul_enabled: false
+
+# folders
+consul_dir: [
+  { dir: '/opt/cluster/mysrc/consul', mode: '0755', owner: '{{ ansible_user_id }}', group: '{{ ansible_user_id }}' },
+  { dir: '/opt/consul/', mode: '0760', owner: 'consul', group: 'consul' },
+  { dir: '/opt/consul/data', mode: '0770', owner: 'consul', group: 'consul' },
+  { dir: '/opt/consul/consul.d', mode: '0760', owner: 'consul', group: 'consul' },
+  { dir: '/opt/consul/consul.d/ssl', mode: '0760', owner: 'consul', group: 'consul' },
+  { dir: '/opt/consul/consul.d/ssl/CA', mode: '0760', owner: 'consul', group: 'consul' }
+]

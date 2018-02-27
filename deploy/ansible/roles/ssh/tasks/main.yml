@@ -1,0 +1,71 @@
+---
+# OpenSSH - https://www.openssh.com/
+- debug: msg="ssh role "
+  tags: [ssh]
+
+
+# message of the day (ssh login banner)
+- name: MOTD
+  template:
+    src: motd.j2
+    dest: /etc/motd
+  become: yes
+  tags: [ssh]
+
+
+# SSH system wide Client config
+- name: ssh client config file
+  template:
+    src: ssh_config.j2
+    dest: /etc/ssh/ssh_config
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  become: yes
+  tags: [ssh]
+
+
+# SSHD Server config
+- name: sshd config file
+  template:
+    src: sshd_config.j2
+    dest: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: '0600'
+    validate: /usr/sbin/sshd -t -f %s
+    backup: yes
+  become: yes
+  notify: sshd_restart
+  tags: [ssh]
+
+
+# enabled on boot
+- name: sshd enabled on boot
+  service: name=ssh enabled=yes
+  become: yes
+  tags: [ssh]
+
+
+# started
+- name: sshd started
+  service: name=ssh state=started
+  become: yes
+  tags: [ssh]
+
+
+# SSH Key
+- import_tasks: keys.yml
+  tags: [ssh,sshkeys]
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+    owner: root
+    group: root
+    mode: 0444
+  become: yes
+  tags: [ssh]

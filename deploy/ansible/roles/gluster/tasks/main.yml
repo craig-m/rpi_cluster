@@ -1,0 +1,63 @@
+---
+- debug: msg="GlusterFS install "
+
+
+# install
+- name: install gluster
+  apt: name={{ item }} state=installed
+  with_items:
+       - glusterfs-server
+  become: yes
+  retries: 1
+  tags: [glusterfs]
+
+
+# srv dir
+- name: srv glusterfs dir
+  file: path=/srv/glusterfs/gv0 state=directory mode=0755 owner=root group=pi
+  become: yes
+  tags: [glusterfs]
+
+
+# mount dir
+- name: mount glusterfs dir
+  file: path=/mnt/gv0 state=directory mode=0755 owner=root group=pi
+  become: yes
+  tags: [glusterfs]
+
+
+# enabled on boot (if flagged on)
+- name: glusterfs enabled on boot
+  service: name=glusterfs-server.service enabled=yes
+  become: yes
+  tags: [glusterfs]
+  when: rpi_glustersrv_enabled == true
+
+# started (if flagged on)
+- name: glusterfs started
+  service: name=glusterfs-server.service state=started
+  become: yes
+  tags: [glusterfs]
+  when: rpi_glustersrv_enabled == true
+
+
+# stop if flagged off
+- name: glusterfs stop
+  service: name=glusterfs-server.service enabled=no
+  become: yes
+  tags: [glusterfs]
+  when: rpi_glustersrv_enabled == false
+
+- name: glusterfs stopped
+  service: name=glusterfs-server.service state=stopped
+  become: yes
+  tags: [glusterfs]
+  when: rpi_glustersrv_enabled == false
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+  become: yes
+  tags: [glusterfs]

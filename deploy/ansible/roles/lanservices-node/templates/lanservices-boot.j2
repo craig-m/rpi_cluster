@@ -1,0 +1,21 @@
+#!/bin/bash
+# {{ ansible_managed }}
+# this script is run on boot by systemd, rpi-lanservices.service
+
+# only run as root
+runas=$(id | cut -c5-5)
+if [ $runas -eq "0" ]; then
+  envok="yes";
+else
+  exit 1;
+fi
+
+# set static arp if exists
+if [ -f /etc/ethers ]; then
+  arp -f /etc/ethers;
+fi
+
+pingresult=$(/usr/lib/nagios/plugins/check_host {{ rpi_failover_ip }});
+logger -t rpicluster "ping failover $pingresult"
+
+logger -t rpicluster "lanservices-boot.sh ran OK"

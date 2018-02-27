@@ -1,0 +1,6 @@
+---
+
+# restart ssh
+- name: sshd_restart
+  service: name=ssh state=restarted
+  become: yes

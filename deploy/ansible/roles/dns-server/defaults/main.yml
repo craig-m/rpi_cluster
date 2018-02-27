@@ -1,0 +1,8 @@
+
+rpi_dnsd_enabled: false
+
+
+bind_dir: [
+  { dir: '/etc/bind/zones/', mode: '0775', owner: 'bind', group: 'bind' },
+  { dir: '/var/log/named/', mode: '0775', owner: 'bind', group: 'bind' }
+]

@@ -1,0 +1,110 @@
+---
+# NFS Server (LanServices - Misc)
+- debug: msg="NFS Server role "
+  tags: [nfs]
+
+
+# packages
+- name: install NFS programs
+  apt: name={{ item }} state=installed
+  with_items:
+       - nfs-server
+       - nfs-kernel-server
+       - nfs-common
+       - rpcbind
+  become: yes
+  retries: 2
+  tags: [nfs]
+
+
+# folder to share
+- name: create /srv/nfs_share/
+  file:
+    path: /srv/nfs_share/
+    state: directory
+    mode: 0775
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+  become: yes
+  tags: [nfs]
+
+
+# copy test file
+- name: copy test_file.txt to srv
+  template:
+    src: test_file.j2
+    dest: /srv/nfs_share/test_file.txt
+    mode: 0644
+    owner: root
+    group: root
+  changed_when: False
+  become: yes
+  tags: [nfs]
+
+
+# nfs-idmapd
+- name: nfs-idmapd enabled on boot
+  service: name=nfs-idmapd enabled=yes
+  become: yes
+  tags: [nfs]
+
+
+- name: nfs-idmapd started
+  service: name=nfs-idmapd state=started
+  become: yes
+  tags: [nfs]
+
+
+# rpcbind
+- name: rpcbind.service started
+  service: name=rpcbind.service state=started
+  become: yes
+  tags: [nfs]
+
+
+- name: rpcbind.service enabled on boot
+  service: name=rpcbind.service enabled=yes
+  become: yes
+  tags: [nfs]
+
+
+# nfs-kernel-server
+- name: nfs-kernel-server.service started
+  service: name=nfs-kernel-server.service state=started
+  become: yes
+  tags: [nfs]
+
+- name: nfs-kernel-server.service enabled on boot
+  service: name=nfs-kernel-server.service enabled=yes
+  become: yes
+  tags: [nfs]
+
+
+# copy export file
+- name: copy exports file
+  template:
+    src: exports.j2
+    dest: /etc/exports
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  become: yes
+  register: nfs_exports_file
+  tags: [nfs]
+
+
+# update exports
+- name: run exportfs
+  become: yes
+  action: command exportfs -a
+  when: nfs_exports_file.changed
+  tags: [nfs]
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+  become: yes
+  tags: [nfs]

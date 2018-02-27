@@ -1,0 +1,12 @@
+graph TD
+A[Alpha] --> | request|T
+G[Beta] -->| request|T
+T --> | response|A
+T --> | response|G
+T((LEDE Router))
+A[Alpha] --> | response|V
+V{R-Pi Cluster} -->| request| A
+Y[deployer] ==> |set static ip| A
+Y[deployer] ==>|set static ip| G
+V{R-Pi Cluster} -->| request| G
+G --> | Response|V{R-Pi Cluster}
