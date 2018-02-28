@@ -4,9 +4,13 @@ A PoC Raspberry Pi Beowulf cluster project.
 
 See doc/readme.me for the detailed cluster setup process, or to also view the readme.md (if you have a working Vagrant + VirtualBox setup), type "vagrant up" from a shell in this directory and then after a few moments open http://localhost:5550/ on your desktop.
 
+This experiment is still in the early stages of development, some parts are still being refined.
+
 ---
 
 # Hardware Inventory
+
+![GitHub Logo](/doc/pictures/pi_towers2.jpg)
 
 ### R-Pi
 
@@ -44,11 +48,12 @@ The x8 boards I ended up with are divided into these groups. All run Raspbian GN
 The other bits and pieces:
 
 * a router (https://lede-project.org/ + https://www.gl-inet.com/)
-* my laptop
-* x1 16 port D-Link switch (Gbit ethernet, unmanaged)
+* D-Link 16 port switch (Gbit ethernet, unmanaged)
 * x2 6 Port RAVPower USB Chargers (each 60W 12A) (https://www.ravpower.com/6-port-usb-wall-charger-black-.html)
-* A Raspberry Pi SenseHat (https://www.raspberrypi.org/products/sense-hat/)
-* A Raspberry Pi Camera
+* a Raspberry Pi SenseHat (https://www.raspberrypi.org/products/sense-hat/)
+* a Raspberry Pi Camera
+
+The switch is connected to a managed one, the cluster has its own vlan.
 
 ---
 
