@@ -3,7 +3,7 @@ vagrantvm
 
 This folder contains files for the VagrantVM.
 
-Related files: ./deploy/ansible/roles/host-vagrantvm/
+Related files ./deploy/ansible/roles/host-vagrantvm/
 
 ## Using
 

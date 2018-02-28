@@ -205,7 +205,7 @@ sleep 1s;
 # get arch
 bs_my_arch=$(uname -m | cut -c 1-3)
 
-## hat is this deployer running on, a VirtualBox or R-Pi?
+## What is this deployer running on, a VirtualBox or R-Pi?
 #
 # R-Pi
 if [[ pi = "$(whoami)" && "arm" = "${bs_my_arch}" ]]; then

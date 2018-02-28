@@ -23,7 +23,7 @@ Raspberry Pi preparation
 
 * Join The R-Pi to a switch, enable DHCP somewhere on the LAN.
 
-  I have a small LEDE (formerly OpenWRT) router for this (my cluster has its own vlan + subnet). This has been configured to only give out IPs to known/static hosts.
+  I have a small LEDE (formerly OpenWRT) router for this (my cluster has its own vlan + subnet). This has been configured to only give out IPs to known/static hosts (the x4 admin nodes).
 
 * Place the SD cards into the R-Pi and power them on. They should all respond to PING.
 

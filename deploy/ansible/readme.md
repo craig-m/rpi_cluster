@@ -1,7 +1,7 @@
 About
 ------
 
-Cheat Notes on the utilities installed from requirements.txt
+bootstrap-deployer.sh will setup the deploy host (Vagrant VM or 'psi' R-Pi). This needs to be ran first.
 
 Assumes working from:
 
@@ -13,6 +13,10 @@ Enter passphrase for /home/vagrant/.ssh/id_rsa:
 vagrant@stretch:~$ source ~/env/bin/activate
 (env) vagrant@stretch:~$ cd rpi_cluster/deploy/ansible/
 ```
+
+---
+
+Cheat notes below:
 
 # SSH
 
@@ -83,11 +87,13 @@ testinfra
 ---------
 https://testinfra.readthedocs.io/en/latest/
 
+bootstrap-deployer.sh runs this to test the deployment host is setup OK.
 
 diceware
 ---------
 https://github.com/ulif/diceware
 
+Used to generate passwords kept in 'pass'.
 
 httpie
 -------

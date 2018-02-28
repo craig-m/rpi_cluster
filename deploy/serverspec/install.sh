@@ -24,7 +24,7 @@ rpilogit "installing serverspec started";
 
 # install Ruby Version Manager
 if [ ! -f ~/.rvm/scripts/rvm ]; then
-  gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+  gpg --keyserver hkp://pgp.mit.edu --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
   # Verify the installer signature (might need `gpg2`), and if it validates run the installer
   gpg --verify rvm-installer.asc && bash rvm-installer stable || echo -e "[*] ERROR: RVM installer "
 fi
