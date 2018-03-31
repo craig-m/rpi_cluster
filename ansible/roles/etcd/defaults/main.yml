@@ -1,0 +1,4 @@
+
+etcd_url_path: "https://github.com/coreos/etcd/releases/download/v3.3.3/"
+etcd_url_targz: "etcd-v3.3.3-linux-arm64.tar.gz"
+etcd_targz_sha: "a"

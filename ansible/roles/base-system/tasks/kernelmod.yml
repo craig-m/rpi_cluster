@@ -1,0 +1,57 @@
+---
+# blacklist wifi and bluetooth kernel modules
+- debug: msg="common (kernelmod) "
+
+
+# stop bluetooth service
+- name: stop bluetooth
+  service: name=bluetooth.service state=stopped
+  become: yes
+  tags: [kernelmod]
+  ignore_errors: yes
+
+
+# disable bluetooth service
+- name: disable bluetooth
+  systemd:
+    name: bluetooth
+    enabled: no
+    masked: no
+  become: yes
+  tags: [kernelmod]
+  ignore_errors: yes
+
+
+# blacklist sound card module
+- name: disable snd_bcm2835
+  kernel_blacklist:
+    name: snd_bcm2835
+    state: present
+  become: yes
+  tags: [kernelmod]
+  ignore_errors: yes
+
+
+# blacklist wifi modules:
+- name: disable wifi mod brcmfmac
+  kernel_blacklist:
+    name: brcmfmac
+    state: present
+  become: yes
+  tags: [kernelmod]
+
+
+- name: disable wifi mod brcmutil
+  kernel_blacklist:
+    name: brcmutil
+    state: present
+  become: yes
+  tags: [kernelmod]
+
+
+- name: disable wifi mod cfg80211
+  kernel_blacklist:
+    name: cfg80211
+    state: present
+  become: yes
+  tags: [kernelmod]

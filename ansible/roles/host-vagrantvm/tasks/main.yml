@@ -1,0 +1,92 @@
+---
+# Tasks just for the Vagrant VM
+# Get the VM environment setup with everything to setup the cluster.
+
+- debug: msg="VagrantVM setup "
+  tags: [vagrantvm]
+
+
+- name: rpicluster syslog message
+  syslogger:
+    msg: "rpicluster: vagrantvm role running"
+    priority: "notice"
+    facility: "daemon"
+    log_pid: true
+  ignore_errors: True
+  changed_when: False
+  tags: [vagrantvm]
+
+
+- name: set-chassis with hostnamectl
+  command: hostnamectl set-chassis {{ rpi_racked }}
+  become: yes
+  changed_when: False
+  tags: [vagrantvm]
+
+
+# vagrant user member of adm group (to read /var/log/)
+- name: add vagrant user to adm group
+  user: name='vagrant'
+    groups=adm
+    append=yes
+  become: yes
+  tags: [vagrantvm]
+
+
+# local testing user for VirtualBox VM
+- name: local vbox user
+  user:
+    name: vboxdev
+    groups: sshusers,staff
+    append: yes
+    createhome: yes
+    home: /home/vboxdev
+  become: yes
+  tags: [vagrantvm]
+
+
+# packages
+- import_tasks: packages.yml
+  tags: [vagrantvm,packages]
+
+
+# apache
+- import_tasks: apache.yml
+  tags: [vagrantvm,apache]
+
+
+# hugo
+- import_tasks: hugo.yml
+  tags: [vagrantvm,hugo]
+
+
+# websocketd
+- import_tasks: websocketd.yml
+  tags: [vagrantvm,websocketd]
+
+
+# golang
+- import_tasks: golang.yml
+  tags: [vagrantvm,golang]
+
+
+# code
+- import_tasks: code.yml
+  tags: [vagrantvm,vagrantcode]
+
+
+# lan scan script
+- name: rpi_lan_nmap.sh
+  template:
+    src: rpi_lan_nmap.j2
+    dest: /opt/cluster/bin/rpi_lan_nmap.sh
+    mode: 0755
+  tags: [vagrantvm]
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+  become: yes
+  tags: [vagrantvm]

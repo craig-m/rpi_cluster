@@ -1,0 +1,46 @@
+# {{ ansible_managed }}
+
+# generic ----------------------------------------------------------------------
+
+host *
+	ServerAliveInterval 30
+	Compression yes
+	controlmaster auto
+
+host 192.168.6.*
+	User pi
+
+host *.local
+	User pi
+
+# hosts ------------------------------------------------------------------------
+
+# ------ admin (x4) ------
+
+host {{ admin1_name }}.local
+	HostName {{ admin1_ip }}
+
+host {{ admin2_name }}.local
+	HostName {{ admin2_ip }}
+
+host {{ admin3_name }}.local
+	HostName {{ admin3_ip }}
+
+host {{ admin4_name }}.local
+	HostName {{ admin4_ip }}
+
+# ------ compute (x4) ------
+
+host {{ compute1_name }}.local
+	HostName {{ compute1_ip }}
+
+host {{ compute2_name }}.local
+	HostName {{ compute2_ip }}
+
+host {{ compute3_name }}.local
+	HostName {{ compute3_ip }}
+
+host {{ compute4_name }}.local
+	HostName {{ compute4_ip }}
+
+#-------------------------------------------------------------------------------

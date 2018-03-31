@@ -19,6 +19,9 @@ if [ ! -d /var/www/html/ ]; then
   exit 1;
 fi
 
+# check vagrantvm (created by vagrantfile_root.sh)
+/etc/ansible/facts.d/vagrantvm.fact | grep boxbuild_id || exit 1;
+
 # move to dir script is running from
 cd "$(dirname "$0")"
 

@@ -1,0 +1,82 @@
+#-------------------------------------------------------------------------------
+
+[compute]
+zeta rpi_racked="L3" ansible_host=zeta.local
+epsilon rpi_racked="L4" ansible_host=epsilon.local
+gamma rpi_racked="R3" ansible_host=gamma.local
+delta rpi_racked="R4" ansible_host=delta.local
+
+# Consul -----------------------------------------------------------------------
+
+[consul:children]
+consul_server
+consul_client
+
+[consul_server]
+delta
+epsilon
+gamma
+
+[consul_boot]
+gamma
+
+[consul_client]
+zeta
+
+# Keepalived -------------------------------------------------------------------
+
+# The floating IP {{ rpi_loadbal_float_ip }} (Set in group_vars/all/vars) will
+# exist on *at least* one of these.
+
+[frontend:children]
+loadbal_prime
+loadbal_second
+
+[loadbal_prime]
+delta haproxy_cfg_file=compute
+
+[loadbal_second]
+epsilon haproxy_cfg_file=compute
+
+# Haproxy ----------------------------------------------------------------------
+
+[compute_api_back:children]
+api_backend
+
+[api_backend]
+zeta
+gamma
+
+# Hadoop -----------------------------------------------------------------------
+
+[hadoop:children]
+hadoop_manager
+hadoop_worker
+
+[hadoop_manager]
+gamma
+
+[hadoop_worker]
+delta
+epsilon
+zeta
+
+# Docker -----------------------------------------------------------------------
+
+[docker:children]
+docker_kube_master
+docker_kube_manager
+docker_kube_worker
+
+[docker_kube_master]
+zeta
+
+[docker_kube_manager]
+gamma
+
+[docker_kube_worker]
+gamma
+epsilon
+delta
+
+#-------------------------------------------------------------------------------

@@ -2,6 +2,8 @@
 # name: app_install.sh
 # desc: install omegapyapi.py virtualenv
 
+# pre-run checks ---------------------------------------------------------------
+
 # run by omegapyapi user only
 if [[ omegapyapi != "$(whoami)" ]]; then
   echo "Error: requires omegapyapi user";
@@ -13,9 +15,11 @@ if [ ! -d /opt/omegapyapi/app/ ]; then
   exit 1;
 fi
 
+# install ----------------------------------------------------------------------
+
 cd /opt/omegapyapi/app/;
 
-logger -t rpicluster "app_install.sh starting ";
+logger -t rpicluster "omegapyapi app_install.sh starting ";
 
 echo "[*] install virtualenv";
 pip install virtualenv;
@@ -29,6 +33,6 @@ source env/bin/activate || exit 1;
 echo "[*] install requirements.txt";
 pip install -r requirements.txt || exit 1;
 
-logger -t rpicluster "app_install.sh finished ";
+logger -t rpicluster "omegapyapi app_install.sh finished ";
 
-# EOF
+# EOF --------------------------------------------------------------------------

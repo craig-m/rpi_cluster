@@ -13,7 +13,7 @@ Requires:
 Raspberry Pi preparation
 ------------------------
 
-* Download Raspbian lite, copy the image to each SD card with DD or Etcher etc.
+* Download Raspbian lite, flash the image on to each SD card with DD or Etcher etc.
 
   I am using the 2017-11-29-raspbian-stretch-lite image.
 
@@ -21,32 +21,38 @@ Raspberry Pi preparation
 
   Read https://www.raspberrypi.org/blog/a-security-update-for-raspbian-pixel/ for info.
 
-* Join The R-Pi to a switch, enable DHCP somewhere on the LAN.
+* Join The R-Pi to a switch, enable DHCP somewhere on the LAN. I have a small OpenWRT router for this (my cluster has its own VLAN + subnet) for this. Changing from the 192.168.6.x subnet is untested so far (to do..).
 
-  I have a small LEDE (formerly OpenWRT) router for this (my cluster has its own vlan + subnet). This has been configured to only give out IPs to known/static hosts (the x4 admin nodes).
+  Make sure your DHCP server is configured to only give out IP addresses to known hosts. You need to set static IPs for the Alpha, Beta, Omega and Psi hosts.
 
-* Place the SD cards into the R-Pi and power them on. They should all respond to PING.
+  The R-Pi in the Compute group will get IP addresses from the Alpha and Beta R-Pi, once they have been configured (from Vagrant). After the setup process the Alpha and Beta nodes will have static IP addresses, DHCP is needed for initial setup/bootstrap only.
+
+* Place the SD cards into the R-Pi and power them on. The four admin hosts should respond to PING and SSH should be available (the default username is pi, with a default password of 'raspberry').
 
 
-Admin VM
---------
+---
 
-* Create the admin VM with Vagrant:
+
+Create the Admin VM
+--------------------
+
+* Create the Virtual admin Machine with Vagrant:
 
 ```
-craig@desktop rpi_cluster (master) $ vagrant up
+craig@desktop:~$ git clone git@github.com:craig-m/rpi_cluster.git
+craig@desktop: rpi_cluster $ vagrant up
 < SNIP >
 ==> default:
 ==> default: ----[ BerryClusterAdmin VM up! ]----
 ```
 
-  see /vagrantvm/readme.md for more information on Vagrant.
+  See /vagrantvm/readme.md for more information and notes on Vagrant.
 
 
 * Login to the new VM:
 
 ```
-craig@desktop rpi_cluster (master) $ vagrant ssh
+craig@desktop: rpi_cluster $ vagrant ssh
 Linux stretch 4.9.0-4-amd64 #1 SMP Debian 4.9.51-1 (2017-09-28) x86_64
 
 The programs included with the Debian GNU/Linux system are free software;
@@ -58,41 +64,76 @@ permitted by applicable law.
 vagrant@stretch:~$
 ```
 
-* Finish AdminVM setup:
+  Now we have an isolated environment for all our tools and config files.
+
+  The folder ./rpi_cluster/ on your desktop is mounted at /home/vagrant/rpi_cluster/ - you can use a text editor from your desktop to alter these files.
+
+  ```
+  vagrant@stretch:~$ df -h | grep -e Filesystem -e rpi_cluster
+  Filesystem                Size  Used Avail Use% Mounted on
+  home_vagrant_rpi_cluster  xxxG  xxxG   xxG  50% /home/vagrant/rpi_cluster
+  ```
+
+  You can carry on reading this document at http://localhost:5550/index.php?p=doc
+
+
+---
+
+
+Key setup and Cluster Config
+----------------------------
+
+### New deploy
+
+* For a new deployment, run new_keysandconf.sh. This will:
+  - wipe all old files (!)
+  - create a new PGP key (with password, the only one we need to remember)
+  - create a password store (https://www.passwordstore.org/)
+  - generate an SSH key pair (with a random password, saved in pass)
+  - generate a random password to use ansible-vault with
+  - copy /docs/defaults/{group_vars,host_vars} to /ansible/ (and encrypt the vault files)
+    (you will be prompted to edit them)
 
 ```
-vagrant@stretch:~$ cd rpi_cluster/deploy/ansible/
-vagrant@stretch:~/rpi_cluster/deploy/ansible$ ./bootstrap-deployer.sh
+vagrant@stretch:~$ cd ~/rpi_cluster/vagrantvm/
+vagrant@stretch:~/rpi_cluster/vagrantvm$ ./keysandconf_new.sh
+```
+
+### Existing cluster
+
+* If you have the cluster up and running already:
+
+```
+vagrant@stretch:~$ cd ~/rpi_cluster/vagrantvm/
+vagrant@stretch:~/rpi_cluster/vagrantvm$ ./keysandconf_restore.sh
+```
+
+
+---
+
+
+Admin VM setup
+--------------
+
+* Run the bootstrap-deployer script. This also gets run on the 'deployer' R-Pi later on. This installs Ansible, then runs playbooks on the local machine.
+
+```
+vagrant@stretch:~$ cd rpi_cluster/ansible/
+vagrant@stretch:~/rpi_cluster/ansible$ ./bootstrap-deployer.sh
 ```
   Note: You will be asked for the PGP key password.
 
 * Activate the environment. The tools we installed in requirements.txt are available now (ansible and fabric etc)
 
 ```
-vagrant@stretch:~$ pass keys/ssh
-vagrant@stretch:~$ ssh-agent bash
-vagrant@stretch:~$ ssh-add
+vagrant@stretch:~/rpi_cluster/ansible$ pass ssh/id_rsa_pw
+vagrant@stretch:~/rpi_cluster/ansible$ ssh-agent bash
+vagrant@stretch:~/rpi_cluster/ansible$ ssh-add
 Enter passphrase for /home/vagrant/.ssh/id_rsa:
-vagrant@stretch:~$ source ~/env/bin/activate
-(env) vagrant@stretch:~$ cd rpi_cluster/deploy/ansible/
+vagrant@stretch:~/rpi_cluster/ansible$ source ~/env/bin/activate
+(env) vagrant@stretch:~/rpi_cluster/ansible$
 ```
 
-Configure
----------
-
-* Alter the settings in all of the variable and inventory files to suit your environment:
-
-  - rpi_cluster/admin/ansible/group_vars/*
-  - rpi_cluster/admin/ansible/host_vars/*
-  - rpi_cluster/admin/ansible/inventories/*
-
-  Note: Any files you add/edit/remove in /home/vagrant/rpi_cluster/ will also change on your host.. And vice-versa. Passthrough is enabled :)
-
-* Use Ansible Vault to edit the encrypted files:
-
-```
-(env) vagrant@stretch:~/rpi_cluster/deploy/ansible$ ansible-vault edit group_vars/all/vault
-```
 
 ---
 
@@ -100,30 +141,35 @@ Configure
 Cluster setup
 -------------
 
-* setup SSH keys:
+* setup SSH keys, this will copy our public key to all of the new R-Pi:
 
 ```
-(env) vagrant@stretch:~/rpi_cluster/deploy/ansible$ ./install_ssh_key.sh
+(env) vagrant@stretch:~/rpi_cluster/ansible$ ./copy_ssh_key.sh
 ```
 
 * List the fabric tasks:
 
 ```
-(env) vagrant@stretch:~/rpi_cluster/deploy/ansible$ fab -l
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab -l
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_hostinfo
 ```
+
+  At this stage only the x4 admin nodes should respond.
 
 ## LanServices
 
 * Configure Lan Services main (Alpha, Beta):
 
 ```
-(env) vagrant@stretch:~/rpi_cluster/deploy/ansible$ fab ansible_lansrv_main
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_lansrv_main
 ```
+
+  After this finishes the x4 compute nodes should have IP addresses.
 
 * Configure Lan Services misc (Omega):
 
 ```
-(env) vagrant@stretch:~/rpi_cluster/deploy/ansible$ fab ansible_lansrv_misc
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_lansrv_misc
 ```
 
 ## Compute nodes
@@ -131,14 +177,13 @@ Cluster setup
 * Run Ansible on the Compute nodes (zeta, epsilon, delta, gamma):
 
 ```
-(env) vagrant@stretch:~/rpi_cluster/deploy/ansible$ fab ansible_compute
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_compute
 ```
 
 ## Web app
 
-
 ```
-(env) vagrant@stretch:~/rpi_cluster/deploy/ansible$ fab ansible_compute_webapp
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_compute_webapp
 ```
 
 ## deployer
@@ -146,7 +191,7 @@ Cluster setup
 * Setup the deployer R-Pi, psi, so we can also run Ansible + Fabric etc from there too.
 
 ```
-(env) vagrant@stretch:~/rpi_cluster/deploy/ansible$ cd ~
+(env) vagrant@stretch:~/rpi_cluster/ansible$ cd ~
 (env) vagrant@stretch:~$ fab -l
 (env) vagrant@stretch:~$ fab bs_deployer_psi -H 192.168.6.16
 ```

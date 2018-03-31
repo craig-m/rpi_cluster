@@ -1,0 +1,66 @@
+---
+# Common base setup - run on all nodes
+
+
+- debug: msg="Base System "
+  tags: [common]
+
+
+# Set timezone UTC
+- name: set timezone to UTC
+  timezone:
+    name: UTC
+  become: yes
+  tags: [common]
+
+
+# /etc/hosts and system hostname
+- import_tasks: hostsname.yml
+  tags: [common]
+
+
+# file structure
+- import_tasks: filesfolders.yml
+  tags: [common]
+
+
+# blacklist kernel modules
+- import_tasks: kernelmod.yml
+  tags: [common,kernelmod]
+
+
+# /etc/sysctl.conf tuning
+- import_tasks: systune.yml
+  tags: [common,systune]
+
+
+# Install Apt packages
+- import_tasks: packages.yml
+  tags: [common,commonpackage]
+
+
+# Remove Apt packages (in defaults/main.yml)
+- name: Remove these packages
+  apt: name={{ item.rmapt }} state=absent
+  with_items: "{{ package_remove }}"
+  become: yes
+  tags: [common,commonpackage]
+
+
+# log
+- name: output to rpicluster log
+  shell: logger -t rpicluster ansible base-system roll ran
+  tags: [common]
+  changed_when: False
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+    owner: root
+    group: root
+    mode: 0444
+  changed_when: False
+  become: yes
+  tags: [common]

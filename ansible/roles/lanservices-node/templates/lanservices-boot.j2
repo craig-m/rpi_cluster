@@ -1,0 +1,36 @@
+#!/bin/bash
+# {{ ansible_managed }}
+# this script is run on boot by systemd, rpi-lanservices.service
+
+# pre-run checks ---------------------------------------------------------------
+
+# only run as root
+id | grep "uid=0(root)" || exit 1;
+
+#-------------------------------------------------------------------------------
+
+# set static arp if exists
+if [ -f /etc/ethers ]; then
+  arp -f /etc/ethers;
+fi
+
+
+# create a 2MB tmpfs
+if [ ! -f /mnt/ramstore/data/test.txt ]; then
+  mkdir -p /mnt/ramstore/;
+  mount -t tmpfs -o size=2m tmpfs /mnt/ramstore;
+  # these files exist in Volatile memory!
+  mkdir -p /mnt/ramstore/data;
+  touch -f /mnt/ramstore/data/test.txt
+  touch -f /mnt/ramstore/data/hour_check.txt
+  chmod 700 /mnt/ramstore/data;
+fi
+
+
+# check failover node
+pingresult=$(/usr/lib/nagios/plugins/check_host {{ rpi_failover_ip }});
+logger -t rpicluster "ping failover host: $pingresult"
+
+logger -t rpicluster "lanservices-boot.sh ran OK"
+
+#-------------------------------------------------------------------------------

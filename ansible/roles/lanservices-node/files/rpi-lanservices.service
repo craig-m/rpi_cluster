@@ -1,0 +1,11 @@
+[Unit]
+Description=rpi-lanservices.service
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+User=root
+ExecStart=/opt/cluster/bin/lanservices-boot.sh
+
+[Install]
+WantedBy=multi-user.target

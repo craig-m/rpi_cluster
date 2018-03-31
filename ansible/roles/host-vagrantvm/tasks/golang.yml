@@ -1,0 +1,46 @@
+---
+# install Go
+# https://golang.org/dl/
+
+
+# check bin exists
+- name: check golang bin
+  stat: path=/usr/local/go/bin/go
+  register: golangbinlocal
+  tags: [golang]
+
+
+# src dir
+- name: make /opt/cluster/mysrc/golang/
+  file: path=/opt/cluster/mysrc/golang/ state=directory mode=0775
+
+
+# check golang .tar.gz
+- name: check golang tar gz
+  stat: path=/opt/cluster/mysrc/golang/{{ golang_targz }}
+  register: golangbintargz
+  tags: [golang]
+
+
+# download golang
+- name: download golang
+  get_url:
+    url: https://dl.google.com/go/{{ golang_targz }}
+    dest: /opt/cluster/mysrc/golang/
+    checksum: sha256:{{ golang_sha256 }}
+  when: golangbintargz.stat.exists == False
+  register: golangtargz
+  tags: [golang]
+
+
+# unarchive golang
+- name: unarchive golang
+  unarchive:
+    src: /opt/cluster/mysrc/golang/{{ golang_targz }}
+    dest: /usr/local/
+    mode: 0755
+    remote_src: yes
+  become: yes
+  register: golangtargzunarch
+  when: golangbinlocal.stat.exists == False
+  tags: [golang]

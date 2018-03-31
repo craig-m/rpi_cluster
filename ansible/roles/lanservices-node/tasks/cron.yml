@@ -1,0 +1,49 @@
+---
+
+
+- name: copy cron daily script
+  template:
+    src: lansrv-cron-daily.j2
+    dest: /opt/cluster/bin/lansrv-cron-daily.sh
+    mode: 0770
+    owner: root
+    group: root
+  become: yes
+
+
+- name: add pathing
+  cron:
+    name: PATH
+    env: yes
+    value: /opt/cluster/bin/
+  become: yes
+
+
+- name: install daily cron script
+  cron:
+    name: "lansrv main daily"
+    special_time: daily
+    user: root
+    job: "/opt/cluster/bin/lansrv-cron-daily.sh > 2>&1"
+    cron_file: "lansrv-cron-daily"
+  become: yes
+
+
+- name: copy cron hourly script
+  template:
+    src: lansrv-cron-hourly.j2
+    dest: /opt/cluster/bin/lansrv-cron-hourly.sh
+    mode: 0770
+    owner: root
+    group: root
+  become: yes
+
+
+- name: install hourly cron script
+  cron:
+    name: "lansrv main hourly"
+    special_time: hourly
+    user: root
+    job: "/opt/cluster/bin/lansrv-cron-hourly.sh > 2>&1"
+    cron_file: "lansrv-cron-hourly"
+  become: yes

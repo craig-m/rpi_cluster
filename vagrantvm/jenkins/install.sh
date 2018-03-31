@@ -3,6 +3,8 @@
 
 logger -t rpicluster "install.sh installing jenkins "
 
+# install ----------------------------------------------------------------------
+
 /usr/bin/sudo apt-key add jenkins.io.key
 
 cat > jenkins.list << EOF
@@ -19,6 +21,12 @@ DEBIAN_FRONTEND=noninteractive
 
 /usr/bin/sudo systemctl start jenkins.service
 
+sleep 20s;
+
 /usr/bin/sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 
+echo -e "\n From your desktop Jenkins can be found at: http://localhost:5553/ \n"
+
 logger -t rpicluster "install.sh installed jenkins "
+
+# EOF --------------------------------------------------------------------------

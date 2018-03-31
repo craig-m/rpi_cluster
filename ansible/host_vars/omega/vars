@@ -1,0 +1,43 @@
+---
+# vars for Omega, LanServices Misc
+
+# Common host configs ----------------------------------------------------------
+
+host_dir: [
+  { dir: '/srv/python/omegapyapi', mode: '0755', owner: '{{ ansible_user_id }}', group: '{{ ansible_user_id }}' },
+  { dir: '/srv/nginx/hugo-site', mode: '0755', owner: '{{ ansible_user_id }}', group: '{{ ansible_user_id }}' },
+  { dir: '/srv/php/omegaapp', mode: '0755', owner: '{{ ansible_user_id }}', group: '{{ ansible_user_id }}' }
+]
+
+# SSH additional port
+ssh_group_port: "2221"
+
+#-------------------------------------------------------------------------------
+
+# for dhcpcd config
+rpi_my_dns_server_1: "192.168.6.66"
+rpi_my_dns_server_2: "192.168.6.68"
+
+#-------------------------------------------------------------------------------
+
+# nginx config
+nginx_configs: [
+  {cfsource: 'sites-enabled/omega.j2', cfdest: '/etc/nginx/sites-enabled/omega.conf'},
+  {cfsource: 'sites-enabled/omega-php.j2', cfdest: '/etc/nginx/sites-enabled/omega-php.conf'}
+]
+nginx_port: "88"
+nginx_site_enabled: "omega"
+
+nginx_port2: "90"
+
+# haproxy server:
+rpi_haproxy_enabled: true
+haproxy_cfg_file: "omega"
+
+# Docker
+rpi_docker_enabled: false
+
+# glusterFS
+rpi_glustersrv_enabled: false
+
+#-------------------------------------------------------------------------------

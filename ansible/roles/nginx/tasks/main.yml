@@ -1,0 +1,148 @@
+---
+# ngix server - https://nginx.org/en/
+- debug: msg="NGINX server role "
+  tags: [nginx]
+
+
+- debug: msg="Default port {{ nginx_port }} "
+  tags: [nginx]
+
+
+# install packages (if missing)
+- name: install nginx programs
+  apt: name={{ item }} state=present
+  with_items:
+       - nginx-full
+  become: yes
+  failed_when: false
+  environment:
+    RUNLEVEL: 1
+  tags: [nginx]
+
+
+# Add ansible-user to www-data group
+- name: add ansible_user to www-data group
+  user:
+    name: "{{ ansible_user_id }}"
+    groups: www-data
+    append: yes
+  become: yes
+  tags: [nginx]
+
+
+- name: www perms
+  file:
+    owner: "{{ ansible_user_id }}"
+    group: "www-data"
+    path: /var/www/
+    state: directory
+    mode: 0775
+  become: yes
+  tags: [common]
+
+
+- name: www html perms
+  file:
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    path: /var/www/html
+    state: directory
+    mode: 0775
+  become: yes
+  tags: [common]
+
+
+# create /srv/nginx/default/
+- name: make /srv/nginx/default/
+  file:
+    path: /srv/nginx/default
+    state: directory
+    mode: 0775
+    owner: "{{ ansible_user_id }}"
+    group: root
+  become: yes
+  tags: [nginx]
+
+
+# Check index
+- name: check index
+  stat:
+    path: "/var/www/html/index.html"
+  register: rpi_nginx_default_index
+  changed_when: False
+
+
+- name: copy defualt index.html file
+  copy:
+    src: index.html
+    dest: /var/www/html/index.html
+  when: "rpi_nginx_default_index.stat.exists == false"
+  become: yes
+
+
+- name: copy rasp logo
+  copy:
+    src: rasp-logo.png
+    dest: /var/www/html/
+  become: yes
+
+
+# remove default config
+- name: no nginx default site
+  file:
+    state: absent
+    path: /etc/nginx/sites-enabled/default
+  become: yes
+  ignore_errors: yes
+  tags: [nginx]
+
+
+# config for this host
+- name: nginx config
+  template:
+    src: "{{ item.cfsource }}"
+    dest: "{{ item.cfdest }}"
+    owner: root
+    group: root
+    mode: '0644'
+  with_items: "{{ nginx_configs }}"
+  become: yes
+  notify: nginx_restart
+  tags: [nginx]
+
+
+# check nginx config file
+- name: test config file
+  shell: /usr/sbin/nginx -t -c /etc/nginx/nginx.conf
+  register: nginxcnf_result
+  become: yes
+  changed_when: False
+  failed_when:
+    - "'syntax is ok' not in nginxcnf_result.stderr"
+    - "'test is successful' not in nginxcnf_result.stderr"
+  tags:
+    - nginx
+    - skip_ansible_lint
+
+
+# reload config
+- name: nginx started
+  service: name=nginx state=reloaded
+  become: yes
+  changed_when: False
+  tags: [nginx]
+
+
+# enable on boot
+- name: nginx enabled on boot
+  service: name=nginx enabled=yes
+  become: yes
+  tags: [nginx]
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+  become: yes
+  tags: [nginx]

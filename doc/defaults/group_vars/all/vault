@@ -1,0 +1,78 @@
+# R-Pi cluster vault file
+
+# Passwords --------------------------------------------------------------------
+
+# password for the Pi user on all hosts:
+passwd_pi_admin: "example_rpi.pw"
+passwd_pi_omega: "example_rpi.pw"
+passwd_pi_front: "example_rpi.pw"
+passwd_pi_back: "example_rpi.pw"
+
+# Network settings -------------------------------------------------------------
+
+# R-Pi LAN settings
+rpi_net_id: "192.168.6.0"
+rpi_net_range: "192.168.6.1-254"
+rpi_net_bcast: "192.168.6.255"
+rpi_net_snet: "255.255.255.0"
+rpi_net_maskbit: "24"
+
+# reverse DNS
+rpi_domain_arpa: "6.168.192"
+
+# LanServices: dhcp server settings
+rpi_dhcp_range_start: "192.168.6.140"
+rpi_dhcp_range_stop: "192.168.6.190"
+
+# LanServices: dhcp server advertise these DNS servers
+rpi_dhcp_dns1: "192.168.6.66"
+rpi_dhcp_dns2: "192.168.6.68"
+
+# LAN default gateway
+rpi_net_default_gw: "192.168.6.6"
+rpi_net_default_gw_mac: "zz:zz:zz:zz:zz:zz"
+
+# WiFi AP (OpenWRT router)
+rpi_net_wifi_gw: "192.168.6.2"
+rpi_net_wifi_gw_mac: "zz:zz:zz:zz:zz:zz"
+
+# This IP will float between two of the Compute nodes. Managed by keepalived
+rpi_loadbal_float_ip: "192.168.6.111"
+
+# Admin nodes ------------------------------------------------------------------
+
+admin1_name: "alpha"
+admin1_ip: "192.168.6.66"
+admin1_mac: "b8:27:eb:31:26:zz"
+
+admin2_name: "beta"
+admin2_ip: "192.168.6.68"
+admin2_mac: "b8:27:eb:91:zz:zz"
+
+admin3_name: "omega"
+admin3_ip: "192.168.6.16"
+admin3_mac: "b8:27:eb:22:zz:zz"
+
+admin4_name: "psi"
+admin4_ip: "192.168.6.100"
+admin4_mac: "b8:27:eb:ec:zz:zz"
+
+# compute/worker Nodes ---------------------------------------------------------
+
+compute1_name: "delta"
+compute1_ip: "192.168.6.200"
+compute1_mac: "b8:27:eb:31:e8:zz"
+
+compute2_name: "gamma"
+compute2_ip: "192.168.6.223"
+compute2_mac: "b8:27:eb:ad:zz:zz"
+
+compute3_name: "zeta"
+compute3_ip: "192.168.6.227"
+compute3_mac: "b8:27:eb:99:zz:zz"
+
+compute4_name: "epsilon"
+compute4_ip: "192.168.6.232"
+compute4_mac: "b8:27:eb:bf:zz:zz"
+
+#-------------------------------------------------------------------------------

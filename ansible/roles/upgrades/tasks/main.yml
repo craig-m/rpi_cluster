@@ -1,0 +1,74 @@
+---
+# maintenance role
+- debug: msg="maintenance role "
+
+
+# log
+- name: output to rpicluster log
+  shell: logger -t rpicluster starting upgrade role
+  tags: [maintenance]
+
+
+# update Apt cache
+- name: update apt cache
+  apt: update_cache=yes
+  become: yes
+  retries: 2
+  check_mode: no
+  changed_when: False
+  tags: [maintenance]
+
+
+- name: wait before carry on
+  pause:
+    seconds: 10
+  tags: [maintenance]
+
+
+# Upgrade all Apt packages
+- name: Upgrade all packages to the latest version
+  apt:
+    name: "*"
+    state: latest
+  retries: 2
+  become: yes
+  tags: [maintenance]
+
+
+- name: wait before carry on
+  pause:
+    seconds: 20
+  tags: [maintenance]
+
+
+# Update R-Pi firmware in /boot/
+# (I've found that, on occasion, this will prevent the Pi from booting)
+#
+#- name: update kernel
+#  shell: SKIP_WARNING=1 /usr/bin/rpi-update
+#  become: yes
+#  tags: [maintenance]
+#  when: "'vagrantvm' not in group_names"
+
+
+# systemctl daemon-reload
+- name: systemctl-daemon-reload
+  command: systemctl daemon-reload
+  become: yes
+
+
+# log
+- name: output to rpicluster log
+  shell: logger -t rpicluster finished upgrade role OK
+  tags: [maintenance]
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+    owner: root
+    group: root
+    mode: 0444
+  become: yes
+  tags: [maintenance]

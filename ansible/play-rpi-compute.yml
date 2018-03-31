@@ -1,0 +1,36 @@
+---
+# Compute base
+
+
+- name: gather facts on other hosts
+  hosts: all
+  gather_facts: True
+  serial: 10
+  roles:
+    - ansible-pre-role
+
+
+- name: Compute nodes main
+  hosts: compute
+  gather_facts: false
+  roles:
+    - userac
+    - base-system
+    - hostsfile
+    - rpilog
+    - ssh
+    - haveged
+    - ntp-client
+    - nfs-client
+    - distcc
+    - mpich
+    - golang
+    - hadoop
+    - compute-node
+
+
+- name: gather facts on nodes
+  hosts: all
+  gather_facts: True
+  roles:
+    - ansible-post-role

@@ -1,0 +1,38 @@
+---
+# setup: code / vagrantstatus /
+- debug: msg="Installing vboxphpcms "
+
+
+# rsync
+- name: copy vboxphpcms to var www
+  synchronize:
+    src: /home/vagrant/rpi_cluster/vagrantvm/vboxphpcms/
+    dest: /var/www/
+  changed_when: false
+
+
+# +x install.sh
+- name: chmod x /var/www/install.sh
+  file:
+    path: /var/www/install.sh
+    mode: 0755
+  changed_when: false
+
+
+# run installer (if composer /vendor/ dir missing)
+- name: run vboxphpcms install.sh
+  command: /var/www/install.sh creates=/var/www/vendor/
+
+
+# Get page
+- name: get page
+  uri:
+     url: http://127.0.0.1:80/index.php
+     return_content: yes
+  register: vboxphp_index
+
+
+# check page
+- name: test index.php on Apache Vbox install
+  fail:
+  when: "'(Debian) Server at 127.0.0.1 Port 80' not in vboxphp_index.content"

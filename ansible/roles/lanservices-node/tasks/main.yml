@@ -1,0 +1,78 @@
+---
+# LanServices main - Alpha and Beta
+- debug: msg="Lan Services role running "
+
+
+- name: tools
+  apt: name={{ item }} state=present
+  with_items:
+       - nmap
+       - telnet
+       - lynx
+  become: yes
+  retries: 2
+  tags: [lanservices]
+
+
+# copy lanservices-boot.sh
+- name: lanservices-boot script
+  template:
+    src: lanservices-boot.j2
+    dest: /opt/cluster/bin/lanservices-boot.sh
+    mode: 0770
+    owner: root
+    group: root
+  become: yes
+  tags: [lanservices]
+
+
+# systemd script
+- name: copy consul systemd script
+  copy:
+    src: rpi-lanservices.service
+    dest: /etc/systemd/system/rpi-lanservices.service
+    mode: 0644
+    owner: root
+    group: root
+  become: yes
+  changed_when: false
+  notify:
+    - systemctl-daemon-reload
+    - restart-rpilansrv
+  tags: [lanservices]
+
+
+# static arp entries for admin nodes
+- name: /etc/ethers
+  template: src=ethers.j2 dest=/etc/ethers  mode=0644
+  become: yes
+  notify: static-arp-ethers
+
+
+# rpi-lanservices.service enabled on boot
+- name: enable rpi-lanservices systemd script
+  systemd:
+    name: rpi-lanservices
+    enabled: yes
+    masked: no
+  become: yes
+  tags: [lanservices]
+
+
+# cron scripts
+- import_tasks: cron.yml
+  tags: [lanservices]
+
+
+- name: output to rpicluster log
+  shell: logger -t rpicluster ansible lanservices role ran
+  changed_when: false
+  tags: [lanservices]
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+  become: yes
+  tags: [lanservices]

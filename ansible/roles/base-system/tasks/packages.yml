@@ -1,0 +1,125 @@
+---
+# Packages needed on All R-Pi
+- debug: msg="common (packages) "
+
+
+- name: update apt cache
+  apt: update_cache=yes
+  become: yes
+  retries: 3
+  check_mode: no
+  changed_when: False
+  tags: [common,commonpackage]
+  failed_when: False
+
+
+- name: clients and network
+  apt: name={{ item }} state=present
+  with_items:
+       - arping
+       - hping3
+       - wget
+       - curl
+       - dnsutils
+       - socat
+  become: yes
+  retries: 2
+  tags: [common,commonpackage]
+
+
+- name: System console
+  apt: name={{ item }} state=present
+  with_items:
+       - linuxlogo
+       - vim
+       - htop
+       - multitail
+       - busybox
+       - exiftool
+       - lsof
+       - zip
+       - unzip
+       - jq
+       - expect
+       - reptyr
+       - screen
+       - tmux
+  become: yes
+  retries: 2
+  tags: [common,commonpackage]
+
+
+- name: System base
+  apt: name={{ item }} state=present
+  with_items:
+       - apt-transport-https
+       - apt-show-versions
+       - ntpstat
+       - monitoring-plugins-common
+       - monitoring-plugins-basic
+       - libnss-myhostname
+       - gfortran
+       - libffi-dev
+       - xsltproc
+       - gawk
+       - bc
+       - git-core
+       - moreutils
+       - pass
+       - dos2unix
+       - inotify-tools
+       - uuid
+       - uuid-runtime
+  become: yes
+  retries: 2
+  tags: [common,commonpackage]
+
+
+# Python pip
+- name: python pip and dev packages
+  apt: name={{ item }} state=present
+  with_items:
+       - python-pip
+       - python-dev
+       - libpython-all-dev
+  become: yes
+  retries: 2
+  tags: [common,commonpackage]
+
+
+- name: install virtualenv with pip
+  pip:
+    name: virtualenv
+  become: yes
+  tags: [common,commonpackage]
+
+
+# Install Bash Automated Testing System
+# https://github.com/sstephenson/bats
+- name: copy BATS src
+  copy:
+    src: files/bats-master.zip
+    dest: /opt/cluster/mysrc/
+    mode: 0644
+  register: copybatszip
+  tags: [common,commonpackage]
+
+
+- name: unzip BATS src
+  unarchive:
+    src: /opt/cluster/mysrc/bats-master.zip
+    dest: /opt/cluster/mysrc/
+    remote_src: True
+  when: copybatszip.changed
+  register: unzipbatszip
+  tags: [common,commonpackage]
+
+
+- name: install BATS
+  when: unzipbatszip.changed
+  shell: /opt/cluster/mysrc/bats-master/install.sh /usr/local/
+  become: yes
+  tags:
+    - common
+    - commonpackage
+    - skip_ansible_lint

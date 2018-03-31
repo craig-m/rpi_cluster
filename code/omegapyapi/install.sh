@@ -1,20 +1,22 @@
 #!/bin/bash
 # name: install.sh
-# desc: Setup OS env for omegapyapi flask app
+# desc: Setup OS env for OmegaPyAPI flask app
 
 # pre-run tasks ----------------------------------------------------------------
 
+echo "[*] installing OmegaPyAPI"
+
 runas=$(id | cut -c5-5)
 if [ $runas -eq "0" ]; then
-  echo -e "rpicluster: Do NOT run this as root";
+  echo -e "* Do NOT run this as root";
   exit 1;
 fi
 
 runas=$(/usr/bin/sudo id | cut -c5-5)
 if [ $runas -eq "0" ]; then
-  echo -e "rpicluster: Can sudo OK";
+  echo -e "* Can sudo OK";
 else
-  echo -e "ERROR: no sudo use";
+  echo -e "* ERROR: no sudo use";
   exit 1;
 fi
 
@@ -23,7 +25,7 @@ rpilogit () {
 	logger -t rpicluster "$1";
 }
 
-rpilogit "starting omegapyapi install";
+rpilogit "omegapyapi starting install.sh";
 
 if [ -f /etc/systemd/system/omegapyapi.service ]; then
   /usr/bin/sudo systemctl stop omegapyapi.service
@@ -58,12 +60,12 @@ echo "[*] copy omegapyapi.service and reload"
 
 echo "[*] starting"
 /usr/bin/sudo systemctl start omegapyapi.service
-/usr/bin/sudo systemctl status omegapyapi.service
+/usr/bin/sudo ps aux | grep omegapyapi | grep python
 
 echo "[*] test unix socket: "
 omegapiget=$(curl -s -X GET --unix-socket /opt/omegapyapi/omegapyapi.socket http:)
 echo "${omegapiget}";
 
-rpilogit "finished omegapyapi install";
+rpilogit "omegapyapi finished install.sh";
 
-# EOF
+# EOF --------------------------------------------------------------------------

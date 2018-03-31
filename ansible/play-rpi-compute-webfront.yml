@@ -1,0 +1,25 @@
+---
+# Compute webapp frontend hosting Playbook
+
+
+- name: gather facts on other hosts
+  hosts: all
+  gather_facts: True
+  roles:
+    - ansible-pre-role
+
+
+- name: webapp frontend
+  hosts: frontend
+  gather_facts: false
+  roles:
+    - nginx
+    - haproxy
+    - keepalived
+
+
+- name: gather facts on nodes
+  hosts: all
+  gather_facts: True
+  roles:
+    - ansible-post-role

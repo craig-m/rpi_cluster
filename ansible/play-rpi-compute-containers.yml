@@ -1,0 +1,31 @@
+---
+# Compute webapp container hosting
+
+
+- name: gather facts on other hosts
+  hosts: all
+  gather_facts: True
+  roles:
+    - ansible-pre-role
+
+
+#- name: consul
+#  hosts: compute
+#  gather_facts: false
+#  roles:
+#    - consul
+
+
+- name: containers
+  hosts: docker
+  gather_facts: false
+  roles:
+    - docker
+    - kubernetes
+
+
+- name: gather facts on nodes
+  hosts: all
+  gather_facts: True
+  roles:
+    - ansible-post-role

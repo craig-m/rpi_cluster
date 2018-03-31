@@ -1,0 +1,93 @@
+---
+# DHCP server -  Run by admin alpha and beta
+# https://www.isc.org/downloads/dhcp/
+- debug: msg="dhcp SERVER role "
+- debug: msg="dhcpd status {{ rpi_dhcpd_status }} "
+
+
+- name: install dhcp server
+  apt: name={{ item }} state=present
+  with_items:
+       - isc-dhcp-server
+       - dhcpdump
+  become: yes
+  retries: 1
+  tags: [dhcpserver]
+
+
+- name: dhcpd default config
+  template:
+    src: dhcp-server-default.j2
+    dest: /etc/default/isc-dhcp-server
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  become: yes
+  notify: isc-dhcp-server-reload
+  tags: [dhcpserver]
+
+
+- name: dhcpd config
+  template:
+    src: dhcpd.j2
+    dest: /etc/dhcp/dhcpd.conf
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  become: yes
+  notify: isc-dhcp-server-reload
+  tags: [dhcpserver]
+
+
+# enabled on boot (if flagged on)
+- name: isc-dhcp-server enabled on boot
+  service: name=isc-dhcp-server enabled=yes
+  become: yes
+  tags: [dhcpserver]
+  when: rpi_dhcpd_enabled == true
+
+
+# service stopped (if flagged off)
+- name: isc-dhcp-server stopped
+  service: name=isc-dhcp-server state=stopped
+  become: yes
+  tags: [dhcpserver]
+  when: rpi_dhcpd_enabled == false
+
+# disabled on boot (if flagged off)
+- name: isc-dhcp-server enabled on boot
+  service: name=isc-dhcp-server enabled=no
+  become: yes
+  tags: [dhcpserver]
+  when: rpi_dhcpd_enabled == false
+
+
+- name: wait for hosts to get leases
+  pause:
+    seconds: 50
+  tags: [dhcpserver]
+
+
+- name: Refresh inventory
+  meta: refresh_inventory
+  tags: [dhcpserver]
+
+
+# log
+- name: output to rpicluster log
+  shell: logger -t rpicluster ansible dhcp-server role ran
+  tags: [dhcpserver]
+  changed_when: false
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+    owner: root
+    group: root
+    mode: 0444
+  become: yes
+  tags: [dhcpserver]

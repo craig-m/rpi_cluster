@@ -1,0 +1,6 @@
+---
+
+- name: keepalived_reload
+  service: name=keepalived state=reloaded
+  become: yes
+  tags: [keepalived]

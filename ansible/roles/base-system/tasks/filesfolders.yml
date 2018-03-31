@@ -1,0 +1,132 @@
+---
+# files/folders on all nodes
+- debug: msg="common (filesandfolders) "
+
+
+# Fix homedir folder perms
+- name: fix homedir perms
+  file:
+    path: /home/{{ ansible_user_id }}
+    state: directory
+    mode: 0700
+  become: yes
+  tags: [common]
+
+
+# create /opt/cluster/
+- name: R Pi cluster base dir
+  file:
+    path: /opt/cluster/
+    state: directory
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: 0770
+  become: yes
+  tags: [common]
+
+
+# create folders
+- name: Create common folders
+  file:
+    path: "{{ item.dir }}"
+    state: directory
+    mode: "{{ item.mode }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+  with_items: "{{ common_dir }}"
+  become: yes
+  tags: [common]
+
+
+# folders for this host
+- name: Create host folders
+  file:
+    path: "{{ item.dir }}"
+    state: directory
+    recurse: yes
+    mode: "{{ item.mode }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+  with_items: "{{ host_dir }}"
+  become: yes
+  tags: [common]
+
+
+# copy ~/. dot files
+- name: dot files in home dir
+  copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0640
+  with_items: "{{ dotfiles }}"
+  tags: [common]
+
+
+# copy bash scripts
+- name: copy bash scripts
+  copy:
+    src: "files/bash-script/{{ item.file }}"
+    dest: "/opt/cluster/bin/{{ item.file }}"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: 0755
+  with_items: "{{ binfile }}"
+  tags: [common]
+
+
+- name: upload vagrant pub gpg key
+  copy:
+    src: "files/vagrant_pub_pgp.key"
+    dest: "/opt/cluster/data/vagrant_pubpgp.key"
+    mode: 0644
+  register: vagrant_pgppub_up
+
+- name: import vagrant pub gpg key
+  command: "gpg --import /opt/cluster/data/vagrant_pubpgp.key"
+  when: vagrant_pgppub_up.changed
+
+
+# detect R-Pi MAC - rpihw.fact
+- name: copy rpihw.fact
+  copy:
+    src: rpihw.fact
+    dest: /etc/ansible/facts.d/rpihw.fact
+    mode: 0775
+    owner: root
+    group: root
+  become: yes
+  changed_when: False
+  tags: [common]
+
+
+# info_roles.txt
+- name: info_roles txt
+  copy:
+    content: "--==[ Ansible Roles run against this host ]==--"
+    dest: /opt/cluster/data/info_roles.txt
+    force: no
+    mode: 0444
+    owner: root
+    group: root
+  become: yes
+  tags: [common]
+
+
+# info_host.txt
+- name: info_host txt
+  template:
+    src: rpihost.j2
+    dest: "/opt/cluster/data/info_host.txt"
+    mode: 0444
+    owner: root
+    group: root
+  become: yes
+  changed_when: False
+  tags: [common]
+
+
+# fetch
+- name: fetch info_host
+  fetch:
+    src: /opt/cluster/data/info_host.txt
+    dest: /opt/cluster/backup

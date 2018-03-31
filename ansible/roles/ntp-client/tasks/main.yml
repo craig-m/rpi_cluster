@@ -1,0 +1,45 @@
+---
+# NTP Client
+- debug: msg="NTP Client "
+
+
+# install
+- name: ntp installed
+  apt: name=ntp state=present
+  become: yes
+  tags: [ntp]
+
+
+# enabled on boot
+- name: ntp enabled on boot
+  service: name=ntp enabled=yes
+  become: yes
+  tags: [ntp]
+
+
+# config file - Clients
+- name: ntpd client conf
+  template:
+    src: ntp_client.j2
+    dest: /etc/ntp.conf
+    mode: 0644
+    owner: root
+    group: root
+  become: yes
+  tags: [ntp]
+  notify: ntp_restart
+
+
+# started
+- name: ntp started
+  service: name=ntp state=started
+  become: yes
+  tags: [ntp]
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+  become: yes
+  tags: [ntp]

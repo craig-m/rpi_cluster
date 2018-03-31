@@ -2,7 +2,7 @@
 
 imgname="rpiwwwpyapp"
 
-ID_IMAGE="$(sudo -u $USER docker images | grep $imgname | head -n 1 | wc -l)"
+ID_IMAGE="$(/usr/bin/sudo -u $USER docker images | grep $imgname | head -n 1 | wc -l)"
 
 # dockerfile build
 echo "[*] Building image"
@@ -24,3 +24,5 @@ DOCKER_IMG_ID=$(docker images | grep $imgname | awk '{print $3}')
 docker image rm $imgname
 
 echo ${DOCKER_IMG_ID};
+
+# EOF

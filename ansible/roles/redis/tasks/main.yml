@@ -1,0 +1,38 @@
+---
+# Redis server - https://redis.io/
+- debug: msg="Redis server role "
+
+
+# install packages (if missing)
+- name: install redis
+  apt: name={{ item }} state=present
+  with_items:
+       - redis-tools
+       - redis-server
+  become: yes
+  tags: [redis]
+
+
+# reload config
+- name: redis-server started
+  service: name=redis-server state=started
+  become: yes
+  tags: [redis]
+
+
+# enable on boot
+- name: redis-server enabled on boot
+  service: name=redis-server enabled=yes
+  become: yes
+  tags: [redis]
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: '{{role_path|basename}}'
+    owner: root
+    group: root
+    mode: 0444
+  become: yes
+  tags: [redis]

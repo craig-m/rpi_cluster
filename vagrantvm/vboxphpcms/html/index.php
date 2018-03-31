@@ -60,7 +60,7 @@ if (in_array($page, $pages_array)) {
 	require $cmspath . '/../vendor/autoload.php';
 
 	// connect to DB
-	include $cmspath . "/../inc_mysql.php";
+	// include $cmspath . "/../inc_mysql.php";
 
 	// start session
 	session_start();

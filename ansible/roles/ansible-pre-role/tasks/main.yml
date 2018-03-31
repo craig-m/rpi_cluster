@@ -1,0 +1,56 @@
+---
+# For debugging, and running on all hosts to gather facts.
+
+
+- debug: msg="inventory hostname {{ inventory_hostname }} "
+  changed_when: False
+  tags: [ansiblepre]
+  ignore_errors: True
+
+
+- debug: msg="ansible hostname {{ ansible_hostname }} "
+  changed_when: False
+  tags: [ansiblepre]
+  ignore_errors: True
+
+
+- name: Refresh inventory
+  meta: refresh_inventory
+
+- meta: clear_host_errors
+
+
+# syslog
+- name: ansible pre role syslog
+  syslogger:
+    msg: "rpicluster ansible-pre-role gathering facts"
+    priority: "notice"
+    facility: "daemon"
+    log_pid: true
+  ignore_errors: True
+  changed_when: False
+  run_once: True
+  tags: [ansiblepre]
+
+
+#- name: rpi deployer ansible runcount
+#  debug: msg="ansible {{ lookup('redis_kv', 'redis://localhost:6379,/rpi/deployer/ansible/runcount') }} runs"
+#  run_once: True
+#  changed_when: False
+#  tags: [ansiblepre]
+
+
+- name: RedisDB set ip
+  local_action: command /usr/bin/redis-cli set /rpi/{{ inventory_hostname }}/ip {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}
+  changed_when: False
+  run_once: True
+  tags: [ansiblepre]
+  ignore_errors: True
+
+
+- name: RedisDB set MAC
+  local_action: command /usr/bin/redis-cli set /rpi/{{ inventory_hostname }}/mac {{ hostvars[inventory_hostname]['ansible_default_ipv4']['macaddress'] }}
+  changed_when: False
+  run_once: True
+  tags: [ansiblepre]
+  ignore_errors: True

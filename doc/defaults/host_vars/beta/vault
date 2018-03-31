@@ -1,0 +1,26 @@
+---
+# vars for Beta, LanServices Main
+
+# DHCP server:
+rpi_dhcpd_enabled: true
+rpi_dhcpd_status: "secondary"
+# primary only config:
+# rpi_dhcpd_mclt: "mclt 1800"
+# rpi_dhcpd_split: "split 128"
+
+# DNS config:
+rpi_dnsd_enabled: true
+rpi_dnsd_status: "slave"
+rpi_dnsd_notify: "no"
+# set on secondary bind9 server only:
+rpi_dnsd_masters: "192.168.6.66"
+# /etc/resolv.conf:
+rpi_my_dns_server_1: "127.0.0.1"
+rpi_my_dns_server_2: "192.168.6.66"
+
+# Failover host (alpha):
+rpi_failover_hostname: "alpha"
+rpi_failover_ip: "192.168.6.66"
+rpi_failover_hwaddr: "b8:27:eb:31:zz:zz"
+
+#-------------------------------------------------------------------------------

@@ -18,10 +18,15 @@ copyright = "Nope"
   debug_page_name = false
 
 [[menu.main]]
-    name = "status"
+    name = "lanservice"
     pre = "<span class='nav-link'>"
     weight = -100
-    url = "/status/"
+    url = "/lanservice/"
+[[menu.main]]
+    name = "serverspec"
+    pre = "<span class='nav-link'>"
+    weight = -100
+    url = "/serverspec/"
 [[menu.main]]
     name = "compute"
     pre = "<span class='nav-link'>"

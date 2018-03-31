@@ -1,0 +1,73 @@
+---
+# install master/boss node
+- debug: msg="kubernetes master boss node "
+
+
+# check if alreadly initialized
+- stat: path=/opt/cluster/data/kube_info.txt
+  register: kube_info_txt
+  changed_when: False
+
+
+# initialize the cluster
+- name: kubeadm init apiserver
+  shell: kubeadm init --ignore-preflight-errors=cri --pod-network-cidr 10.244.0.0/16 --apiserver-advertise-address={{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}
+  when:
+    - "kube_info_txt.stat.exists == False"
+    - "rpi_docker_enabled == True"
+    - "'docker_kube_master' in group_names"
+  register: initialized_main_node
+  become: yes
+
+
+# save init info to kube_info.txt
+- name: "initialization info"
+  copy:
+    content: "{{ initialized_main_node.stdout }}"
+    dest: "/opt/cluster/data/kube_info.txt"
+  when:
+    - initialized_main_node.changed
+    - "kube_info_txt.stat.exists == False"
+
+
+# fetch init details
+- name: fetch kube master api info
+  fetch:
+    src: /opt/cluster/data/kube_info.txt
+    dest: /opt/cluster/backup
+  when:
+    - initialized_main_node.changed
+
+
+- name: pausing
+  pause:
+    seconds: 10
+  when: initialized_main_node.changed
+
+
+# copy setup script
+- name: copy setup-kube.sh
+  copy:
+    src: setup-kube.sh
+    dest: /opt/cluster/mysrc/setup-kube.sh
+    mode: 0775
+
+
+- name: run setup
+  shell: /opt/cluster/mysrc/setup-kube.sh
+  args:
+    chdir: /opt/cluster/mysrc/
+    creates: /opt/cluster/data/.setup-kube
+
+
+- name: kubectl cluster info
+  shell: kubectl cluster-info
+  changed_when: False
+  become: yes
+  ignore_errors: true
+
+
+# log
+- name: output to rpicluster log
+  shell: logger -t rpicluster ansible kubernetes master boss role ran
+  changed_when: False

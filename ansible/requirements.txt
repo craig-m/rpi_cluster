@@ -1,0 +1,10 @@
+ansible
+ansible-container
+python-consul
+redis
+passlib
+fabric
+httpie
+testinfra
+diceware
+ansible-lint

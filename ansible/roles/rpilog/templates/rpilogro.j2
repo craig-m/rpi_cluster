@@ -1,0 +1,10 @@
+# {{ ansible_managed }}
+#
+/var/log/rpicluster.log {
+    maxsize 1M
+    missingok
+    compress
+    notifempty
+    rotate 6
+    create 0664 {{ ansible_user_id }} adm
+}

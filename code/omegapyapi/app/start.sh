@@ -2,6 +2,8 @@
 # name: start.sh
 # desc: run omegapyapi.py
 
+# pre-run checks ---------------------------------------------------------------
+
 # run by omegapyapi user only
 if [[ omegapyapi != "$(whoami)" ]]; then
   echo "Error: requires omegapyapi user";
@@ -13,11 +15,13 @@ if [ ! -d /opt/omegapyapi/app/ ]; then
   exit 1;
 fi
 
-cd /opt/omegapyapi/app/;
+# start ------------------------------------------------------------------------
 
-source env/bin/activate;
+cd /opt/omegapyapi/app/ || exit 1;
 
-logger -t rpicluster "start.sh running gunicorn"
+source env/bin/activate || exit 1;
+
+logger -t rpicluster "omegapyapi start.sh running gunicorn"
 
 gunicorn omegapyapi:app \
   --pid /opt/omegapyapi/pyapi-gunicorn.pid \
@@ -27,4 +31,6 @@ gunicorn omegapyapi:app \
   --limit-request-fields 50 \
   || echo "ERROR starting gunicorn";
 
-# EOF
+logger -t rpicluster "omegapyapi start.sh ran OK"
+
+# EOF --------------------------------------------------------------------------

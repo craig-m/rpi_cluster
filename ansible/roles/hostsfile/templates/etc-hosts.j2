@@ -1,0 +1,15 @@
+# {{ ansible_managed }}
+#
+127.0.0.1   localhost
+::1   localhost ip6-localhost ip6-loopback
+ff02::1   ip6-allnodes
+ff02::2   ip6-allrouters
+#
+127.0.1.1   {{ inventory_hostname }}
+#
+# ansible inventory hosts:
+{% for host in groups['all'] %}
+{% if 'ansible_eth0' in hostvars[host] %}
+{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }} {{ host }} {{ host }}.local
+{% endif %}
+{% endfor %}

@@ -1,0 +1,7 @@
+[template]
+src = "myconfig.txt.tmpl"
+dest = "/home/pi/myconfig.conf"
+keys = [
+    "/myapp/database/url",
+    "/myapp/database/user",
+]

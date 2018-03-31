@@ -1,0 +1,20 @@
+#!/bin/bash
+
+export PATH=$PATH:/usr/local/go/bin
+
+mkdir -pv $HOME/go/src/hello
+cd $HOME/go/src/hello || exit 1;
+
+cat > $HOME/go/src/hello/hello.go << EOF
+package main
+
+import "fmt"
+
+func main() {
+    fmt.Printf("Hello, from Golang on {{ inventory_hostname }}.\n")
+}
+EOF
+
+go build
+
+./hello >> /var/log/rpicluster.log

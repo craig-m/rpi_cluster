@@ -1,0 +1,115 @@
+---
+# Apache Hadoop - https://hadoop.apache.org/
+- debug: msg="Apache Hadoop install "
+
+
+# src dir
+- name: /opt/cluster/mysrc/hadoop
+  file:
+    path: /opt/cluster/mysrc/hadoop
+    state: directory
+    mode: 0755
+  tags: [hadoop]
+
+
+# check src
+- name: check hadoop targz
+  stat: path=/opt/cluster/mysrc/hadoop/{{ hadoop_targz }}
+  register: hadoopsrctargz
+  tags: [hadoop]
+
+
+# download hadoop src if missing
+- name: download hadoop
+  get_url:
+    url: "{{ hadoop_targz_url }}/{{ hadoop_targz }}"
+    dest: /opt/cluster/mysrc/hadoop/
+    checksum: sha256:{{ hadoop_targz_sha256 }}
+  when: hadoopsrctargz.stat.exists == False
+  register: hadoopsrctargz_dl
+  tags: [hadoop]
+
+- name: pause
+  pause:
+    seconds: 2
+  tags: [hadoop]
+  when: hadoopsrctargz_dl.changed
+
+
+# user for hadoop to run as
+- name: add a user
+  user:
+    name: "{{ hadoop_user }}"
+    createhome: yes
+    home: "{{ hadoop_user_dir }}"
+  become: yes
+  tags: [hadoop]
+
+
+# SSH keys
+- name: Create a SSH key pair for hadoop user
+  user:
+    name: "{{ hadoop_user }}"
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    ssh_key_file: /opt/hadoop/.ssh/id_rsa
+  tags: [hadoop]
+  become: yes
+
+- name: check authorized_keys exists
+  stat: path=/opt/hadoop/.ssh/authorized_keys
+  register: hadoop_sshauth
+  failed_when: False
+  become: yes
+  tags: [hadoop]
+
+- name: create authorized keys file
+  shell: cat /opt/hadoop/.ssh/id_rsa.pub > /opt/hadoop/.ssh/authorized_keys
+  when: hadoop_sshauth.stat.exists == False
+  become: yes
+  tags: [hadoop]
+
+- name: check authorized_keys
+  file:
+    path: /opt/hadoop/.ssh/authorized_keys
+    owner: "{{ hadoop_user }}"
+    group: "{{ hadoop_user }}"
+    mode: 0600
+  tags: [hadoop]
+  become: yes
+
+# hadoop hdfs path
+#- name: /srv/hdfs/tmp
+#  file: path=/srv/hdfs/tmp state=directory mode=0750 owner="{{ hadoop_user }}" group="hadoop"
+#  tags: [hadoop]
+#  become: yes
+
+# unzip source
+- name: unarchive hadoop
+  unarchive:
+    src: /opt/cluster/mysrc/hadoop/{{ hadoop_targz }}
+    dest: /opt/hadoop/
+    mode: 0755
+    remote_src: yes
+  register: hadoopsrctargz_dl_unzip
+  when: hadoopsrctargz.stat.exists == False
+  tags: [hadoop]
+  become: yes
+
+
+- name: pause
+  pause:
+    seconds: 3
+  tags: [hadoop]
+  when: hadoopsrctargz_dl_unzip.changed
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+    owner: root
+    group: root
+    mode: 0444
+  become: yes
+  tags: [hadoop]

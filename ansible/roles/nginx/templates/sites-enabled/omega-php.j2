@@ -1,0 +1,31 @@
+# {{ ansible_managed }}
+# /nginx/templates/sites-enabled/omega-php.j2
+server {
+  listen {{ nginx_port2 }} default_server;
+
+  root /srv/php/omegaapp;
+
+  index index.php;
+
+  location / {
+
+  }
+
+  location ~* \.(jpg|jpeg|gif|css|png|js|ico|html)$ {
+     access_log off;
+     expires max;
+   }
+
+  location ~ /\.ht {
+   deny  all;
+ }
+
+  location ~ \.php$ {
+    fastcgi_index index.php;
+    fastcgi_keep_conn on;
+    include /etc/nginx/fastcgi_params;
+    fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+  }
+
+}

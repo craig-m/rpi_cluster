@@ -1,0 +1,4 @@
+# {{ ansible_managed }}
+# NFS exports - allow these nfs clients:
+#
+/srv/nfs_share/ {{ rpi_net_id }}/{{ rpi_net_maskbit }}(ro,root_squash,subtree_check)

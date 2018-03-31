@@ -1,0 +1,23 @@
+---
+# Vagrant group Vault file
+
+vault_vbox_test: "TEST v4gr4nt"
+
+# OS user password -------------------------------------------------------------
+
+# user: root
+# pass: dfaultPW.example_root
+
+# user: vagrant
+# pass: dfaultPW.example_123
+
+# user: pi
+# pass: dfaultPW.example_pi
+
+vault_user_pw: [
+  {user: 'root', hash: '$6$rounds=656000$kvg9muhj2hcrVI83$C.ytqCBHtYoTTskR1tj/NDqci1fzeaym/KfCeFilsQJqAXgFOTCaQh/IEE/dlepvNy/v4qGaTnrG6oj320BCh0'},
+  {user: 'piclust', hash: '$6$rounds=656000$4toLen6SzTw3sPg5$7PDWuLyOOaPJ3NbWAnAPd4pjdVUKn4ngwDtLX./159/tYmmLA3ArrVaqmJSY2m0AFOz4PskxxNGILlfEy478s/'},
+  {user: 'vagrant', hash: '$6$rounds=656000$4toLen6SzTw3sPg5$7PDWuLyOOaPJ3NbWAnAPd4pjdVUKn4ngwDtLX./159/tYmmLA3ArrVaqmJSY2m0AFOz4PskxxNGILlfEy478s/'}
+]
+
+#-------------------------------------------------------------------------------

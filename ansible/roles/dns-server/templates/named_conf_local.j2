@@ -1,0 +1,25 @@
+// {{ ansible_managed }}
+//
+// {{ rpi_dnsd_status }} DNS configuration
+//
+
+zone "{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {
+    type {{ rpi_dnsd_status }};
+    {% if rpi_dnsd_masters is defined %}
+    masters { {{ rpi_dnsd_masters }}; };
+    {% endif %}
+    notify {{ rpi_dnsd_notify }};
+    file "/etc/bind/zones/{{ rpi_dnsd_status }}/rpi-{{ rpi_dnsd_status }}.db";
+    allow-transfer { {{ rpi_failover_ip }}; };
+};
+
+// Reverse DNS
+zone "{{ rpi_domain_arpa }}.in-addr.arpa" {
+    type {{ rpi_dnsd_status }};
+  {% if rpi_dnsd_masters is defined %}
+    masters { {{ rpi_dnsd_masters }}; };
+  {% endif %}
+    notify {{ rpi_dnsd_notify }};
+    file "/etc/bind/zones/{{ rpi_dnsd_status }}/reverse-{{ rpi_dnsd_status }}.db";
+    allow-transfer { {{ rpi_failover_ip }}; };
+};

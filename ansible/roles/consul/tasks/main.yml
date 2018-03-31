@@ -1,0 +1,157 @@
+---
+# consul - https://www.consul.io/
+- debug: msg="setup consul "
+
+
+# copy uninstall script
+- name: copy uninstall script
+  copy:
+    src: "remove_consul.sh"
+    dest: "/opt/cluster/bin/"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: 0755
+  tags: [consul]
+
+
+# Create consul user (for daemon to run as)
+- name: add consul user
+  user: name=consul createhome=yes home=/opt/consul
+  become: yes
+  tags: [consul]
+
+
+# folder structure
+- name: Create consul folders
+  file:
+    path: "{{ item.dir }}"
+    state: directory
+    mode: "{{ item.mode }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+  with_items: "{{ consul_dir }}"
+  become: yes
+  tags: [consul]
+
+
+# check zip exists
+- name: check consul zip
+  stat: path=/opt/cluster/mysrc/consul/{{ consulbin }}
+  register: consulzip
+  tags: [consul]
+
+
+# check bin exists
+- name: check consul bin
+  stat: path=/usr/local/sbin/consul
+  register: consulsbinlocal
+  tags: [consul]
+
+
+# download consul src
+- name: download consul
+  get_url:
+    url: "{{ consulurl }}"
+    dest: /opt/cluster/mysrc/consul/
+    checksum: sha256:{{ consulsha }}
+  when: consulzip.stat.exists == False
+  register: consulzipdl
+  tags: [consul]
+
+
+# pause
+- name: pause after download
+  pause:
+    seconds: 2
+  tags: [consul]
+  when: consulzip.stat.exists == False
+
+
+# unzip source
+- name: unarchive consul
+  unarchive:
+    src: /opt/cluster/mysrc/consul/{{ consulbin }}
+    dest: /usr/local/sbin/
+    mode: 0755
+    remote_src: yes
+  when: consulsbinlocal.stat.exists == False
+  become: yes
+  register: consulzipext
+  tags: [consul]
+
+
+# config json
+- import_tasks: config.yml
+  tags: [consul]
+
+
+# systemd script
+- name: copy consul systemd script
+  template:
+    src: consul.service.j2
+    dest: /etc/systemd/system/consul.service
+    mode: 0644
+    owner: root
+    group: root
+  become: yes
+  tags: [consul]
+  register: consul_systemd_serv
+  notify: restart-consul
+
+
+# reload consul.service
+- name: systemctl-daemon-reload
+  command: systemctl daemon-reload
+  become: yes
+  tags: [consul]
+  register: consul_sysctl_reload
+
+
+# wait for daemon to start
+- name: pause after reload
+  pause:
+    seconds: 3
+  tags: [consul]
+  when: consul_sysctl_reload.changed
+
+
+# rpiinv_kv_local_sh
+- name: copy consul hw script
+  template:
+    src: rpiinv_kv_local_sh.j2
+    dest: /opt/cluster/bin/rpi_inv_consul.sh
+    mode: 0755
+  tags: [consul]
+
+
+# start daemons (if enabled)
+- import_tasks: start.yml
+  tags: [consul]
+
+
+# Join the Bootstrap node
+#- import_tasks: join.yml
+#  tags: [consul]
+#  when: rpi_conul_enabled == True
+#when: "'consul_server' in group_names"
+
+
+- name: consul process
+  shell: pgrep consul
+  tags: [consul]
+  register: rpi_consul_pid
+  failed_when: false
+  changed_when: false
+
+
+- debug: msg="consul PID {{ rpi_consul_pid }} "
+  tags: [consul]
+
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+  become: yes
+  tags: [consul]

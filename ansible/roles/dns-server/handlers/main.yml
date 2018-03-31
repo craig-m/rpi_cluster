@@ -1,0 +1,15 @@
+---
+
+
+# Check named config before restarting
+- name: bind-restart
+  shell: /usr/sbin/named-checkconf /etc/bind/named.conf
+  become: yes
+  notify: bind-restart-actual
+  changed_when: False
+
+
+# Restart DNS server
+- name: bind-restart-actual
+  service: name=bind9 state=restarted
+  become: yes

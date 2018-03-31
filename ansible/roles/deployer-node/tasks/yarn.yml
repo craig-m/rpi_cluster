@@ -1,0 +1,62 @@
+---
+# Yarn - https://yarnpkg.com/en/
+- debug: msg="deployer (yarn) "
+
+
+# src folder
+- name: create /opt/cluster/mysrc/yarn/
+  file: path=/opt/cluster/mysrc/yarn/ state=directory mode=0755
+
+
+# add apt gpg key
+- name: Add yarn apt key
+  apt_key:
+    data: "{{ lookup('file', 'yarnkey.asc') }}"
+    state: present
+  become: yes
+
+
+# copy yarn gpg key to server also
+- name: copy yarnpubkey
+  copy:
+    src: yarnkey.asc
+    dest: /opt/cluster/mysrc/yarn/yarnkey.asc
+    mode: 0644
+
+
+# check apt file
+- name: check yarn apt file
+  stat: path=/etc/apt/sources.list.d/yarn.list
+  register: yarn_aptconf
+
+
+# add repo file
+- name: yarn apt repo
+  shell: echo 'deb https://dl.yarnpkg.com/debian/ stable main' | tee /etc/apt/sources.list.d/yarn.list
+  become: yes
+  when: yarn_aptconf.stat.exists == False
+  register: yarnaddapt
+
+
+# check installed
+- name: check yarn bin
+  stat: path=/usr/bin/yarn
+  register: yarnbin
+
+
+# update apt
+- name: update apt cache
+  apt: update_cache=yes
+  become: yes
+  retries: 1
+  check_mode: no
+  when: yarnaddapt.changed
+
+
+# check package installed
+- name: yarn packages installed
+  apt: name={{ item }} state=present
+  with_items:
+       - yarn
+  become: yes
+  retries: 1

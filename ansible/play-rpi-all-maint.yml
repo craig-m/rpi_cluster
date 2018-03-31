@@ -1,0 +1,44 @@
+---
+# maintenance role Playbook
+
+
+- name: gather facts on other hosts
+  hosts: all
+  gather_facts: True
+  serial: 12
+  roles:
+    - ansible-pre-role
+
+
+- name: LanServices Main (Alpha and Beta)
+  hosts: lanservices
+  gather_facts: false
+  serial: 1
+  roles:
+    - upgrades
+    - reboot
+
+
+- name: LanServices Misc (Omega)
+  hosts: misc
+  gather_facts: false
+  serial: 1
+  roles:
+    - upgrades
+    - reboot
+
+
+- name: compute nodes upgrades
+  hosts: compute
+  gather_facts: false
+  serial: 2
+  roles:
+    - upgrades
+
+
+- name: compute nodes reboot
+  hosts: compute
+  gather_facts: false
+  serial: 1
+  roles:
+    - reboot

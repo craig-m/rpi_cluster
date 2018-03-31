@@ -1,0 +1,10 @@
+# {{ ansible_managed }}
+#
+domain dc1.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}
+# this admin node
+nameserver 127.0.0.1
+# other admin node
+nameserver {{ rpi_failover_ip }}
+#
+# search
+search dc1.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}

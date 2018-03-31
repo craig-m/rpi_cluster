@@ -1,0 +1,100 @@
+# {{ ansible_managed }}
+# /etc/dhcp/dhcpd.conf for {{ rpi_dhcpd_status }} DHCP server
+
+authoritative;
+ddns-update-style none;
+
+failover peer "dhcpbu" {
+  # declare server as {{ rpi_dhcpd_status }}
+  {{ rpi_dhcpd_status }};
+  address {{ inventory_hostname }};
+  port 647;
+
+  # backup server
+  peer address {{ rpi_failover_ip }};
+  peer port 647;
+
+  max-response-delay 30;
+  max-unacked-updates 10;
+  load balance max seconds 4;
+
+{% if rpi_dhcpd_mclt is defined %}
+  # mclt only set on primary
+  {{ rpi_dhcpd_mclt }};
+{% endif %}
+{% if rpi_dhcpd_split is defined %}
+  # split only set on primary
+  {{ rpi_dhcpd_split }};
+{% endif %}
+}
+
+# config common to both dhcp servers ###########################################
+
+subnet {{ rpi_net_id }} netmask {{ rpi_net_snet }} {
+
+  option subnet-mask {{ rpi_net_snet }};
+  option broadcast-address {{ rpi_net_bcast }};
+  option routers {{ rpi_net_default_gw }};
+  option domain-name-servers {{ rpi_dhcp_dns1 }}, {{ rpi_dhcp_dns2 }};
+
+  option domain-name "{{ rpi_cust_tld }}";
+
+  pool {
+    failover peer "dhcpbu";
+
+    # 60 minute lease time
+    max-lease-time 3600;
+
+    # dhcp range
+    range {{ rpi_dhcp_range_start }} {{ rpi_dhcp_range_stop }};
+  }
+}
+
+# Static IP leases #############################################################
+
+# reserve default GW IP
+host router {
+ hardware ethernet {{ rpi_net_default_gw_mac }};
+ fixed-address {{ rpi_net_default_gw }};
+}
+
+###### Lan Service nodes ######
+
+host alpha {
+  hardware ethernet {{ hostvars['alpha']['ansible_default_ipv4']['macaddress'] }};
+  fixed-address {{ hostvars['alpha']['ansible_default_ipv4']['address'] }};
+}
+
+host beta {
+  hardware ethernet {{ hostvars['beta']['ansible_default_ipv4']['macaddress'] }};
+  fixed-address {{ hostvars['beta']['ansible_default_ipv4']['address'] }};
+}
+
+host omega {
+  hardware ethernet {{ hostvars['omega']['ansible_default_ipv4']['macaddress'] }};
+  fixed-address {{ hostvars['omega']['ansible_default_ipv4']['address'] }};
+}
+
+###### Compute / worker nodes ######
+
+host {{ compute1_name }} {
+  hardware ethernet {{ compute1_mac }};
+  fixed-address {{ compute1_ip }};
+}
+
+host {{ compute2_name }} {
+  hardware ethernet {{ compute2_mac }};
+  fixed-address {{ compute2_ip }};
+}
+
+host {{ compute3_name }} {
+  hardware ethernet {{ compute3_mac }};
+  fixed-address {{ compute3_ip }};
+}
+
+host {{ compute4_name }} {
+  hardware ethernet {{ compute4_mac }};
+  fixed-address {{ compute4_ip }};
+}
+
+# EOF

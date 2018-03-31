@@ -1,0 +1,75 @@
++++
+title = "lanservice"
+
++++
+
+<script language="JavaScript">
+var xmlhttp = new XMLHttpRequest();
+xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        myObj = JSON.parse(this.responseText);
+        document.getElementById("spec-alpha").innerHTML = " <p>Passed tests: " + myObj.summary.example_count + "</p></p> Failed tests: " + myObj.summary.failure_count  + " </p></p>Duration: " + myObj.summary.duration + "</p>";
+    }
+};
+xmlhttp.open("GET", "reports/alpha.local.json", true);
+xmlhttp.send();
+
+
+var xmlhttp = new XMLHttpRequest();
+xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        myObj = JSON.parse(this.responseText);
+        document.getElementById("spec-beta").innerHTML = " <p>Passed tests: " + myObj.summary.example_count + "</p></p> Failed tests: " + myObj.summary.failure_count  + " </p></p>Duration: " + myObj.summary.duration + "</p>";
+    }
+};
+xmlhttp.open("GET", "reports/beta.local.json", true);
+xmlhttp.send();
+
+
+var xmlhttp = new XMLHttpRequest();
+xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        myObj = JSON.parse(this.responseText);
+        document.getElementById("spec-omega").innerHTML = " <p>Passed tests: " + myObj.summary.example_count + "</p></p> Failed tests: " + myObj.summary.failure_count  + " </p></p>Duration: " + myObj.summary.duration + "</p>";
+    }
+};
+xmlhttp.open("GET", "reports/omega.local.json", true);
+xmlhttp.send();
+</script>
+
+<h1>Status</h1>
+
+<p>
+	<h3>ServerSpec tests</h3>
+</p>
+<div class="row">
+<div class="col-xs-4 col-sm-4">
+  <div class="card">
+  	 <div class="card-header"> <span class="fa fa-cog"></span> alpha (&alpha;) </div>
+  	 <div class="card-block"> <p id="spec-alpha"></p> </div>
+     <div class="card-footer text-muted">
+      <small> <a target="_blank" href="reports/alpha.local.html">html</a> | <a target="_blank" href="reports/alpha.local.json">json</a> <span class="fa fa-external-link"></span> </small>
+     </div>
+  </div>
+</div>
+<div class="col-xs-4 col-sm-4">
+  <div class="card">
+    <div class="card-header"> <span class="fa fa-cog"></span> beta (&beta;) </div>
+	  <div class="card-block"> <p id="spec-beta"></p> </div>
+    <div class="card-footer text-muted">
+     <small> <a target="_blank" href="reports/beta.local.html">html</a> | <a target="_blank" href="reports/beta.local.json">json</a> <span class="fa fa-external-link"></span> </small>
+    </div>
+  </div>
+</div>
+<div class="col-xs-4 col-sm-4">
+  <div class="card">
+    <div class="card-header"> <span class="fa fa-cog"></span> omega (&omega;) </div>
+    <div class="card-block"> <p id="spec-omega"></p> </div>
+    <div class="card-footer text-muted">
+     <small> <a target="_blank" href="reports/omega.local.html">html</a> | <a target="_blank" href="reports/omega.local.json">json</a> <span class="fa fa-external-link"></span> </small>
+    </div>
+  </div>
+</div>
+</div>
+
+<p>&nbsp;</p>

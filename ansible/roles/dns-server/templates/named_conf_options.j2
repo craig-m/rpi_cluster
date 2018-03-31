@@ -1,0 +1,54 @@
+// {{ ansible_managed }}
+
+acl "trusted" {
+	localhost;
+	localnets;
+	{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }};
+	{{ rpi_failover_ip }};
+};
+
+options {
+	directory "/var/cache/bind";
+
+  recursion yes;
+	allow-recursion { trusted; };
+	allow-query { trusted; };
+	allow-transfer { {{ rpi_failover_ip }}; };
+
+	// forwarders {
+	// 	0.0.0.0;
+	// };
+
+	dnssec-enable no;
+	dnssec-validation no;
+
+	# conform to RFC1035
+	auth-nxdomain no;
+
+	listen-on-v6 { any; };
+
+	version "dns";
+};
+
+logging {
+	channel system_log {
+		file "/var/log/named/sys.log" versions unlimited size 1g;
+		severity warning;
+		print-time yes;
+		print-severity yes;
+		print-category yes;
+	};
+	channel queries_log {
+		file "/var/log/named/queries.log" versions unlimited size 1g;
+		severity info;
+		print-time no;
+	};
+	category default{
+		system_log;
+	};
+	category queries{
+		queries_log;
+	};
+};
+
+include "/etc/bind/consul.conf";

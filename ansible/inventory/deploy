@@ -1,0 +1,2 @@
+[deploy]
+psi rpi_racked="L1" ansible_host=psi.local

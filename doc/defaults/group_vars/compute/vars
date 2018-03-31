@@ -1,0 +1,29 @@
+---
+# Varibles for all compute nodes
+
+# Common host configs ----------------------------------------------------------
+
+host_dir: [
+  { dir: '/opt/cluster/compute', mode: '0750', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
+]
+
+# SSH additional port
+ssh_group_port: "2020"
+
+#-------------------------------------------------------------------------------
+
+# Compute servers use these NTP servers
+rpi_ntp_client_1: "192.168.6.66"
+rpi_ntp_client_2: "192.168.6.68"
+rpi_ntp_client_3: "192.168.6.16"
+
+#-------------------------------------------------------------------------------
+
+# consul options
+rpi_conul_enabled: true
+rpi_conul_start_opt: "agent -disable-host-node-id -raft-protocol 3"
+
+# Docker
+rpi_docker_enabled: true
+
+#-------------------------------------------------------------------------------

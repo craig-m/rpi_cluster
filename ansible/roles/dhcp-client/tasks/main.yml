@@ -1,0 +1,36 @@
+---
+# only used for nodes that have a static IP set,
+# as this is where you set static IP's on Raspbian now.
+- debug: msg="dhcp CLIENT role "
+
+
+# Network settings (static IP is set here)
+- name: dhcp client conf
+  template:
+    src: dhcp-client.j2
+    dest: /etc/dhcpcd.conf
+    mode: 0644
+    owner: root
+    group: root
+    backup: yes
+  become: yes
+  notify: dhcpcd-restart
+  tags: [dhcpclient]
+
+
+# log
+- name: output to rpicluster log
+  shell: logger -t rpicluster ansible dhcp-client role ran
+  tags: [dhcpclient]
+  changed_when: False
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+    owner: root
+    group: root
+    mode: 0444
+  become: yes
+  tags: [dhcpclient]

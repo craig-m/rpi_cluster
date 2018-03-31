@@ -1,0 +1,78 @@
+---
+
+- debug: msg="kubernetes system setup "
+
+
+- name: disable swap
+  shell: /opt/cluster/bin/disable-swap.sh
+  args:
+    creates: /opt/cluster/data/swap_disabled
+  become: yes
+  tags: [kube]
+
+
+# Save /boot/cmdline.txt to /opt/cluster/backup/<host>/boot/cmdline.txt
+- name: fetch cmdline txt
+  fetch:
+    src: /boot/cmdline.txt
+    dest: /opt/cluster/backup
+
+
+- name: test for cmdline options
+  command: 'grep "cgroup_enable=cpuset cgroup_memory=1" /boot/cmdline.txt'
+  register: check_cmdlineopt
+  ignore_errors: yes
+  changed_when: False
+
+
+- name: cmdline boot options
+  lineinfile:
+    path: /boot/cmdline.txt
+    backrefs: True
+    state: present
+    regexp: '(.*)$'
+    line: '\1 cgroup_enable=cpuset cgroup_memory=1'
+  when: check_cmdlineopt.stdout == ""
+  become: yes
+  register: kube_bootopts
+
+
+- name: pause
+  pause:
+    seconds: 3
+  when: kube_bootopts.changed
+
+
+# log
+- name: output to rpicluster log
+  shell: logger -t rpicluster kubeernetes role changed /boot/cmdline.txt
+  when: kube_bootopts.changed
+
+
+- debug: msg="rebooting host "
+
+
+# reboot if cmdline.txt changes
+# reboot host
+- name: reboot host
+  shell: sleep 2 && reboot now
+  become: yes
+  async: 30
+  poll: 0
+  ignore_errors: true
+  tags: [kube]
+  when: kube_bootopts.changed
+
+
+# wait for host
+- name: wait for host to restart
+  wait_for:
+    host: '{{ ansible_default_ipv4.address }}'
+    port: 22
+    state: started
+    delay: 65
+    timeout: 240
+  with_items: '{{ play_hosts }}'
+  connection: local
+  tags: [kube]
+  when: kube_bootopts.changed

@@ -1,0 +1,38 @@
+---
+# https://github.com/joewalnes/websocketd
+# http://websocketd.com/
+- debug: msg="VagrantVM websocketd "
+
+
+# src dir
+- name: make /opt/cluster/mysrc/websocketd/
+  file: path=/opt/cluster/mysrc/websocketd/ state=directory mode=0775
+
+
+# check for src
+- name: check for websocketd source
+  stat: path=/opt/cluster/mysrc/websocketd/{{ websocketd_deb }}
+  register: websocketddebsrc
+
+
+# download websocketd src
+- name: download websocketd
+  get_url:
+    url: "{{ websocketd_url }}"
+    dest: /opt/cluster/mysrc/websocketd/{{ websocketd_deb }}
+    checksum: sha256:{{ websocketd_sha }}
+  when: websocketddebsrc.stat.exists == False
+  register: websocketddebsrcdl
+
+
+- name: pause
+  pause:
+    seconds: 2
+  when: websocketddebsrcdl.changed
+
+
+# websocketd install
+- name: Install a websocketd.deb package
+  shell: dpkg -i /opt/cluster/mysrc/websocketd/{{ websocketd_deb }}
+  become: yes
+  when: websocketddebsrcdl.changed

@@ -1,0 +1,63 @@
+---
+- debug: msg="golang armv6l install role "
+# https://golang.org/dl/
+
+
+- name: check if go installed
+  stat: path=/usr/local/go/bin/go
+  register: go_bin_usrlocal
+
+
+- name: download go binary
+  get_url:
+    url: https://dl.google.com/go/{{ goland_targz }}
+    dest: /opt/cluster/mysrc/
+    checksum: sha256:{{ golang_shasum }}
+  when: go_bin_usrlocal.stat.exists == False
+
+
+- name: check if go installed
+  stat: path=/usr/local/go/bin/go
+  register: go_bin_usrlocal
+
+
+- name: unarchive go
+  become: yes
+  unarchive:
+    src: /opt/cluster/mysrc/{{ goland_targz }}
+    dest: /usr/local/
+    remote_src: True
+  when: go_bin_usrlocal.stat.exists == False
+
+
+- name: golang path
+  shell: go version
+  environment:
+    PATH: $PATH:/usr/local/go/bin
+
+
+- name: system wide PATH
+  copy:
+    dest: /etc/profile.d/golang-path.sh
+    content: 'export PATH=$PATH:/usr/local/go/bin'
+  become: True
+
+
+- name: copy build_go_hello
+  template:
+    src: build_go_hello.j2
+    dest: /opt/cluster/bin/build_go_hello.sh
+    mode: 0755
+
+
+- name: run build_go_hello
+  shell: /opt/cluster/bin/build_go_hello.sh
+  args:
+    creates: ~/go/src/hello/hello
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+  become: yes

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+# stop all
+sudo docker stop $(sudo docker ps -a -q)
+
+# Delete all containers
+sudo docker rm $(sudo docker ps -a -q)
+
+# Delete all images (forced)
+sudo docker rmi -f $(sudo docker images -q)

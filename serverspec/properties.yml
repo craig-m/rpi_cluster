@@ -1,0 +1,31 @@
+alpha.local:
+  :name: "alpha"
+  :roles:
+    - base
+    - lanservice
+  :rpi_ip_addr: "192.168.6.66"
+  :rpi_dnsd_status: "master"
+  :rpi_cust_domain: "b3rry"
+  :rpi_cust_tld: "clust0r"
+  :rpi_net_wifi_gw: "192.168.6.2"
+  :ssh_group_port: "2220"
+beta.local:
+  :name: "beta"
+  :roles:
+    - base
+    - lanservice
+  :rpi_ip_addr: "192.168.6.68"
+  :rpi_dnsd_status: "slave"
+  :rpi_cust_domain: "b3rry"
+  :rpi_cust_tld: "clust0r"
+  :rpi_net_wifi_gw: "192.168.6.2"
+  :ssh_group_port: "2220"
+omega.local:
+  :name: "omega"
+  :roles:
+    - base
+    - omega
+  :rpi_cust_domain: "b3rry"
+  :rpi_cust_tld: "clust0r"
+  :rpi_net_wifi_gw: "192.168.6.2"
+  :ssh_group_port: "2221"

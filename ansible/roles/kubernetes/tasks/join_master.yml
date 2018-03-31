@@ -1,0 +1,40 @@
+---
+- debug: msg="kubernetes join a master node "
+
+
+- name: get kube init info
+  local_action: shell tail -n1 /opt/cluster/backup/zeta/opt/cluster/data/kube_info.txt | grep -e kubeadm -e token -e discovery -e hash
+  register: join_kube_mast
+  changed_when: False
+
+
+- name: check kube_cli.txt
+  stat: path=/opt/cluster/data/kube_joined_cli.txt
+  register: kube_clitxt
+
+
+- name: join master
+  shell: "{{ join_kube_mast.stdout }}"
+  become: yes
+  register: joined_kubemast
+  register: joined_master
+  when:
+    - kube_clitxt.stat.exists == False
+    - "'docker_kube_worker' in group_names"
+
+
+- name: pausing
+  pause:
+    seconds: 10
+  when: joined_master.changed
+
+
+- name: joined master
+  shell: touch /opt/cluster/data/kube_joined_cli.txt
+  when: joined_master.changed
+
+
+# log
+- name: output to rpicluster log
+  shell: logger -t rpicluster ansible kubernetes join master roll ran
+  changed_when: False

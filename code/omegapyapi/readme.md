@@ -2,13 +2,6 @@ Python Flask API
 ----------------
 http://flask.pocoo.org/
 
-
-Copy this code to the Omega R-Pi:
-
-```
-vagrant@stretch:~/rpi_cluster/code/omegapyapi$ rsync -avr * pi@192.168.xx.xx:/srv/python/omegapyapi/
-```
-
 Install:
 
 ```

@@ -1,0 +1,35 @@
+#!/bin/busybox sh
+
+# for /opt/chroot_bb/www/cgi-bin/hello
+
+# strict mode
+set -e;
+
+# headers
+echo "Content-type: text/html";
+echo "Content-Location: *.b3rry.clust0r";
+echo "Access-Control-Allow-Origin: *";
+echo "Access-Control-Allow-Origin: localhost";
+echo "";
+
+# get info
+thedate=$(/bin/busybox date || exit 1;)
+hostname=$(/bin/busybox hostname || exit 1;)
+uname=$(/bin/busybox uname -a || exit 1;)
+uptime=$(/bin/busybox uptime || exit 1;)
+memory=$(/bin/busybox free || exit 1;)
+
+# return html
+echo "<html>";
+echo "<head><title>R-Pi status</title></head>";
+echo "<body>";
+echo "<p><b>hostname:</b> $hostname</p>";
+echo "<p><b>date:</b> $thedate</p>";
+echo "<p><b>uptime:</b> $uptime </p>";
+echo "<p><b>uname:</b> $uname</p>";
+echo "<p><b>memory:</b> <pre>$memory</pre></p>";
+echo "</body>";
+echo "</html>";
+echo "";
+
+# EOF
