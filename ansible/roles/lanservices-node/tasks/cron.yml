@@ -27,7 +27,7 @@
     hour: "01"
     weekday: 7
     job: "/root/crontab/lansrvmain-cron-daily"
-    cron_file: "lansrvmain-cron-daily"
+    user: root
   become: yes
 
 
@@ -46,7 +46,8 @@
     name: "lansrv main hourly"
     hour: "1"
     minute: "0"
-    job: "/root/crontab/lansrvmain-cron-hourly"
     cron_file: "lansrvmain-cron-hourly"
+    job: "/root/crontab/lansrvmain-cron-hourly"
     state: "present"
+    user: root
   become: yes

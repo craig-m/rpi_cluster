@@ -13,7 +13,7 @@ This experiment is still in the early stages of development, and exists mainly f
 
 ### R-Pi
 
-The x8 boards I ended up with are divided into these groups. All run Raspbian GNU/Linux 9.3 (stretch), a Debian-based OS.
+The x8 boards I ended up with are divided into these groups:
 
 <table>
 <tbody>
@@ -44,6 +44,7 @@ The x8 boards I ended up with are divided into these groups. All run Raspbian GN
 </tbody>
 </table>
 
+All run Raspbian GNU/Linux 9.3 (stretch), a Debian-based OS.
 
 ### Other parts
 
@@ -94,6 +95,7 @@ For miscellaneous, non-essential, net services. Used for dev, reporting, testing
 * Hugo (static website generator)
 * Yarn
 * NFS server
+* Docker
 
 ### Compute / Worker
 

@@ -25,6 +25,7 @@
     - distcc
     - mpich
     - golang
+    - dotnet
     - hadoop
     - compute-node
 

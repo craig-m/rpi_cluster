@@ -1,6 +1,5 @@
 """
 R-Pi cluster control (task run on all nodes)
-use: fab -f fab_cluster_control.py rpi_info -H alpha.local,beta.local,omega.local
 """
 
 from fabric.tasks import *
@@ -36,6 +35,7 @@ def rpi_rpiledblink():
 def rpi_get_info():
     """ rpi host """
     run("uname -a")
+    run("uptime")
     run("cat /sys/class/net/eth0/address")
 
 @task

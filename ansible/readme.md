@@ -1,7 +1,7 @@
 About
 ------
 
-bootstrap-deployer.sh will setup the deploy host (Vagrant VM or 'psi' R-Pi).
+bootstrap-deployer.sh will setup the deploy host (Vagrant VM or 'psi' R-Pi), installing the tools listed in requirements.txt
 
 Assumes working from:
 
@@ -35,6 +35,7 @@ alpha
 ```
 
 ---
+
 
 Fabric
 ------
@@ -87,7 +88,7 @@ ping:
 
 ```
 ansible all -m ping
-``
+```
 
 
 ansible-lint
@@ -103,8 +104,6 @@ vagrant@stretch:~$ source ~/env/bin/activate
 testinfra
 ---------
 https://testinfra.readthedocs.io/en/latest/
-
-bootstrap-deployer.sh runs this to test the deployment host is setup OK.
 
 
 diceware

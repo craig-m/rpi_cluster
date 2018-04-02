@@ -156,20 +156,26 @@ Cluster setup
 
   At this stage only the x4 admin nodes should respond.
 
+## deployer
+
+* Setup the deployer R-Pi, psi, so we can also run Ansible + Fabric etc from there too.
+
+```
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_0_lansrv_deploy
+```
+
 ## LanServices
 
-* Configure Lan Services main (Alpha, Beta):
+* Configure Lan Services main (Alpha, Beta). After this finishes the x4 compute nodes should have IP addresses.
 
 ```
-(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_lansrv_main
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_1_lansrv_main
 ```
-
-  After this finishes the x4 compute nodes should have IP addresses.
 
 * Configure Lan Services misc (Omega):
 
 ```
-(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_lansrv_misc
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_2_lansrv_misc
 ```
 
 ## Compute nodes
@@ -177,26 +183,9 @@ Cluster setup
 * Run Ansible on the Compute nodes (zeta, epsilon, delta, gamma):
 
 ```
-(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_compute
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_3_compute
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_4_compute_webapp
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_5_compute_containers
 ```
-
-## Web app
-
-```
-(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_compute_webapp
-```
-
-## deployer
-
-* Setup the deployer R-Pi, psi, so we can also run Ansible + Fabric etc from there too.
-
-```
-(env) vagrant@stretch:~/rpi_cluster/ansible$ cd ~
-(env) vagrant@stretch:~$ fab -l
-(env) vagrant@stretch:~$ fab bs_deployer_psi -H 192.168.6.16
-```
-
-  This will upload ~/rpi_cluster/ to psi and run the bootstrap-deployer.sh script (detached, under screen).
-
 
 EOF

@@ -11,8 +11,8 @@ Scripts that configure this VM:
 
 * vagrantvm/vagrantfile_root.sh (automatic on 'vagrant up')
 * vagrantvm/vagrantfile_user.sh (automatic on 'vagrant up')
-* deploy/ansible/bootstrap-deployer.sh (manual)
-* deploy/ansible/roles/host-vagrantvm/ (called in bootstrap-deployer.sh)
+* ansible/bootstrap-deployer.sh (manual)
+* ansible/roles/host-vagrantvm/ (called in bootstrap-deployer.sh)
 
 
 ## Using
@@ -27,7 +27,7 @@ If /home/vagrant/rpi_cluster becomes unmounted, just run the provisioning comman
 
 
 ```
-$ vagrant provision
+$ vagrant reload
 $ vagrant ssh
 ```
 
