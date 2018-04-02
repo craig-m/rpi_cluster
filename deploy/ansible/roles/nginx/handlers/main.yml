@@ -1,7 +1,0 @@
----
-# nginx handlers
-
-- name: nginx_restart
-  service: name=nginx state=reloaded
-  become: yes
-  tags: [nginx]

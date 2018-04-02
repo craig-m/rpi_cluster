@@ -1,16 +1,15 @@
 # rpi_cluster
 
-A PoC Raspberry Pi Beowulf cluster project.
+An 8 node PoC Raspberry Pi Beowulf cluster project.
 
-See doc/readme.me for the detailed cluster setup process, or to also view the readme.md (if you have a working Vagrant + VirtualBox setup), type "vagrant up" from a shell in this directory and then after a few moments open http://localhost:5550/ on your desktop.
+See doc/readme.me for the detailed setup process.
 
-This experiment is still in the early stages of development, some parts are still being refined.
+This experiment is still in the early stages of development, and exists mainly for my own learning.
 
 ---
 
 # Hardware Inventory
 
-![GitHub Logo](/doc/pictures/pi_towers2.jpg)
 
 ### R-Pi
 
@@ -19,25 +18,28 @@ The x8 boards I ended up with are divided into these groups. All run Raspbian GN
 <table>
 <tbody>
 <tr>
-  <td>&nbsp;Group&nbsp;</td>
-  <td>&nbsp;LanServices main&nbsp;</td>
-  <td>&nbsp;LanServices misc&nbsp;</td>
-  <td>&nbsp;Deployer&nbsp;</td>
-  <td>&nbsp;Compute/Worker&nbsp;</td>
+  <td>Group</td>
+  <td>LAN main</td>
+  <td>LAN misc</td>
+  <td>Deployer</td>
+  <td>Compute</td>
+  <td>Total</td>
 </tr>
 <tr>
-  <td>&nbsp;Model&nbsp;</td>
-  <td>&nbsp;V 1&nbsp;</td>
-  <td>&nbsp;V 2&nbsp;</td>
-  <td>&nbsp;V 2&nbsp;</td>
-  <td>&nbsp;V 3&nbsp;</td>
+  <td>Model</td>
+  <td>1</td>
+  <td>2</td>
+  <td>2</td>
+  <td>3</td>
+  <td>&nbsp;</td>
 </tr>
 <tr>
-  <td>&nbsp;Count&nbsp;</td>
-  <td>&nbsp;x 2&nbsp;</td>
-  <td>&nbsp;x 1&nbsp;</td>
-  <td>&nbsp;x 1&nbsp;</td>
-  <td>&nbsp;x 4&nbsp;</td>
+  <td>Count</td>
+  <td>2</td>
+  <td>1</td>
+  <td>1</td>
+  <td>4</td>
+  <td>8</td>
 </tr>
 </tbody>
 </table>
@@ -53,17 +55,19 @@ The other bits and pieces:
 * a Raspberry Pi SenseHat (https://www.raspberrypi.org/products/sense-hat/)
 * a Raspberry Pi Camera
 
-The switch is connected to a managed one, the cluster has its own vlan.
+The switch is connected to a managed one, the cluster has its own VLAN.
 
 ---
+
 
 # Overview of roles
 
 What the cluster is doing, more or less. The software stack for each group.
 
+
 ### Deployer
 
-The Deployer role runs on x1 R-Pi, and in the Virtual Machine. This configures all of the other hosts.
+The Deployer code/playbooks run on x1 R-Pi, and in the Virtual Machine (debian/stretch64). This configures all of the other hosts.
 
 * Fabric (http://www.fabfile.org/)
 * Ansible (https://www.ansible.com/)
@@ -72,33 +76,34 @@ The Deployer role runs on x1 R-Pi, and in the Virtual Machine. This configures a
 
 ### LanServices - Main
 
-To provide redundant essential services for the LAN.
+To provide redundant essential services for the LAN. Redundancy: x1 node can fail.
 
 * DHCP Server (in high availability)
-* DNS (Bind with zone replication between master/slave)
-* NTPD Server
+* DNS Server (Bind with zone replication between master/slave)
+* NTP Server
 * FTP Daemon
 * BusyBox httpd (running in chroot)
 
 ### LanServices - Misc
 
-For miscellaneous, non-essential, net services.
+For miscellaneous, non-essential, net services. Used for dev, reporting, testing, monitoring. Redundancy: not redundant, does not provide services for the LAN.
 
-* Used for dev, reporting, testing
-* Nginx + PHP-fpm
+* Redis
+* Nginx + PHP-FPM
 * Haproxy
-* Hugo website generator
+* Hugo (static website generator)
+* Yarn
 * NFS server
 
-### Compute/Worker
+### Compute / Worker
 
-To play with services.
+To play with services and offer hosting. Subdivided into a frontend and backend group. Redundancy: x1 front and x1 back node can fail.
 
-* Consul (x2 clients, x2 server)
 * Keepalived (floating IP over x2 nodes)
 * Haproxy
+* Nginx
 * NFS Client
 * DistCC (for distributed compiling)
+* Python MPICH (Message Passing Interface)
+* Docker swarm
 * Hadoop (to do)
-* Docker cluster (x2 frontend, x2 backend) (to do)
-* Python MPICH (to do)

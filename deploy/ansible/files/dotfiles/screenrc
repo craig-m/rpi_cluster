@@ -1,9 +1,0 @@
-# {{ ansible_managed }}
-startup_message off
-altscreen on
-term screen-256color
-bind ',' prev
-bind '.' next
-
-hardstatus alwayslastline
-hardstatus string '%{= kg}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %m-%d %{W}%c %{g}]'

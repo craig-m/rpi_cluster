@@ -1,20 +1,20 @@
-# -- ignore --
+# ---- ignore ----
 #
 ignore_me/*
 local_data/*
-vagrantvm/dotfiles/gnupg/*
 .vagrant/*
+nohup.out
 #
-# -- code --
-deploy/serverspec/reports/*
-deploy/ansible/.pytest_cache/
+# ---- code ----
+serverspec/reports/*
+ansible/.pytest_cache/
 code/omegapyapi/flask/
 code/hugo-site/public/*
 vagrantvm/vboxphpcms/vendor/*
 yarn-error.log
 node_modules/
 #
-# -- python --
+# ---- python ----
 .cache
 __pycache__/
 *.py[cod]
@@ -27,7 +27,7 @@ env/
 venv/
 ENV/
 #
-# -- Apple --
+# ---- Apple ----
 *.DS_Store
 .AppleDouble
 .LSOverride
@@ -46,3 +46,5 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+#
+# ---- eof ----

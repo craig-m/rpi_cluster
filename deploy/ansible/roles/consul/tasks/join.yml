@@ -1,9 +1,0 @@
----
-- debug: msg="consul join "
-
-
-- name: join nodes server
-  command: /usr/local/sbin/consul join {{ consul_join }}
-  changed_when: false
-  when: "'consul_boot' not in group_names"
-  tags: [consul]

@@ -1,7 +1,0 @@
----
-
-# restart ntp
-- name: ntp_restart
-  service: name=ntp state=restarted
-  become: yes
-  tags: [ntp]

@@ -1,7 +1,0 @@
----
-# rpi_cluster master playbook
-- import_playbook: play-rpi-services-main.yml
-- import_playbook: play-rpi-services-misc.yml
-- import_playbook: play-rpi-compute.yml
-- import_playbook: play-rpi-compute-webapp.yml
-- import_playbook: play-rpi-all-maint.yml
