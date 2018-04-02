@@ -2,10 +2,12 @@
 # {{ ansible_managed }}
 # this script is run on boot by systemd, rpi-lanservices.service
 
+logger -t rpicluster "lanservices-boot.sh started"
+
 # pre-run checks ---------------------------------------------------------------
 
-# only run as root
-id | grep "uid=0(root)" || exit 1;
+# no LD_PRELOAD
+unset LD_PRELOAD
 
 #-------------------------------------------------------------------------------
 

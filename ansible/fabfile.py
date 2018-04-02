@@ -126,7 +126,7 @@ def deploy_omega_site():
     local('cd ../code/hugo-site/ && rsync -avr -- public/ pi@omega.local:/srv/nginx/hugo-site/')
     #print('upload omegapyapi')
     #local('cd ../code/ && rsync -avr -- omegapyapi/* pi@omega.local:/srv/python/omegapyapi/')
-    #local('ssh pi@192.168.6.16 bash -c /srv/python/omegapyapi/install.sh')
+    #local('ssh pi@omega.local bash -c /srv/python/omegapyapi/install.sh')
     local ('logger -t rpicluster "fabfile.py finish deploy_omega_site "')
 
 # testing ----------------------------------------------------------------------

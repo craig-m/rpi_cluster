@@ -9,6 +9,7 @@
 - name: install programs
   apt: name={{ item }} state=present
   with_items:
+       - tcpdump
        - sense-hat
        - python-pycurl
   retries: 1
@@ -16,15 +17,46 @@
   tags: [host-omega]
 
 
+- name: copy firewall script
+  template:
+    src: ufw.j2
+    dest: /root/ufw.sh
+    owner: root
+    group: root
+    mode: 0755
+  become: yes
+  changed_when: False
+  tags: [host-omega]
+
+
+- name: run firewall script
+  shell: /root/ufw.sh
+  args:
+    chdir: /root/
+    creates: /root/.ufw
+  become: yes
+  tags: [host-omega]
+
+
+# Copy SenseHat welcome script
+- name: copy sensehat welcome
+  copy:
+    src: sensehat-welcome.py
+    dest: /opt/cluster/bin/sensehat-welcome.py
+    mode: 0755
+    owner: pi
+    group: pi
+
+
+# note: code runs from /opt/omegapyapi/app/
 - name: copy omegapyapi code
   synchronize:
     src: ~/rpi_cluster/code/omegapyapi
     dest: /srv/python/omegapyapi
   changed_when: False
   tags: [host-omega]
-
-
-# note: code runs from /opt/omegapyapi/app/
+  when:
+    -  "{{ ansible_local.rpihw.rpi_hw_mac }} == 'True'"
 
 
 - name: run omegapyapi installer
@@ -33,6 +65,8 @@
     chdir: /srv/python/omegapyapi
     creates: /opt/omegapyapi/omegapyapi.socket
   tags: [host-omega]
+  when:
+    -  "{{ ansible_local.rpihw.rpi_hw_mac }} == 'True'"
 
 
 - name: omegapyapi service started
@@ -44,6 +78,11 @@
 - name: omegapyapi enabled on boot
   service: name=omegapyapi enabled=yes
   become: yes
+  tags: [host-omega]
+
+
+# cron scripts
+- import_tasks: cron.yml
   tags: [host-omega]
 
 

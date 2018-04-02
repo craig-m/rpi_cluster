@@ -1,0 +1,37 @@
+#!/bin/bash
+# {{ ansible_managed }}
+
+apt-get install ufw -y
+
+ufw status verbose
+
+echo 1 > /proc/sys/net/ipv4/tcp_syncookies
+echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
+
+# defaults
+ufw default deny incoming || exit 1;
+ufw default allow outgoing
+
+# incoming SSH from outside LAN
+ufw allow 22/tcp
+ufw allow {{ ssh_group_port }}/tcp
+
+# incoming web from outside LAN
+ufw allow 80/tcp
+ufw allow 443/tcp
+
+# allow all incoming from local LAN
+ufw allow from {{ rpi_net_id }}/{{ rpi_net_maskbit }}
+
+# log
+ufw logging on
+
+# enable FW
+ufw enable || exit 1;
+ufw status
+
+touch -fv /root/.ufw
+
+logger -t rpicluster "ufw enabled";
+
+# eof

@@ -17,7 +17,7 @@ build + upload:
 
 ```
 hugo -v
-rsync -avr public/ pi@192.168.6.16:/srv/nginx/hugo-site/;
+rsync -avr public/ pi@omega.local:/srv/nginx/hugo-site/;
 ```
 
 http://status.b3rry.clust0r

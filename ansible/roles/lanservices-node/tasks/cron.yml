@@ -1,11 +1,12 @@
 ---
+- debug: msg="Lan Services main cron jobs "
 
 
 - name: copy cron daily script
   template:
-    src: lansrv-cron-daily.j2
-    dest: /opt/cluster/bin/lansrv-cron-daily.sh
-    mode: 0770
+    src: lansrvmain-cron-daily.j2
+    dest: /root/crontab/lansrvmain-cron-daily
+    mode: 0755
     owner: root
     group: root
   become: yes
@@ -15,25 +16,26 @@
   cron:
     name: PATH
     env: yes
-    value: /opt/cluster/bin/
+    value: /root/bin/
   become: yes
 
 
 - name: install daily cron script
   cron:
     name: "lansrv main daily"
-    special_time: daily
-    user: root
-    job: "/opt/cluster/bin/lansrv-cron-daily.sh > 2>&1"
-    cron_file: "lansrv-cron-daily"
+    minute: "30"
+    hour: "01"
+    weekday: 7
+    job: "/root/crontab/lansrvmain-cron-daily"
+    cron_file: "lansrvmain-cron-daily"
   become: yes
 
 
 - name: copy cron hourly script
   template:
-    src: lansrv-cron-hourly.j2
-    dest: /opt/cluster/bin/lansrv-cron-hourly.sh
-    mode: 0770
+    src: lansrvmain-cron-hourly.j2
+    dest: /root/crontab/lansrvmain-cron-hourly
+    mode: 0755
     owner: root
     group: root
   become: yes
@@ -42,8 +44,9 @@
 - name: install hourly cron script
   cron:
     name: "lansrv main hourly"
-    special_time: hourly
-    user: root
-    job: "/opt/cluster/bin/lansrv-cron-hourly.sh > 2>&1"
-    cron_file: "lansrv-cron-hourly"
+    hour: "1"
+    minute: "0"
+    job: "/root/crontab/lansrvmain-cron-hourly"
+    cron_file: "lansrvmain-cron-hourly"
+    state: "present"
   become: yes

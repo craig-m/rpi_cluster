@@ -1,0 +1,46 @@
+---
+
+- debug: msg="workder node on {{ inventory_hostname }} "
+
+
+- name: check if part of the swarm
+  stat: path=/opt/cluster/data/swarm_worker.txt
+  register: swarm_worker_joined
+
+
+- name: pausing
+  pause:
+    seconds: 2
+
+
+- name: get master info from localhost
+  local_action: shell tail /opt/cluster/backup/delta/opt/cluster/data/swarm_master.txt | tail -n 3 | grep "docker swarm join --token" | tr -d '\n'
+  register: join_docker_clust
+  changed_when: False
+  run_once: True
+
+
+- name: join the swarm
+  shell: "{{ join_docker_clust.stdout }}"
+  become: yes
+  register: joined_master
+  when:
+    - swarm_worker_joined.stat.exists == False
+
+
+- name: pausing
+  pause:
+    seconds: 2
+
+- name: joined master - save info
+  copy:
+    content: "{{ joined_master.stdout }}"
+    dest: "/opt/cluster/data/swarm_worker.txt"
+  when:
+    - joined_master.changed
+    - swarm_worker_joined.stat.exists == False
+
+
+- name: pausing
+  pause:
+    seconds: 2

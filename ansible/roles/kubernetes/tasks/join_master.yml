@@ -20,7 +20,7 @@
   register: joined_master
   when:
     - kube_clitxt.stat.exists == False
-    - "'docker_kube_worker' in group_names"
+    - "'docker_worker' in group_names"
 
 
 - name: pausing

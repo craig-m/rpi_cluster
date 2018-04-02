@@ -66,7 +66,7 @@
   changed_when: false
 
 
-# ping IP (todo: check result)
+# ping IP
 - name: ping test floating IP
   command: ping -c 3 {{ rpi_loadbal_float_ip }}
   register: rpi_ping_float_ip

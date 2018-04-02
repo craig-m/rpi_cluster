@@ -157,10 +157,10 @@ backend omega
   http-response set-header Referrer-Policy strict-origin
   http-response set-header X-Content-Type-Options nosniff
   #
-  reqrep ^([^\ :]*)\ /php/omega/(.*)     \1\ \2
+  reqrep ^([^\ :]*)\ /php/omega/(.*)     \1\ /pub/\2
   #
   # backend servers
-  server omega_nginx 127.0.0.1:{{ nginx_port2 }} maxconn 1000
+  server omega_nginx2 127.0.0.1:{{ nginx_port2 }} maxconn 1000
 
 
 # all other requests - nginx on localhost
@@ -180,6 +180,6 @@ backend default-backend
   http-response set-header X-Content-Type-Options nosniff
   #
   # backend servers
-  server omega_nginx 127.0.0.1:{{ nginx_port }} maxconn 1000
+  server omega_nginx1 127.0.0.1:{{ nginx_port }} maxconn 1000
 
 # eof

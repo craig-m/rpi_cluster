@@ -12,19 +12,3 @@
   register: dockergc_clone
   tags:
     - skip_ansible_lint
-
-
-#- name: check for docker machine Linux armhf
-#  stat: path=/usr/local/bin/docker-machine
-#  register: docker_machine_bin
-
-
-# download consul src
-#- name: download consul
-#  get_url:
-#    url: "{{ docker_machine_url }}"
-#    dest: /usr/local/bin/docker-machine
-#    checksum: sha256:{{ docker_machine_sha }}
-#    mode: 0755
-  #when: docker_machine_bin.stat.exists == False
-  #become: yes

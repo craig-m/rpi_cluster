@@ -74,16 +74,16 @@
   tags: [common]
 
 
-- name: upload vagrant pub gpg key
-  copy:
-    src: "files/vagrant_pub_pgp.key"
-    dest: "/opt/cluster/data/vagrant_pubpgp.key"
-    mode: 0644
-  register: vagrant_pgppub_up
+#- name: upload vagrant pub gpg key
+#  copy:
+#    src: "files/vagrant_pub_pgp.key"
+#    dest: "/opt/cluster/data/vagrant_pubpgp.key"
+#    mode: 0644
+#  register: vagrant_pgppub_up
 
-- name: import vagrant pub gpg key
-  command: "gpg --import /opt/cluster/data/vagrant_pubpgp.key"
-  when: vagrant_pgppub_up.changed
+#- name: import vagrant pub gpg key
+#  command: "gpg --import /opt/cluster/data/vagrant_pubpgp.key"
+#  when: vagrant_pgppub_up.changed
 
 
 # detect R-Pi MAC - rpihw.fact
@@ -97,6 +97,11 @@
   become: yes
   changed_when: False
   tags: [common]
+
+
+# so the fact above is available
+- name: reload ansible_local
+  setup: filter=ansible_local
 
 
 # info_roles.txt
@@ -130,3 +135,4 @@
   fetch:
     src: /opt/cluster/data/info_host.txt
     dest: /opt/cluster/backup
+  changed_when: false

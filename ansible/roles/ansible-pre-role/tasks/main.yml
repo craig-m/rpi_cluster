@@ -2,6 +2,18 @@
 # For debugging, and running on all hosts to gather facts.
 
 
+- meta: clear_host_errors
+
+- name: ping
+  ping:
+
+- name: Refresh inventory
+  meta: refresh_inventory
+
+- name: "re-run setup "
+  setup: ~
+
+
 - debug: msg="inventory hostname {{ inventory_hostname }} "
   changed_when: False
   tags: [ansiblepre]
@@ -12,12 +24,6 @@
   changed_when: False
   tags: [ansiblepre]
   ignore_errors: True
-
-
-- name: Refresh inventory
-  meta: refresh_inventory
-
-- meta: clear_host_errors
 
 
 # syslog

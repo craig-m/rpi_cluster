@@ -97,7 +97,7 @@ if [ ! -f ~/.rpibs/rpibs_packages ]; then
   sshfs tcpdump nmap netdiscover libncurses5-dev libsqlite3-dev sqlite3 \
   libssl-dev libyaml-dev libgmp-dev libgdbm-dev libffi-dev libpython-all-dev \
   monitoring-plugins-common monitoring-plugins-basic inotify-tools \
-  python-pip python-dev uuid-runtime uuid;
+  python-pip python-dev uuid-runtime uuid mpich;
   sleep 2s;
   # upgrade
   /usr/bin/sudo apt-get -q -y upgrade || echo "ERROR with apt upgrade";

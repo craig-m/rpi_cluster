@@ -1,0 +1,47 @@
+---
+# Docker Swarm
+- debug: msg="Docker Swarm control "
+
+
+# get docker info from host
+- name: docker info
+  shell: /usr/bin/docker info
+  register: docker_info
+  changed_when: False
+  tags: [swarm]
+  become: yes
+
+
+- name: pausing
+  pause:
+    seconds: 2
+  tags: [swarm]
+
+
+- name: master init
+  import_tasks: init-master.yml
+  when:
+    - "'docker_master' in group_names"
+  tags: [swarm]
+
+
+- name: managers join
+  import_tasks: join-manager.yml
+  when:
+    - "'docker_manager' in group_names"
+  tags: [swarm]
+
+
+- name: workers join
+  import_tasks: join-worker.yml
+  when:
+    - "'docker_worker' in group_names"
+  tags: [swarm]
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+  become: yes
+  tags: [swarm]

@@ -24,6 +24,7 @@
     path: /etc/php/7.0/fpm/pool.d/www.conf
     state: absent
   become: yes
+  notify: phpfpm_restart
   tags: [php]
 
 
@@ -35,7 +36,9 @@
     owner: "root"
     group: "root"
     mode: 0775
+  notify: phpfpm_restart
   become: yes
+  tags: [php]
 
 
 # reload config

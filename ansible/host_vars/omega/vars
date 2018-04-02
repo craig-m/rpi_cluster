@@ -6,7 +6,7 @@
 host_dir: [
   { dir: '/srv/python/omegapyapi', mode: '0755', owner: '{{ ansible_user_id }}', group: '{{ ansible_user_id }}' },
   { dir: '/srv/nginx/hugo-site', mode: '0755', owner: '{{ ansible_user_id }}', group: '{{ ansible_user_id }}' },
-  { dir: '/srv/php/omegaapp', mode: '0755', owner: '{{ ansible_user_id }}', group: '{{ ansible_user_id }}' }
+  { dir: '/srv/php/omegaapp/pub', mode: '0755', owner: '{{ ansible_user_id }}', group: '{{ ansible_user_id }}' }
 ]
 
 # SSH additional port

@@ -16,6 +16,7 @@
        - toilet
        - emacs
        - ranger
+       - mpich
   become: yes
   retries: 2
 

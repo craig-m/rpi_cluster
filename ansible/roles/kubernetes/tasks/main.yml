@@ -2,7 +2,6 @@
 # install kubernetes
 - debug: msg="kubernetes setup "
 
-#   
 
 # System (swap, /boot/cmdline.txt)
 - include: systemopts.yml
@@ -56,11 +55,11 @@
   tags: [kube]
 
 
-# The Kube master node (docker_kube_master group)
+# The Kube master node (docker_master group)
 - import_tasks: master_boss_node.yml
   tags: [kube,kubemaster]
   when:
-    - "'docker_kube_master' in group_names"
+    - "'docker_master' in group_names"
     - "rpi_docker_enabled == True"
 
 
@@ -68,7 +67,7 @@
 - import_tasks: join_master.yml
   tags: [kube,kubemaster]
   when:
-    - "'docker_kube_worker' in group_names"
+    - "'docker_worker' in group_names"
     - "rpi_docker_enabled == True"
 
 

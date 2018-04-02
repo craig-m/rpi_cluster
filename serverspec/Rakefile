@@ -7,7 +7,7 @@ require 'yaml'
 host = ENV['host']
 
 # properties for the host
-properties = YAML.load_file('properties.yml')
+properties = YAML.load_file('inventory.yml')
 
 desc "Run serverspec on all hosts"
 task :spec => 'serverspec:all'

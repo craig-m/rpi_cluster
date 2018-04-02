@@ -1,24 +1,23 @@
 #!/bin/bash
 # {{ ansible_managed }}
 
-logger -t rpicluster "lansrv-cron-daily.sh started"
+/usr/bin/logger -t rpicluster "lansrv-cron-daily.sh started"
 
 # pre-run checks ---------------------------------------------------------------
-
-# only run as root
-id | grep "uid=0(root)" || exit 1;
 
 # no LD_PRELOAD
 unset LD_PRELOAD
 
 #-------------------------------------------------------------------------------
 
+sync
+
 # sleep
-sleep 5m;
+/bin/sleep 5m;
 
 # check disk
 /usr/lib/nagios/plugins/check_disk -x /dev/sda1;
 
-logger -t rpicluster "lansrv-cron-daily.sh finished"
+/usr/bin/logger -t rpicluster "lansrv-cron-daily.sh finished"
 
 #-------------------------------------------------------------------------------

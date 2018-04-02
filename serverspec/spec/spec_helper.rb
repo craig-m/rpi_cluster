@@ -4,7 +4,7 @@ require 'yaml'
 
 set :backend, :ssh
 
-properties = YAML.load_file('properties.yml')
+properties = YAML.load_file('inventory.yml')
 
 host = ENV['TARGET_HOST']
 set_property properties[host]

@@ -13,7 +13,7 @@
 - name: reboot host
   shell: sleep 2 && reboot now
   become: yes
-  async: 30
+  async: 45
   poll: 0
   ignore_errors: true
   tags: [maintenance]
@@ -25,18 +25,10 @@
     host: '{{ ansible_default_ipv4.address }}'
     port: 22
     state: started
-    delay: 40
+    delay: 60
     timeout: 240
   with_items: '{{ play_hosts }}'
   connection: local
-  tags: [maintenance]
-
-
-# longer pause between lanservices
-- name: wait for lanservices
-  pause:
-    seconds: 60
-  when: "'lanservices' in group_names"
   tags: [maintenance]
 
 

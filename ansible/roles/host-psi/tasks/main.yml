@@ -7,17 +7,22 @@
 - name: copy rpi_cluster code
   synchronize:
     src: ~/rpi_cluster/
-    dest: ~/
+    dest: ~/rpi_cluster/
     rsync_opts:
       - "--no-motd"
-      - "--exclude=.git .vagrant/ .DS_Store ignore_me/ local_data/ code/hugo-side/node_modules/"
+      - "--exclude=~/rpi_cluster/.git"
+      - "--exclude=~/rpi_cluster/.vagrant/"
+      - "--exclude=~/rpi_cluster/.DS_Store"
+      - "--exclude=~/rpi_cluster/ignore_me/"
+      - "--exclude=~/rpi_cluster/local_data/"
+      - "--exclude=~/rpi_cluster/code/hugo-side/node_modules/"
   changed_when: False
   tags: [host-omega]
 
 
 - name: copy firewall script
-  copy:
-    src: ufw.sh
+  template:
+    src: ufw.j2
     dest: /root/ufw.sh
     owner: root
     group: root

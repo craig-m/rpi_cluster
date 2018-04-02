@@ -57,26 +57,24 @@ hadoop_worker
 gamma
 
 [hadoop_worker]
-delta
-epsilon
+gamma
 zeta
 
 # Docker -----------------------------------------------------------------------
 
 [docker:children]
-docker_kube_master
-docker_kube_manager
-docker_kube_worker
+docker_master
+docker_manager
+docker_worker
 
-[docker_kube_master]
-zeta
-
-[docker_kube_manager]
-gamma
-
-[docker_kube_worker]
-gamma
-epsilon
+[docker_master]
 delta
+
+[docker_manager]
+epsilon
+
+[docker_worker]
+gamma
+zeta
 
 #-------------------------------------------------------------------------------

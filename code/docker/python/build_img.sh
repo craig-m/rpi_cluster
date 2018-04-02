@@ -23,6 +23,8 @@ DOCKER_IMG_ID=$(docker images | grep $imgname | awk '{print $3}')
 
 docker image rm $imgname
 
+docker image ls
+
 echo ${DOCKER_IMG_ID};
 
 # EOF

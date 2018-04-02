@@ -1,10 +1,23 @@
 #!/bin/bash
 
+cd /opt/cluster/mysrc/ || exit 1;
+
 wget ftp://ftp.gnu.org/pub/gnu/gzip/gzip-1.6.tar.xz
 
-tar xf gzip-1.6.tar.xz
+gziphash=$(sha512sum gzip-1.6.tar.xz | cut -d' ' -f1)
 
-cd gzip-1.6
+if [ "$gziphash" = "06da599fc38b459d7e9a3f43fdd06d1a0d7b29ad14cb7b6552176bab584a1135bb47ba37a4eb377e6c42c4934d557079ace1e289a252ae192ee154079a62ed01" ] ; then
+  echo "sha512 sum is OK";
+else
+  echi "BAD sha512 sum";
+  exit 1;
+fi
+
+file gzip-1.6.tar.xz | grep "XZ compressed data" || exit 1;
+
+tar xf gzip-1.6.tar.xz || exit 1;
+
+cd gzip-1.6 || exit 1;
 
 ./configure
 

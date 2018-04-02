@@ -1,0 +1,8 @@
+---
+
+
+#- name: cron monitor
+#  cron:
+#     name: "check-keepalived"
+#     minute: "*/15"
+#     job: "/usr/lib/nagios/plugins/check_http -I {{ rpi_loadbal_float_ip }} >> /var/log/rpicluster.log 2>&1"

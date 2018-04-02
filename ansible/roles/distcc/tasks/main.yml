@@ -35,7 +35,15 @@
   become: yes
   notify: distcc-restart
   tags: [distcc]
-  when: "'compute' in group_names"
+
+
+- name: distcc_test test script
+  template:
+    src: distcc_test.j2
+    dest: /opt/cluster/bin/distcc_test.sh
+    mode: 0755
+  notify: distcc-restart
+  tags: [distcc]
 
 
 - name: distcc enabled on boot

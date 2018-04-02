@@ -19,12 +19,6 @@
   tags: [maintenance]
 
 
-- name: wait before carry on
-  pause:
-    seconds: 10
-  tags: [maintenance]
-
-
 # Upgrade all Apt packages
 - name: Upgrade all packages to the latest version
   apt:
@@ -32,12 +26,6 @@
     state: latest
   retries: 2
   become: yes
-  tags: [maintenance]
-
-
-- name: wait before carry on
-  pause:
-    seconds: 20
   tags: [maintenance]
 
 

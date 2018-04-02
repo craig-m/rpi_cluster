@@ -20,12 +20,17 @@ Cheat notes below:
 
 # SSH
 
-Execute a command via a Jump Box, or two:
+Execute a command via a Jump Box
 
 ```
-$ ssh -J pi@192.168.6.100 pi@192.168.6.16 hostname
+$ ssh -J pi@psi.local pi@omega.local hostname
 omega
-$ ssh -J pi@192.168.6.16,pi@192.168.6.100 pi@192.168.6.66 hostname
+```
+
+or two:
+
+```
+$ ssh -J pi@omega.local,pi@psi.local pi@alpha.local hostname
 alpha
 ```
 

@@ -10,6 +10,7 @@ common_dir: [
   { dir: '/home/{{ ansible_user_id }}/tmp/', mode: '0750', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
   { dir: '/root/bin/', mode: '0750', owner: 'root', group: 'root' },
   { dir: '/root/tmp/', mode: '0750', owner: 'root', group: 'root' },
+  { dir: '/root/crontab/', mode: '0750', owner: 'root', group: 'root' },
   { dir: '/mnt/usbkey/', mode: '0755', owner: 'root', group: 'root' },
   { dir: '/mnt/sshfs/', mode: '0755', owner: 'root', group: 'root' }
 ]

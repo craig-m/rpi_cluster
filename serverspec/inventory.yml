@@ -29,3 +29,12 @@ omega.local:
   :rpi_cust_tld: "clust0r"
   :rpi_net_wifi_gw: "192.168.6.2"
   :ssh_group_port: "2221"
+psi.local:
+  :name: "psi"
+  :roles:
+    - base
+    - deployer
+  :rpi_cust_domain: "b3rry"
+  :rpi_cust_tld: "clust0r"
+  :rpi_net_wifi_gw: "192.168.6.2"
+  :ssh_group_port: "2222"

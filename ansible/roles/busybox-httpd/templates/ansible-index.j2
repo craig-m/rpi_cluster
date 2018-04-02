@@ -20,19 +20,19 @@
 <body>
 <article>
   <h1>R-Pi BB httpd</h1>
-  <p>Running on {{ ansible_nodename }}</p>
+  <p>Running on: {{ ansible_nodename }}.</p>
   <hr>
   <div>
   <p><center>
     <ul>
       <li>[<a href="/cgi-bin/hello">info</a>]</li>
-      <li>[<a href="/reports/stats.html">stats</a>]</li>
     </ul>
   </center></p>
   <p><center><img src="static/glinder1.png" height="220px" width="220px"></center></p>
   </div>
   <hr>
-  <i>modified {{ ansible_date_time.time}} {{ ansible_date_time.date }}</i>
+  <p>modified: <i>{{ ansible_date_time.time}} {{ ansible_date_time.date }}</i></p>
+  <p>ssh connection: <i>{{ ansible_env.SSH_CONNECTION }}</i></p>
 </article>
 </body>
 </html>

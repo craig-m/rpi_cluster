@@ -15,7 +15,7 @@
   when:
     - "kube_info_txt.stat.exists == False"
     - "rpi_docker_enabled == True"
-    - "'docker_kube_master' in group_names"
+    - "'docker_master' in group_names"
   register: initialized_main_node
   become: yes
 
