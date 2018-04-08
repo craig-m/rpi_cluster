@@ -1,0 +1,23 @@
+# {{ ansible_managed }}
+#-------------------------------------------------------------------------------
+
+# all
+host *
+	ServerAliveInterval 30
+	Compression yes
+	controlmaster auto
+
+host *.local
+	User pi
+	#IdentityFile ~/rpi_cluster/local_data/ssh/id_ecdsa
+
+# hosts ------------------------------------------------------------------------
+{% for host in groups['all'] %}
+
+# {{ hostvars[host]['rpi_mac'] }} - {{ hostvars[host]['rpi_racked'] }}
+host {{ hostvars[host]['inventory_hostname'] }} {{ hostvars[host]['inventory_hostname'] }}.local
+  User pi
+  HostName {{ hostvars[host]['rpi_ip'] }}
+{% endfor %}
+
+#-------------------------------------------------------------------------------

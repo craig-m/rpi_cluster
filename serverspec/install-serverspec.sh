@@ -15,12 +15,11 @@ rpilogit () {
 	logger -t rpicluster "$1";
 }
 
-# move to this dir
-cd "$(dirname "$0")" || exit 1;
-
 # install ----------------------------------------------------------------------
 
-rpilogit "installing serverspec started";
+rpilogit "serverspec install started";
+
+cd ~/rpi_cluster/serverspec || exit 1;
 
 # install Ruby Version Manager
 if [ ! -f ~/.rvm/scripts/rvm ]; then
@@ -38,7 +37,7 @@ rvm use 2.4.1 || echo -e "[*] ERROR: using rvm "
 rvm gemset create serverspec
 rvm gemset use serverspec
 gem install bundle
-bundle install
+bundle install || exit 1
 
 chmod -v 755 run.sh
 
@@ -50,6 +49,6 @@ rake --tasks || exit 1
 touch ~/.serverspecinstall
 echo OK > ~/.serverspecinstall
 
-rpilogit "installing serverspec finished";
+rpilogit "serverspec install finished";
 
 # EOF --------------------------------------------------------------------------

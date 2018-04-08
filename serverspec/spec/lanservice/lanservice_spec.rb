@@ -4,7 +4,7 @@ require 'spec_helper'
 describe file('/opt/cluster/data/info_roles.txt') do
  it { should be_file }
  it { should be_owned_by 'root' }
- its(:content) { should match /lanservices-node/ }
+ its(:content) { should match /group-lanservices/ }
  it { should be_mode 444 }
 end
 

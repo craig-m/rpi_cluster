@@ -1,7 +1,7 @@
 About
 ------
 
-bootstrap-deployer.sh will setup the deploy host (Vagrant VM or 'psi' R-Pi), installing the tools listed in requirements.txt
+ will setup the deploy host (Vagrant VM or 'psi' R-Pi), installing the tools listed in requirements.txt
 
 Assumes working from:
 
@@ -77,17 +77,29 @@ Ad hoc command on a single host:
 $ ansible omega -a "hostname"
 ```
 
+see all hosts in inventory
+
+```
+ansible all -m debug | grep SUCCESS | awk '{print $1}'
+```
+
+copy a file to a host:
+
+```
+ansible psi -m copy -a "src=~/foo dest=/tmp/bar"
+```
+
 
 Gather facts:
 
 ```
-ansible all -m setup
+$ ansible all -m setup
 ```
 
 ping:
 
 ```
-ansible all -m ping
+$ ansible all -m ping
 ```
 
 

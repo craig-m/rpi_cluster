@@ -2,18 +2,18 @@
 
 An 8 node PoC Raspberry Pi Beowulf cluster project.
 
-See doc/readme.me for the detailed setup process.
+See doc/readme.me for the detailed cluster setup process.
 
-This experiment is still in the early stages of development, and exists mainly for my own learning.
+This is an experiment, and exists mainly for my own learning and tinkering when I have time.
+
 
 ---
 
 # Hardware Inventory
 
-
 ### R-Pi
 
-The x8 boards I ended up with are divided into these groups:
+The x8 Raspberry's I ended up with are divided into these groups:
 
 <table>
 <tbody>
@@ -50,13 +50,14 @@ All run Raspbian GNU/Linux 9.3 (stretch), a Debian-based OS.
 
 The other bits and pieces:
 
-* a router (https://lede-project.org/ + https://www.gl-inet.com/)
+* A router (https://lede-project.org/ + https://www.gl-inet.com/)
 * D-Link 16 port switch (Gbit ethernet, unmanaged)
 * x2 6 Port RAVPower USB Chargers (each 60W 12A) (https://www.ravpower.com/6-port-usb-wall-charger-black-.html)
-* a Raspberry Pi SenseHat (https://www.raspberrypi.org/products/sense-hat/)
-* a Raspberry Pi Camera
+* Raspberry Pi SenseHat (https://www.raspberrypi.org/products/sense-hat/)
+* Raspberry Pi Camera
 
-The switch is connected to a managed one, the cluster has its own VLAN.
+The switch is connected to a managed one, where the cluster has its own VLAN.
+
 
 ---
 
@@ -68,12 +69,13 @@ What the cluster is doing, more or less. The software stack for each group.
 
 ### Deployer
 
-The Deployer code/playbooks run on x1 R-Pi, and in the Virtual Machine (debian/stretch64). This configures all of the other hosts.
+The Deployer code (and Ansible playbooks) runs from x1 R-Pi, and in a Virtual Machine (debian/stretch64). This configures all of the other hosts.
 
 * Fabric (http://www.fabfile.org/)
 * Ansible (https://www.ansible.com/)
 * ServerSpec (http://serverspec.org/)
 * Redis DB for Ansible fact cache (https://redis.io/)
+
 
 ### LanServices - Main
 
@@ -84,6 +86,7 @@ To provide redundant essential services for the LAN. Redundancy: x1 node can fai
 * NTP Server
 * FTP Daemon
 * BusyBox httpd (running in chroot)
+
 
 ### LanServices - Misc
 
@@ -96,6 +99,7 @@ For miscellaneous, non-essential, net services. Used for dev, reporting, testing
 * Yarn
 * NFS server
 * Docker
+
 
 ### Compute / Worker
 

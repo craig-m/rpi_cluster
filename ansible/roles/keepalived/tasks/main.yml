@@ -74,6 +74,14 @@
   tags: [keepalived]
 
 
+# Log to ARA
+- name: Log floating IP to ARA
+  ara_record:
+    key: "website"
+    type: "url"
+    value: "{{ rpi_loadbal_float_ip }}"
+
+
 # log
 - name: notify rpicluster log
   shell: logger -t rpicluster running Keepalived with floating IP {{ rpi_loadbal_float_ip }}

@@ -3,9 +3,13 @@
 
 logger -t rpicluster "install.sh installing jenkins "
 
+# move to this dir
+cd $(dirname $(realpath $0)) || exit 1;
+pwd;
+
 # install ----------------------------------------------------------------------
 
-/usr/bin/sudo apt-key add jenkins.io.key
+/usr/bin/sudo apt-key add ~/rpi_cluster/vagrantvm/jenkins/jenkins.io.key || exit 1
 
 cat > jenkins.list << EOF
 #

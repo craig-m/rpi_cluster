@@ -40,9 +40,11 @@ Create the Admin VM
 
 ```
 craig@desktop:~$ git clone git@github.com:craig-m/rpi_cluster.git
+craig@desktop:~$ cd rpi_cluster
 craig@desktop: rpi_cluster $ vagrant up
+
 < SNIP >
-==> default:
+
 ==> default: ----[ BerryClusterAdmin VM up! ]----
 ```
 
@@ -114,14 +116,6 @@ vagrant@stretch:~/rpi_cluster/vagrantvm$ ./keysandconf_restore.sh
 
 Admin VM setup
 --------------
-
-* Run the bootstrap-deployer script. This also gets run on the 'deployer' R-Pi later on. This installs Ansible, then runs playbooks on the local machine.
-
-```
-vagrant@stretch:~$ cd rpi_cluster/ansible/
-vagrant@stretch:~/rpi_cluster/ansible$ ./bootstrap-deployer.sh
-```
-  Note: You will be asked for the PGP key password.
 
 * Activate the environment. The tools we installed in requirements.txt are available now (ansible and fabric etc)
 

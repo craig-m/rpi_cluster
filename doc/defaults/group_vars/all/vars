@@ -19,7 +19,6 @@ rpi_cust_domain_loc: "dc1"
 
 sshpubkey: [
   {key: 'craig-host.pub'},
-  {key: 'windows1.pub'},
   {key: 'linuxdesk.pub'}
 ]
 

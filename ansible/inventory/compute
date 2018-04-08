@@ -1,10 +1,10 @@
-#-------------------------------------------------------------------------------
+# Hosts ------------------------------------------------------------------------
 
 [compute]
-zeta rpi_racked="L3" ansible_host=zeta.local
-epsilon rpi_racked="L4" ansible_host=epsilon.local
-gamma rpi_racked="R3" ansible_host=gamma.local
-delta rpi_racked="R4" ansible_host=delta.local
+zeta rpi_racked="L3" ansible_host=zeta.local rpi_ip=192.168.6.230 rpi_mac=b8:27:eb:99:1a:1a
+epsilon rpi_racked="L4" ansible_host=epsilon.local rpi_ip=192.168.6.240 rpi_mac=b8:27:eb:bf:a3:8d
+gamma rpi_racked="R3" ansible_host=gamma.local rpi_ip=192.168.6.220 rpi_mac=b8:27:eb:ad:48:5a
+delta rpi_racked="R4" ansible_host=delta.local rpi_ip=192.168.6.210 rpi_mac=b8:27:eb:31:e8:ef
 
 # Consul -----------------------------------------------------------------------
 

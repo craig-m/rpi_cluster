@@ -44,7 +44,9 @@ Vagrant.configure(VAGRANT_API_VER) do |config|
   # provisioning exec commands
   config.vm.provision :shell, :path => "vagrantvm/vagrantfile_root.sh", :privileged => true
   config.vm.provision :shell, :path => "vagrantvm/vagrantfile_user.sh", :privileged => false
-  config.vm.provision :shell, :inline => "uptime", :privileged => false
+  config.vm.provision :shell, :path => "vagrantvm/jenkins/install.sh", :privileged => false
+  config.vm.provision :shell, :path => "ansible/install-deploy-tools.sh", :privileged => false
+  config.vm.provision :shell, :path => "serverspec/install-serverspec.sh", :privileged => false
 
   # post up message
   config.vm.post_up_message = "----[ Berry Cluster Admin VM up! ]----"

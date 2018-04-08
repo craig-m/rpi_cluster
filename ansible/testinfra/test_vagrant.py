@@ -31,10 +31,6 @@ def test_folder_vagrant_home(host):
     assert userfold.group == "vagrant"
     assert userfold.mode == 0700
 
-def test_folder_vboxdev_home(host):
-    userfold = host.file("/home/vboxdev")
-    assert userfold.user == "vboxdev"
-    assert userfold.group == "vboxdev"
 
 # LAMP -------------------------------------------------------------------------
 

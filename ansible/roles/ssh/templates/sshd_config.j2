@@ -29,12 +29,15 @@ LoginGraceTime 120
 PermitRootLogin No
 StrictModes yes
 
-PubkeyAuthentication yes
-AuthorizedKeysFile     %h/.ssh/authorized_keys
+# accept SSH keys signed by our CA
+TrustedUserCAKeys /etc/ssh/ca.pub
+
+# User SSH keys
+PubkeyAuthentication  yes
+AuthorizedKeysFile  %h/.ssh/authorized_keys
 
 # Don't read the user's ~/.rhosts and ~/.shosts files
 IgnoreRhosts yes
-
 
 # To enable empty passwords, change to yes (NOT RECOMMENDED)
 PermitEmptyPasswords no

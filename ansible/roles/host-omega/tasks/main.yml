@@ -52,11 +52,9 @@
 - name: copy omegapyapi code
   synchronize:
     src: ~/rpi_cluster/code/omegapyapi
-    dest: /srv/python/omegapyapi
+    dest: /srv/python/
   changed_when: False
   tags: [host-omega]
-  when:
-    -  "{{ ansible_local.rpihw.rpi_hw_mac }} == 'True'"
 
 
 - name: run omegapyapi installer
@@ -65,8 +63,6 @@
     chdir: /srv/python/omegapyapi
     creates: /opt/omegapyapi/omegapyapi.socket
   tags: [host-omega]
-  when:
-    -  "{{ ansible_local.rpihw.rpi_hw_mac }} == 'True'"
 
 
 - name: omegapyapi service started
@@ -82,8 +78,8 @@
 
 
 # cron scripts
-- import_tasks: cron.yml
-  tags: [host-omega]
+#- import_tasks: cron.yml
+#  tags: [host-omega]
 
 
 - name: output to rpicluster log

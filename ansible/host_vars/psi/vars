@@ -1,14 +1,12 @@
 ---
 # vars for psi, the Deployer R-Pi
 
-ansible_ssh_user: pi 
-
 rpi_deployer_ssh_prv: "admin_id_rsa.vault"
 
 # Common host configs ----------------------------------------------------------
 
 host_dir: [
-  { dir: '/opt/cluster/backup', mode: '0700', owner: '{{ ansible_user_id }}', group: '{{ ansible_user_id }}' }
+  { dir: '/opt/cluster/backup', mode: '0770', owner: '{{ ansible_user_id }}', group: '{{ ansible_user_id }}' }
 ]
 
 # SSH additional port

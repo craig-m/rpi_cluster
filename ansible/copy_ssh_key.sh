@@ -22,7 +22,7 @@ tmp_hostsout=$(mktemp)
 
 # log
 rpilogit () {
-	echo -e "rpicluster: $1 \\n";
+	echo -e "rpicluster: $1 \n";
 	logger -t rpicluster "$1";
 }
 
@@ -33,10 +33,10 @@ rpilogit "starting copy_ssh_key.sh";
 # Scan LAN for Raspbian SSHD
 echo -e "[*] running scanssh on 192.168.6.0/24 ";
 sudo scanssh -n 22 -s ssh 192.168.6.0/24 | grep Raspbian | grep "192.168.6" | awk '{print $1}' | sed -s 's/\:22//' > ${tmp_hostsout};
-echo -e "[*] processing list: ${tmp_hostsout} \\n";
+echo -e "[*] processing list: ${tmp_hostsout} \n";
 
 
-IFS=$'\\n'
+IFS=$'\n'
 for livehost in $(cat $tmp_hostsout)
 do
 	echo -e "------ ${livehost} ------ ";

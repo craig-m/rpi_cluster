@@ -1,6 +1,7 @@
 #!/bin/bash
 # name: vagrantfile_user.sh
 # desc: Runs on Vagrant Provision, as Vagrant user.
+# Safe to re-run manually, multiple times over.
 
 # pre-run checks ---------------------------------------------------------------
 
@@ -11,6 +12,9 @@ rpilogit () {
 	echo -e "rpicluster: $1";
 	logger -t rpicluster "$1";
 }
+
+# log
+rpilogit "vagrantfile_user.sh started";
 
 # only run as vagrant
 if [[ vagrant != "$(whoami)" ]]; then
@@ -27,33 +31,33 @@ fi
 # check vagrantvm (created by vagrantfile_root.sh)
 /etc/ansible/facts.d/vagrantvm.fact | grep boxbuild_id || exit 1;
 
-# log
-rpilogit "setup.sh (vagrantvm) started";
-
 # Vagrant VM files -------------------------------------------------------------
 
 # local_data ssh
-if [ ! -d /home/vagrant/rpi_cluster/local_data/ssh ]; then
-	mkdir -pv /home/vagrant/rpi_cluster/local_data/ssh
+keyssshdir="~/rpi_cluster/local_data/ssh/my-ssh-ca"
+if [ ! -d ${keyssshdir} ]; then
+	mkdir -pv ${keyssshdir}
+	chmod 700 ${keyssshdir}
 fi
 
 # local_data pgp
-if [ ! -d /home/vagrant/rpi_cluster/local_data/pgp ]; then
-	mkdir -pv /home/vagrant/rpi_cluster/local_data/pgp
+keyspgpdir="~/rpi_cluster/local_data/pgp"
+if [ ! -d ${keyspgpdir}]; then
+	mkdir -pv ${keyspgpdir}
+	chmod 700 ${keyspgpdir}
 fi
 
-# local_data ansible var backup
-if [ ! -d /home/vagrant/rpi_cluster/local_data/var-bu ]; then
-	mkdir -pv /home/vagrant/rpi_cluster/local_data/var-bu
-fi
+# inventory for localhost
+cat > ~/.ansible_local << EOF
+[deploy]
+stretch ansible_host=stretch.local rpi_ip="10.0.2.15" rpi_racked="vm" rpi_mac="zz:zz:zz:zz:zz:zz"
+EOF
 
 # finish up --------------------------------------------------------------------
 
-# check process count
-echo "check process count";
-/usr/bin/sudo /usr/lib/nagios/plugins/check_procs -w 200 -c 300;
-
 # Done
-rpilogit "setup.sh (vagrantvm) finished";
+rpilogit "vagrantfile_user.sh finished OK";
+
+sleep 1s;
 
 # EOF --------------------------------------------------------------------------

@@ -20,7 +20,6 @@
   tags: [common,commonssh,ssh]
   when:
     - sshprivkeyexists.stat.exists == false
-    - "'deploy' not in group_names"
   register: gen_ansible_user_ssh
 
 

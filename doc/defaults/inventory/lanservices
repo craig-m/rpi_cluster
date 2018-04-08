@@ -1,0 +1,20 @@
+# Hosts ------------------------------------------------------------------------
+
+[lanservices]
+alpha rpi_racked="L2" ansible_host=alpha.local rpi_ip=192.168.6.XX rpi_mac=b8:27:eb:31:XX:XX
+beta rpi_racked="R2" ansible_host=beta.local rpi_ip=192.168.6.XX rpi_mac=b8:27:eb:91:XX:XX
+
+[misc]
+omega rpi_racked="L1" ansible_host=omega.local rpi_ip=192.168.6.XX rpi_mac=b8:27:eb:22:XX:XX
+
+# NTP --------------------------------------------------------------------------
+
+[ntpd:children]
+ntpserver
+
+[ntpserver]
+alpha
+beta
+omega
+
+#-------------------------------------------------------------------------------

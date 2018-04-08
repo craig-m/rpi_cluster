@@ -8,3 +8,4 @@ httpie
 testinfra
 diceware
 ansible-lint
+ara

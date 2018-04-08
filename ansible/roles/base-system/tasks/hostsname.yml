@@ -41,6 +41,7 @@
   when: my_current_hostname == "raspberrypi"
   register: rebooted_rpi
 
+
 # longer pause between lanservices
 - name: pause
   pause:
@@ -48,6 +49,7 @@
   when:
     - my_current_hostname == "Raspberry"
     - rebooted_rpi.changed
+
 
 # wait for host
 - name: wait for host to restart
@@ -62,16 +64,3 @@
   when:
     - my_current_hostname == "Raspberry"
     - rebooted_rpi.changed
-
-
-# /etc/hosts file
-- name: etc hosts file
-  template:
-    src: hosts.j2
-    dest: /etc/hosts
-    owner: root
-    group: root
-    mode: 0644
-  when: "'vagrantvm' not in group_names"
-  become: yes
-  changed_when: False

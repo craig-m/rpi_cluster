@@ -3,15 +3,13 @@
 # desc: create new private SSH, PGP and Ansible vault files.
 # Used when standing up a R-Pi new cluster, with new configs (varible files).
 
-thehomedir="/home/vagrant";
-
 # pre-run checks ---------------------------------------------------------------
 
 # prompt before continue
 echo " ";
 echo "Generate new PGP, SSH, and ansible vault configs (see /doc/defaults/readme.md). Use when creating a new cluster.";
 echo " ";
-echo "WARNING: all old [ssh and PGP] keys, passwords, and ansible varibles will be replaced!"
+echo "WARNING: all old keys (GPG, SSH, CA etc), passwords, and ansible varibles will be replaced!"
 echo " ";
 
 read -p "Type uppercase yes to contine:"$'\n\n' message
@@ -23,6 +21,12 @@ if [ "$message" != "YES" ]; then
 else
   echo "* Continuing.";
 fi
+
+# log
+rpilogit () {
+	echo -e "rpicluster: $1 \n";
+	logger -t rpicluster "$1";
+}
 
 # only run as vagrant
 if [[ vagrant != "$(whoami)" ]]; then
@@ -36,17 +40,13 @@ if [[ stretch != "$(hostname)" ]]; then
   exit 1;
 fi
 
-# check vagrantvm (created by vagrantfile_root.sh)
-/etc/ansible/facts.d/vagrantvm.fact | grep boxbuild_id || exit 1;
+# check vagrantvm OK (created by vagrantfile_root.sh)
+/etc/ansible/facts.d/vagrantvm.fact | grep boxbuild_id > /dev/null 2>&1 || exit 1;
 
-# log
-rpilogit () {
-	echo -e "rpicluster: $1 \n";
-	logger -t rpicluster "$1";
-}
+rpilogit "starting keysandconf_new.sh";
 
-rpilogit "starting new_keysandconf.sh";
-
+# secure umask
+umask 77
 
 # Create PGP key ---------------------------------------------------------------
 # Make a pair of keys, with password for private key.
@@ -55,10 +55,20 @@ rpilogit "starting new_keysandconf.sh";
 # This will be the only password that we need to manage,
 # all other passwords are encrypted with our PGP key.
 
-read -p "Type the GPG password:"$'\n\n' themasterpw
+read -s -p "Type the GPG password, push enter:"$'\n\n' themasterpw
+
+read -s -p "Enter GPG password again, push enter:"$'\n\n' themasterpw_conf
+
+# check passwords match
+if [ "$themasterpw" != "$themasterpw_conf" ]; then
+  echo "ERROR: passwords don't match!";
+  exit 1;
+else
+  echo -e "Passwords match OK.\n";
+fi
 
 # created in tmpfs
-cat > /mnt/ramstore/data/gpg-gen-key-script << EOF
+cat > /mnt/ramstore/data/gpg.batch << EOF
 Key-Type: 1
 Key-Length: 4096
 Subkey-Type: 1
@@ -70,69 +80,87 @@ Passphrase: $themasterpw
 Expire-Date: 0
 EOF
 
-killall gpg-agent
-
 # remmove old keys
 echo "* remove old ~/.gnupg files"
 rm -rfv -- ~/.gnupg/*
+mkdir -pv -- ~/.gnupg/private-keys-v1.d
+mkdir -pv -- ~/.gnupg/openpgp-revocs.d
+
+killall gpg-agent
+gpg-agent bash
+sleep 2s;
 
 # gen new keys
-gpg --batch --gen-key /mnt/ramstore/data/gpg-gen-key-script
+echo "* create gpg private key"
+gpg --batch --gen-key /mnt/ramstore/data/gpg.batch || exit 1;
 
 # clean up
-themasterpw="x";
-srm -v -- /mnt/ramstore/data/gpg-gen-key-script
+themasterpw="x"
+if [ -f /mnt/ramstore/data/gpg.batch ]; then
+  srm -v -- /mnt/ramstore/data/gpg.batch || exit 1;
+fi
 
 # public key id
-mypubkeyid=$(gpg2 --list-public-keys root@localhost | head -n2 | tail -1 | tr -d '\ ')
-
+mypubkeyid=$(gpg2 --list-public-keys admin@localhost | head -n2 | tail -1 | tr -d '\ ')
 
 # pass store -------------------------------------------------------------------
 # the password store is encrypted with the GPG key we just created
 # https://www.passwordstore.org/
+# https://docs.ansible.com/ansible/latest/plugins/lookup/passwordstore.html
 
 echo "* remove old ~/.password-store files"
-rm -rfv -- ${thehomedir}/.password-store/
+rm -rfv -- ~/.password-store/
+rm -rfv -- ~/rpi_cluster/vagrantvm/dotfiles/password-store
 
 echo "* initialize a new password storage"
-pass init ${mypubkeyid}
+pass init ${mypubkeyid} || exit 1;
 
-# ID for this vault
+# test passwords
+# note: only used for verification this script has run (etc),
+# these are not sensitive.
+echo "* create test passwords: "
+
 pass_id=$(uuid)
-pass insert id/
+echo ${pass_id} | pass insert --echo test/id || exit 1;
 
-# test password with a random name
-echo "* create test password: "
 atestpw=$(pwgen -1 -a)
-pass generate test/${atestpw} 10
-echo "* test password is: "
-pass test/${atestpw}
+pass generate --no-symbols test/${atestpw} 10
+echo "* test password named: "
+pass test/${atestpw} || exit 1;
+pass generate --no-symbols test/test 10
 
+mv /home/vagrant/.password-store ~/rpi_cluster/vagrantvm/dotfiles/password-store
+ln -s -f ~/rpi_cluster/vagrantvm/dotfiles/password-store /home/vagrant/.password-store
 
 # ansible vault ----------------------------------------------------------------
 
 # generate a password for the new vault files, stored in pass
-pass generate ansible/vault/current 40
+pass generate --no-symbols ansible/vault/current 40
 
 # remove old config
 echo "* remove old ansible var files"
-rm -rfv -- /home/vagrant/rpi_cluster/deploy/ansible/host_vars/*
-rm -rfv -- /home/vagrant/rpi_cluster/deploy/ansible/group_vars/*
+rm -rfv -- ~/rpi_cluster/deploy/ansible/host_vars/*
+rm -rfv -- ~/rpi_cluster/deploy/ansible/group_vars/*
 
 # copy example files from /doc/defaults/{host_vars,group_vars} to deploy/ansible/{host_vars,group_vars}
 echo "* copy /doc/default var files"
 
 rsync -avr -- \
-  /home/vagrant/rpi_cluster/doc/defaults/host_vars/* \
-  /home/vagrant/rpi_cluster/ansible/host_vars/
+  ~/rpi_cluster/doc/defaults/host_vars/* \
+  ~/rpi_cluster/ansible/host_vars/
 
 rsync -avr -- \
-  /home/vagrant/rpi_cluster/doc/defaults/group_vars/* \
-  /home/vagrant/rpi_cluster/ansible/group_vars/
+  ~/rpi_cluster/doc/defaults/group_vars/* \
+  ~/rpi_cluster/ansible/group_vars/
 
+rsync -avr -- \
+  ~/rpi_cluster/doc/defaults/inventory/* \
+  ~/rpi_cluster/ansible/inventory/
 
 # edit the var files - this is a manual step
-echo "* You need to edit /rpi_cluster/local_data/ansible_var_temp on your desktop (or in VM if you want)."
+echo "* On your desktop or in Vagrant VM, in rpi_cluster/ansible"
+echo "you need to edit files in group_vars/* + host_vars/* + inventory/* to suit your needs."
+echo "These files will be encrypted with ansible vault when you are done. \n"
 read -p "Type uppercase yes to contine:"$'\n\n' message
 echo " ";
 if [ "$message" != "YES" ]; then
@@ -145,62 +173,83 @@ fi
 
 # encrypt all of the vault files in host_vars and group_vars
 echo "* encrypt the vault files with ansible-vault"
+
 find \
-  /home/vagrant/rpi_cluster/deploy/ansible/host_vars/ \
-  /home/vagrant/rpi_cluster/deploy/ansible/group_vars/ \
+  ~/rpi_cluster/ansible/group_vars/* \
   -iname vault \
-  -exec ansible-vault --vault-id ~/rpi_cluster/ansible/vault_pass.sh encrypt {} \;
+  -exec ansible-vault encrypt {} \;
+
+find \
+  ~/rpi_cluster/ansible/host_vars/* \
+  -iname vault \
+  -exec ansible-vault encrypt {} \;
 
 
 # SSH keys ---------------------------------------------------------------------
 
 # remove old
-echo "* remove old ssh key pair from ~/.ssh/"
-rm -fv -- ${thehomedir}/.ssh/id_rsa
-rm -fv -- ${thehomedir}/.ssh/id_rsa.pub
+rm -rfv -- ~/rpi_cluster/local_data/ssh/my-ssh-ca/ca
+rm -rfv -- ~/rpi_cluster/local_data/ssh/id_ecdsa
+rm -rfv -- ~/rpi_cluster/local_data/ssh/id_ecdsa.pub
+rm -rfv -- ~/rpi_cluster/local_data/ssh/id_ecdsa-cert.pub
+
+
+# ------ create the CA certs ------
+
+mkdir -pv ~/rpi_cluster/local_data/ssh/my-ssh-ca/ || exit 1
+cd ~/rpi_cluster/local_data/ssh/my-ssh-ca/ || exit 1
+
+# generate a password for the SSH CA
+echo "* create a password for ssh CA"
+pass generate --no-symbols ssh/CA 40
+# get the password
+thesshcapw=$(pass ssh/CA)
+
+# generate the CA key pair (with password)
+ssh-keygen -C ~/rpi_cluster/local_data/ssh/my-ssh-ca/CA -f ~/rpi_cluster/local_data/ssh/my-ssh-ca/ca -P ${thesshcapw} -C rpi_ssh_ca -I rpi_ssh_ca_1
+
+
+# ------ SSH user keys ------
 
 # generate a password for the SSH private key
 echo "* create a password for ssh private key"
 pass generate --no-symbols ssh/id_rsa_pw 30
-
 # get the password
 thesshkeypw=$(pass ssh/id_rsa_pw)
 
-# create key pair
-echo "* create a new SSH key pair"
-ssh-keygen -b 4096 -P ${thesshkeypw} -t rsa -f ${thehomedir}/.ssh/id_rsa
+# generate our SSH key pair
+ssh-keygen -t ecdsa -P ${thesshkeypw} -f ~/rpi_cluster/local_data/ssh/id_ecdsa
 
-# cleanup
-thesshkeypw="x";
 
+# ------ sign our SSH key with CA key ------
+
+# sign the SSH key
+ssh-keygen -s ~/rpi_cluster/local_data/ssh/my-ssh-ca/ca -I vagrant -P ${thesshcapw} -n pi -V +1w -z 1 ~/rpi_cluster/local_data/ssh/id_ecdsa
+
+ # cleanup
+ thesshkeypw="x";
+ thesshcapw="x";
 
 # ID ---------------------------------------------------------------------------
 
 if [ ! -f /home/vagrant/rpi_cluster/local_data/keyset_id ]; then
   keyset_id=$(uuid)
-  ssh_fprint=$(ssh-keygen -l -f ~/.ssh/id_rsa.pub)
-  touch /home/vagrant/rpi_cluster/local_data/keyset_id
-  echo "keyset_id: ${keyset_id}" > /home/vagrant/rpi_cluster/local_data/keyset_id
-  echo "gpgkey_id: ${mypubkeyid}" >> /home/vagrant/rpi_cluster/local_data/keyset_id
-  echo "ssh_pub_id: ${ssh_fprint}" >> /home/vagrant/rpi_cluster/local_data/keyset_id
+  ssh_fprint=$(ssh-keygen -l -f ~/rpi_cluster/local_data/ssh/id_ecdsa.pub )
+  touch ~/rpi_cluster/local_data/keyset_id
+  echo "keyset_id: ${keyset_id}" > ~/rpi_cluster/local_data/keyset_id
+  echo "gpgkey_id: ${mypubkeyid}" >> ~/rpi_cluster/local_data/keyset_id
+  echo "ssh_pub_id: ${ssh_fprint}" >> ~/rpi_cluster/local_data/keyset_id
+  # from VM build:
+  vmbuild_id=$(/etc/ansible/facts.d/vagrantvm.fact | jq '.boxbuild_id' | tr -d '"')
+  echo "boxbuild_id: ${vmbuild_id}" >> ~/rpi_cluster/local_data/keyset_id
 fi
 
 # Backup -----------------------------------------------------------------------
-# the GPG, SSH, and password store files are only in an ephemeral right now, we
-# need to back them up. They can be restored in a new VN when we have an
-# exiting cluster up and running already.
 
-# to local
-rsync -avr --exclude '*.DS_Store' \
-  -- /home/vagrant/.ssh/ /home/vagrant/rpi_cluster/local_data/ssh/
+rsync -avr \
+  --exclude '*.DS_Store' \
+  -- ~/.gnupg/ ~/rpi_cluster/local_data/pgp
 
-rsync -avr --exclude '*.DS_Store' \
-  -- /home/vagrant/.gnupg/ /home/vagrant/rpi_cluster/local_data/pgp
-
-# copy into git repo
-rsync -avr --delete --exclude '*.DS_Store' \
-  -- /home/vagrant/.password-store/ /home/vagrant/rpi_cluster/vagrantvm/dotfiles/password-store/
-
-rpilogit "finished new_keysandconf.sh";
+rpilogit "finished keysandconf_new.sh";
 
 # EOF --------------------------------------------------------------------------

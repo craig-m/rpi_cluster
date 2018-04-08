@@ -3,14 +3,7 @@
 #
 # ansible-playbook -e "runtherole=maintenance" single-role.yml
 
-- name: ping all hosts
-  hosts: all
-  tasks:
-     - name: Ping
-       ping:
-
 - name: single role
   hosts: all
-  serial: 1
   roles:
     - "{{ runtherole }}"

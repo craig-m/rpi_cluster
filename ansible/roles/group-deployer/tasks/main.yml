@@ -4,15 +4,6 @@
 - debug: msg="deployer role "
 
 
-# ssh config
-- name: .ssh/config template
-  template:
-    src: ssh-config.j2
-    dest: ~/.ssh/config
-    mode: 0640
-  tags: [deployer]
-
-
 # Download src/pacakges etc
 - import_tasks: dl_packages.yml
   tags: [deployer]

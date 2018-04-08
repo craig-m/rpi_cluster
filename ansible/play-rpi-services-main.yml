@@ -28,7 +28,7 @@
     - dhcp-client
     - dhcp-server
     - busybox-httpd
-    - lanservices-node
+    - group-lanservices
 
 
 - name: gather facts on nodes

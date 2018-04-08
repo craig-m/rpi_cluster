@@ -20,7 +20,7 @@ rpi_my_dns_server_2: "192.168.6.66"
 
 # Failover host (alpha):
 rpi_failover_hostname: "alpha"
-rpi_failover_ip: "192.168.6.66"
-rpi_failover_hwaddr: "b8:27:eb:31:zz:zz"
+rpi_failover_ip: "{{ hostvars['alpha']['rpi_ip'] }}"
+rpi_failover_hwaddr: "b8:27:eb:XX:XX:XX"
 
 #-------------------------------------------------------------------------------

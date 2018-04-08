@@ -58,43 +58,14 @@ host router {
  fixed-address {{ rpi_net_default_gw }};
 }
 
-###### Lan Service nodes ######
+###### R-Pi ######
 
-host alpha {
-  hardware ethernet {{ hostvars['alpha']['ansible_default_ipv4']['macaddress'] }};
-  fixed-address {{ hostvars['alpha']['ansible_default_ipv4']['address'] }};
+{% for host in groups['all'] %}
+host {{ hostvars[host]['inventory_hostname'] }} {
+  hardware ethernet {{ hostvars[host]['rpi_mac'] }};
+  fixed-address {{ hostvars[host]['rpi_ip'] }};
 }
 
-host beta {
-  hardware ethernet {{ hostvars['beta']['ansible_default_ipv4']['macaddress'] }};
-  fixed-address {{ hostvars['beta']['ansible_default_ipv4']['address'] }};
-}
+{% endfor %}
 
-host omega {
-  hardware ethernet {{ hostvars['omega']['ansible_default_ipv4']['macaddress'] }};
-  fixed-address {{ hostvars['omega']['ansible_default_ipv4']['address'] }};
-}
-
-###### Compute / worker nodes ######
-
-host {{ compute1_name }} {
-  hardware ethernet {{ compute1_mac }};
-  fixed-address {{ compute1_ip }};
-}
-
-host {{ compute2_name }} {
-  hardware ethernet {{ compute2_mac }};
-  fixed-address {{ compute2_ip }};
-}
-
-host {{ compute3_name }} {
-  hardware ethernet {{ compute3_mac }};
-  fixed-address {{ compute3_ip }};
-}
-
-host {{ compute4_name }} {
-  hardware ethernet {{ compute4_mac }};
-  fixed-address {{ compute4_ip }};
-}
-
-# EOF
+# EOF ##########################################################################

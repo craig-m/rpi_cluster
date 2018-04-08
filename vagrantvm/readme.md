@@ -11,8 +11,8 @@ Scripts that configure this VM:
 
 * vagrantvm/vagrantfile_root.sh (automatic on 'vagrant up')
 * vagrantvm/vagrantfile_user.sh (automatic on 'vagrant up')
-* ansible/bootstrap-deployer.sh (manual)
-* ansible/roles/host-vagrantvm/ (called in bootstrap-deployer.sh)
+* ansible/ (manual)
+* ansible/roles/host-vagrantvm/ (called in )
 
 
 ## Using
@@ -36,9 +36,12 @@ $ vagrant ssh
 ssh-agent bash
 pass ssh/id_rsa_pw
 ssh-add
+ssh-add -l
+```
+
+```
 source ~/env/bin/activate
 cd ~/rpi_cluster/ansible/
-ssh-add -l
 fab -l
 ```
 

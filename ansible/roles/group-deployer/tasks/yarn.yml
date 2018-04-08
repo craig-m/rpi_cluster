@@ -8,20 +8,20 @@
   file: path=/opt/cluster/mysrc/yarn/ state=directory mode=0755
 
 
-# add apt gpg key
-- name: Add yarn apt key
-  apt_key:
-    data: "{{ lookup('file', 'yarnkey.asc') }}"
-    state: present
-  become: yes
-
-
 # copy yarn gpg key to server also
 - name: copy yarnpubkey
   copy:
     src: yarnkey.asc
     dest: /opt/cluster/mysrc/yarn/yarnkey.asc
     mode: 0644
+
+
+# add apt gpg key
+- name: Add yarn apt key
+  apt_key:
+    data: "{{ lookup('file', '/opt/cluster/mysrc/yarn/yarnkey.asc') }}"
+    state: present
+  become: yes
 
 
 # check apt file

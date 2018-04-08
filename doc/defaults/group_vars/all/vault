@@ -30,49 +30,13 @@ rpi_dhcp_dns2: "192.168.6.68"
 
 # LAN default gateway
 rpi_net_default_gw: "192.168.6.6"
-rpi_net_default_gw_mac: "zz:zz:zz:zz:zz:zz"
+rpi_net_default_gw_mac: "00:0d:b9:XX:XX:XX"
 
 # WiFi AP (OpenWRT router)
 rpi_net_wifi_gw: "192.168.6.2"
-rpi_net_wifi_gw_mac: "zz:zz:zz:zz:zz:zz"
+rpi_net_wifi_gw_mac: "E4:95:6E:XX:XX:XX"
 
 # This IP will float between two of the Compute nodes. Managed by keepalived
 rpi_loadbal_float_ip: "192.168.6.111"
-
-# Admin nodes ------------------------------------------------------------------
-
-admin1_name: "alpha"
-admin1_ip: "192.168.6.66"
-admin1_mac: "b8:27:eb:31:26:zz"
-
-admin2_name: "beta"
-admin2_ip: "192.168.6.68"
-admin2_mac: "b8:27:eb:91:zz:zz"
-
-admin3_name: "omega"
-admin3_ip: "192.168.6.16"
-admin3_mac: "b8:27:eb:22:zz:zz"
-
-admin4_name: "psi"
-admin4_ip: "192.168.6.100"
-admin4_mac: "b8:27:eb:ec:zz:zz"
-
-# compute/worker Nodes ---------------------------------------------------------
-
-compute1_name: "delta"
-compute1_ip: "192.168.6.200"
-compute1_mac: "b8:27:eb:31:e8:zz"
-
-compute2_name: "gamma"
-compute2_ip: "192.168.6.223"
-compute2_mac: "b8:27:eb:ad:zz:zz"
-
-compute3_name: "zeta"
-compute3_ip: "192.168.6.227"
-compute3_mac: "b8:27:eb:99:zz:zz"
-
-compute4_name: "epsilon"
-compute4_ip: "192.168.6.232"
-compute4_mac: "b8:27:eb:bf:zz:zz"
 
 #-------------------------------------------------------------------------------

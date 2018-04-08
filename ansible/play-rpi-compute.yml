@@ -27,7 +27,7 @@
     - golang
     - dotnet
     - hadoop
-    - compute-node
+    - group-compute
 
 
 - name: gather facts on nodes

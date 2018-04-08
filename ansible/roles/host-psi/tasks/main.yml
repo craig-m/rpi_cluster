@@ -1,7 +1,6 @@
 ---
 # tasks just for psi R-Pi
 - debug: msg="psi node setup "
-  tags: [host-psi]
 
 
 - name: copy rpi_cluster code
@@ -17,7 +16,6 @@
       - "--exclude=~/rpi_cluster/local_data/"
       - "--exclude=~/rpi_cluster/code/hugo-side/node_modules/"
   changed_when: False
-  tags: [host-omega]
 
 
 - name: copy firewall script
@@ -29,7 +27,6 @@
     mode: 0755
   become: yes
   changed_when: False
-  tags: [host-psi]
 
 
 - name: run firewall script
@@ -38,13 +35,41 @@
     chdir: /root/
     creates: /root/.ufw
   become: yes
-  tags: [host-psi]
+
+
+- name: copy ramstore script
+  template:
+    src: ramstore.j2
+    dest: /root/ramstore.sh
+    owner: root
+    group: root
+    mode: 0755
+  become: yes
+  changed_when: False
+
+
+- name: run firewall script
+  shell: /root/ramstore.sh
+  args:
+    chdir: /root/
+    creates: /mnt/ramstore/data/test.txt
+  become: yes
+
+
+- name: copy vault pw
+  copy:
+    content: "{{ myvaultpassword }}"
+    dest: "/mnt/ramstore/data/.vaultpassword"
+    owner: pi
+    group: pi
+    mode: 0440
+  vars:
+    myvaultpassword: "{{ lookup('passwordstore', 'ansible/vault/current returnall=true')}}"
 
 
 - name: output to rpicluster log
   shell: logger -t rpicluster host-psi role ran
   changed_when: False
-  tags: [host-psi]
 
 
 - name: roles info txt
@@ -55,4 +80,3 @@
     group: root
     mode: 0444
   become: yes
-  tags: [host-psi]

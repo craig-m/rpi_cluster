@@ -8,12 +8,10 @@ from fabric.api import *
 from fabric.network import *
 from fabric.context_managers import *
 from fabric.contrib.files import *
-
 from datetime import datetime
-
-import os
 from os import path
 from glob import glob
+import os
 import sys
 
 """
@@ -24,35 +22,41 @@ env.user = 'pi'
 env.use_ssh_config = False
 env.output_prefix = False
 env.timeout = 30
+env.keepalive = 20
 env.connection_attempts = 3
 env.parallel = False
+env.forward_agent = False
 
-def host_init():
-    " defailt Raspbian password "
+def default_host_init():
+    " default Raspbian password "
+    env.user = 'pi'
     env.password = 'raspberry'
+    env.disable_known_hosts = False
     env.reject_unknown_hosts = False
+    env.no_agent = True
+    env.connection_attempts = 2
+    env.output_prefix = True
 
-def host_init_ssh():
-    " key, for use when installed "
-    env.key_filename = '../key/rpiclust_rsa'
-
-"""
-functions - common
-"""
-
-def rpi_sshtest():
-    """ test ssh is up """
-    print "[*] testing SSH default creds and host (password login)"
-    execute(host_init)
-    run("hostname")
-    run("cat /sys/class/net/eth0/address")
-    print "My ssh fingerprints!"
-    sudo("ssh-keygen -lf /etc/ssh/ssh_host_ecdsa_key")
-    sudo("ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key")
 
 """
 Tasks
 """
+
+@task
+def rpi_sshtest():
+    """ test default login """
+    with settings(warn_only=True):
+        """ test default ssh is up """
+        print("[*] testing SSH using password on %(host)s as %(user)s" % env)
+        execute(default_host_init)
+        run("hostname")
+        run("hostname -I")
+        print "MAC of eth0:"
+        run("cat /sys/class/net/eth0/address")
+        print "SSH fingerprints:"
+        sudo("ssh-keygen -lf /etc/ssh/ssh_host_ecdsa_key")
+        sudo("ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key")
+
 
 # ansible commands -------------------------------------------------------------
 
@@ -71,16 +75,13 @@ def ansible_ping():
 @task
 def ansible_0_lansrv_deploy():
     """ Playbook - LanServices - Deployer R-Pi (psi)  """
-    local('ansible-playbook play-deployer.yml -e "ansible_user=pi" -v')
+    local('ansible-playbook --connection=local -i ~/.ansible_local play-deployer.yml')
+    local('ansible-playbook -e "runtherole=group-deployer-ssh" single-role.yml --connection=local')
 
 @task
 def ansible_1_lansrv_main():
-    """ Playbook - LanServices - base (alpha, beta)  """
+    """ Playbook - LanServices - (alpha, beta, omega)  """
     local('ansible-playbook play-rpi-services-main.yml -v')
-
-@task
-def ansible_2_lansrv_misc():
-    """ Playbook - LanServices - misc (omega). """
     local('ansible-playbook play-rpi-services-misc.yml -v')
 
 @task
@@ -106,13 +107,14 @@ def cluster_maintainence():
 
 @task
 def cluster_shutdown():
-    """ shutdown cluster (excludes deployer) """
+    """ shutdown cluster - ansible (excludes deployer) """
     with settings(warn_only=True):
         print('Powering down all nodes')
         local('ansible compute -a "shutdown -h now" -f 4 --become')
         local('ansible lanservices -a "shutdown -h now" -f 1 --become')
         local('ansible misc -a "shutdown -h now" -f 2 --become')
         local('ansible all -m ping')
+
 
 # code deploy ------------------------------------------------------------------
 
@@ -124,9 +126,6 @@ def deploy_omega_site():
     local('cd ../code/hugo-site/ && hugo')
     print('uploading public web code')
     local('cd ../code/hugo-site/ && rsync -avr -- public/ pi@omega.local:/srv/nginx/hugo-site/')
-    #print('upload omegapyapi')
-    #local('cd ../code/ && rsync -avr -- omegapyapi/* pi@omega.local:/srv/python/omegapyapi/')
-    #local('ssh pi@omega.local bash -c /srv/python/omegapyapi/install.sh')
     local ('logger -t rpicluster "fabfile.py finish deploy_omega_site "')
 
 # testing ----------------------------------------------------------------------

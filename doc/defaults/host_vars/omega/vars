@@ -1,5 +1,5 @@
 ---
-# vars for Omega, LanServices Misc 
+# vars for Omega, LanServices Misc
 
 # Common host configs ----------------------------------------------------------
 
@@ -15,8 +15,8 @@ ssh_group_port: "2221"
 #-------------------------------------------------------------------------------
 
 # for dhcpcd config
-rpi_my_dns_server_1: "192.168.6.66"
-rpi_my_dns_server_2: "192.168.6.68"
+rpi_my_dns_server_1: "{{ hostvars['alpha']['rpi_ip'] }}"
+rpi_my_dns_server_2: "{{ hostvars['beta']['rpi_ip'] }}"
 
 #-------------------------------------------------------------------------------
 
@@ -25,6 +25,7 @@ nginx_configs: [
   {cfsource: 'sites-enabled/omega.j2', cfdest: '/etc/nginx/sites-enabled/omega.conf'}
 ]
 nginx_port: "88"
+nginx_port2: "3000"
 nginx_site_enabled: "omega"
 
 # haproxy server:

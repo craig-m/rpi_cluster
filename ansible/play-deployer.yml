@@ -1,9 +1,9 @@
 ---
-# Deployer
+# Deployers
 
 
 - name: Deployer
-  hosts: stretch
+  hosts: deploy
   gather_facts: True
   roles:
     - ansible-pre-role
@@ -15,23 +15,21 @@
     - ntp-server
     - redis
     - nodejs
-    - deployer-node
+    - docker
+    - group-deployer
+    - group-deployer-ssh
     - ansible-post-role
 
 
-- name: Deployer VagrantVM
-  hosts: stretch
-  gather_facts: True
-  roles:
-    - docker
-    - host-vagrantvm
-
-
-- name: Deployer Psi
+- name: rpi deployer
   hosts: psi
   gather_facts: True
   roles:
-    - ansible-pre-role
-    - haveged
-    - deployer-node
     - host-psi
+
+
+- name: Deployer
+  hosts: stretch
+  gather_facts: True
+  roles:
+    - host-vagrantvm

@@ -1,0 +1,45 @@
+---
+- debug: msg="group deployer ssh "
+
+
+- debug: msg="inventory_hostname {{ inventory_hostname }} "
+  ignore_errors: True
+  changed_when: False
+
+
+- name: ssh config
+  template: src=ssh_client_conf.j2 dest=~/.ssh/config
+  delegate_to: localhost
+  changed_when: False
+
+
+- name: etc hosts
+  template: src=etc_hosts.j2 dest=/etc/hosts
+  delegate_to: localhost
+  become: True
+  changed_when: False
+
+
+#- name: ssh keyscan inventory_hostname .local
+#  shell: ssh-keygen -R "{{ inventory_hostname }}.local"
+#  delegate_to: localhost
+#  changed_when: false
+
+
+- name: known hosts
+  shell: ssh -o StrictHostKeyChecking=false pi@{{ inventory_hostname }}.local
+  delegate_to: localhost
+  changed_when: False
+  ignore_errors: True
+
+
+# ssh-keyscan -4 -t ecdsa-sha2-nistp256 psi.local | ssh-keygen -lf - | awk '{print $2}'
+
+#- name: host in known_hosts
+#  lineinfile:
+#    dest: ~/.ssh/known_hosts
+#    create: yes
+#    state: present
+#    line: "{{ lookup('pipe', 'ssh-keyscan -4 -t ecdsa-sha2-nistp256 {{ inventory_hostname }}.local') }}"
+#    regexp: "^{{ inventory_hostname }}.local"
+#  delegate_to: localhost

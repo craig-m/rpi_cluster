@@ -1,4 +1,4 @@
 ---
 allow_duplicates: no
 dependencies:
-  - { role: deployer-node }
+  - { role: group-deployer }

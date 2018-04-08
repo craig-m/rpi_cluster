@@ -1,7 +1,7 @@
 #!/bin/bash
 # name: vagrantfile_root.sh
 # desc: Runs on Vagrant Provision, as root user. Install all dependencies.
-# output logged to ~/vagrantfile.sh.log
+# output logged to ~/vagrantfile.sh.log. Safe to re-run manually, multiple times over.
 
 # pre-run checks and info ------------------------------------------------------
 
@@ -21,11 +21,11 @@ if [[ stretch != "$(hostname)" ]]; then
 fi
 
 # log all output from this script
-exec > >(tee /home/vagrant/vagrantfile.sh.log)
+exec > >(tee /root/vagrantfile.sh.log)
 exec 2>&1
 
 # script info
-echo -e "Vagrantfile.sh starting";
+echo -e "vagrantfile_root.sh starting";
 script_name=$(readlink -f ${BASH_SOURCE[0]});
 script_pwd=$(pwd);
 
@@ -56,9 +56,6 @@ if [ -f /etc/ld.so.preload ]; then
   exit 1;
 fi
 
-# Remount /proc with hidepid option to hide processes from other users
-/usr/bin/sudo mount -o remount,rw,hidepid=2 /proc
-
 # kernel info
 uname -a;
 
@@ -79,11 +76,13 @@ apt-get install -y -q \
   xsltproc multitail ccze parted libffi-dev libssl-dev libyaml-dev multistrap \
   libgdbm-dev libncurses5-dev python-pip python-dev libpython-all-dev screen \
   nftables iptables-nftables-compat arptables ebtables iptables-nftables-compat \
-  uuid uuid-dev;
-
-apt-get install -y -q \
-  monitoring-plugins-common monitoring-plugins-basic netcat-traditional \
+  uuid uuid-dev monitoring-plugins-common monitoring-plugins-basic netcat-traditional \
   tcpdump lynx telnet wget curl alpine hydra socat sshfs nmap;
+
+# haveged - an unpredictable random number generator
+sudo apt-get install -y haveged;
+systemctl start haveged.service;
+systemctl enable haveged.service;
 
 # Test programs were installed and are now in our path
 # ( ref http://wiki.bash-hackers.org/scripting/style )
@@ -221,7 +220,6 @@ chown -v vagrant:vagrant /var/run/rpiclust/
 
 # finish up --------------------------------------------------------------------
 
-updatedb;
 apt-file update;
 rm -f -- /var/cache/apt/archives/*.deb;
 sleep 2s;
@@ -231,11 +229,12 @@ find / -user root -perm -4000 -exec ls -ldb {} \; > /root/setuid_list.txt
 
 # check process count
 echo "check process count";
-/usr/lib/nagios/plugins/check_procs -w 200 -c 300;
+/usr/lib/nagios/plugins/check_procs -w 200 -c 300 || exit 1;
 
 # check disk use
 echo "check disk usage";
 /usr/lib/nagios/plugins/check_disk -x /dev/sda1;
+
 
 # set ansible facts
 if [ ! -f /etc/ansible/facts.d/vagrantvm.fact ]; then
@@ -254,8 +253,10 @@ EOF
   chmod 755 /etc/ansible/facts.d/vagrantvm.fact;
 fi
 
+
 # done
-echo "Vagrantfile.sh ran" >> /home/Vagrantfile.sh.txt
-rpilogit "Vagrantfile.sh finished OK";
+rpilogit "vagrantfile_root.sh finished OK";
+
+sleep 1s;
 
 # EOF --------------------------------------------------------------------------

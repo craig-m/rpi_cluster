@@ -39,13 +39,13 @@ def setup_packages():
 def bootstrap_remote():
     """ setup """
     print "[*] run bootstrap script on remote system and detach "
-    local("logger 'rpicluster: bootstrap-deployer.sh on %s@%s under screen'" % (env.user, env.host))
-    run('screen -c  ~/rpi_cluster/deploy/ansible/files/fab_screenrc -L -d -m  ~/rpi_cluster/deploy/scripts/bootstrap-deployer.sh; sleep 3')
+    local("logger 'rpicluster:  on %s@%s under screen'" % (env.user, env.host))
+    run('screen -c  ~/rpi_cluster/deploy/ansible/files/fab_screenrc -L -d -m  ~/rpi_cluster/deploy/scripts/; sleep 3')
 
 def check_bootstrap():
     """ check bootstrap is running  """
     print "[*] checking bootstrap-deployer  "
-    run('sleep 2; ps aux | grep "bootstrap-deployer.sh" | grep -v grep')
+    run('sleep 2; ps aux | grep "" | grep -v grep')
 
 
 """
@@ -61,7 +61,7 @@ def deployer_psi_upload():
 
 @task
 def deployer_psi_bootstrap():
-    """ run bootstrap-deployer.sh on remote psi node (needs -H <ip>) """
+    """ run  on remote psi node (needs -H <ip>) """
     execute(setup_packages)
     execute(upload_to_psi)
     execute(bootstrap_remote)
@@ -70,5 +70,5 @@ def deployer_psi_bootstrap():
 
 @task
 def deployer_local_bootstrap():
-    """ run bootstrap-deployer.sh on local VagrantVM """
-    local('sh ~/rpi_cluster/admin/ansible/scripts/bootstrap-deployer.sh')
+    """ run  on local VagrantVM """
+    local('sh ~/rpi_cluster/admin/ansible/scripts/')
