@@ -3,19 +3,44 @@
 - debug: msg="psi node setup "
 
 
+- name: rpi_cluster dir in homefolder
+  file:
+    path: ~/rpi_cluster/
+    state: directory
+    mode: 0770
+
+
+- name: copy rpi_cluster ansible
+  synchronize:
+    src: ~/rpi_cluster/ansible
+    dest: ~/rpi_cluster/ansible
+    recursive: true
+    delete: yes
+    rsync_opts:
+      - '--no-motd'
+      - '--exclude=~/rpi_cluster/.DS_Store'
+
+
+- name: copy rpi_cluster serverspec
+  synchronize:
+    src: ~/rpi_cluster/serverspec
+    dest: ~/rpi_cluster/serverspec
+    recursive: true
+    delete: yes
+    rsync_opts:
+      - '--no-motd'
+      - '--exclude=~/rpi_cluster/.DS_Store'
+
+
 - name: copy rpi_cluster code
   synchronize:
-    src: ~/rpi_cluster/
-    dest: ~/rpi_cluster/
+    src: ~/rpi_cluster/code
+    dest: ~/rpi_cluster/code
+    recursive: true
+    delete: yes
     rsync_opts:
-      - "--no-motd"
-      - "--exclude=~/rpi_cluster/.git"
-      - "--exclude=~/rpi_cluster/.vagrant/"
-      - "--exclude=~/rpi_cluster/.DS_Store"
-      - "--exclude=~/rpi_cluster/ignore_me/"
-      - "--exclude=~/rpi_cluster/local_data/"
-      - "--exclude=~/rpi_cluster/code/hugo-side/node_modules/"
-  changed_when: False
+      - '--no-motd'
+      - '--exclude=~/rpi_cluster/.DS_Store'
 
 
 - name: copy firewall script
@@ -66,6 +91,10 @@
   become: true
   vars:
     myvaultpassword: "{{ lookup('passwordstore', 'ansible/vault/current returnall=true')}}"
+
+
+# ssh-keygen -s ~/rpi_cluster/local_data/ssh/my-ssh-ca/ca -P ${thesshcapw} -I vagrant -n pi -V +4w -z 1 /opt/cluster/
+
 
 
 - name: output to rpicluster log

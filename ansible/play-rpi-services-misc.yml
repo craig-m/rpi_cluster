@@ -17,7 +17,7 @@
     - userac
     - base-system
     - rpilog
-    - ssh
+    - ssh-server
     - haveged
     - uptimed
     - golang

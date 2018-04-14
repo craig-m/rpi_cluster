@@ -10,14 +10,13 @@
     - userac
     - base-system
     - rpilog
-    - ssh
+    - ssh-server
     - haveged
     - ntp-server
     - redis
     - nodejs
     - docker
     - group-deployer
-    - group-deployer-ssh
     - ansible-post-role
 
 

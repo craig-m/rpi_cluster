@@ -39,11 +39,12 @@
   tags: [ansiblepre]
 
 
-#- name: rpi deployer ansible runcount
-#  debug: msg="ansible {{ lookup('redis_kv', 'redis://localhost:6379,/rpi/deployer/ansible/runcount') }} runs"
-#  run_once: True
-#  changed_when: False
-#  tags: [ansiblepre]
+- name: get rpi deployer ansible runcount
+  local_action: command /usr/bin/redis-cli get /rpi/deployer/ansible/runcount
+  run_once: True
+  changed_when: False
+  tags: [ansiblepre]
+  ignore_errors: True
 
 
 - name: RedisDB set ip

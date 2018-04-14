@@ -6,10 +6,6 @@ install-deploy-tools.sh will setup the deploy host (Vagrant VM or 'psi' R-Pi), i
 Assumes working from:
 
 ```
-vagrant@stretch:~$ pass ssh/id_rsa_pw
-vagrant@stretch:~$ ssh-agent bash
-vagrant@stretch:~$ ssh-add
-Enter passphrase for /home/vagrant/.ssh/id_rsa:
 vagrant@stretch:~$ source ~/env/bin/activate
 (env) vagrant@stretch:~$ cd rpi_cluster/ansible/
 ```
@@ -66,6 +62,12 @@ gathering = smart
 fact_caching = redis
 fact_caching_connection = localhost:6379:0
 fact_caching_timeout = 86400
+```
+
+login with default creds
+
+```
+$ ansible all -a "uname -a" -f 10 -e "ansible_user=pi ansible_ssh_pass=raspberry ansible_sudo_pass:raspberry" -e 'host_key_checking=False'
 ```
 
 

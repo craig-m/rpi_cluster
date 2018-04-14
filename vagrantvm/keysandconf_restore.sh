@@ -53,4 +53,13 @@ fi
 
 rpilogit "finished keysandconf_restore.sh";
 
+# -- file start --
+cat > /etc/ansible/facts.d/keysandconf.fact << EOF
+#!/bin/bash
+echo '{ "keysandconf" : "true" }';
+EOF
+# -- file stop --
+
+chmod 755 /etc/ansible/facts.d/keysandconf.fact
+
 # EOF --------------------------------------------------------------------------

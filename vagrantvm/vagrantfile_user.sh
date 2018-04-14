@@ -53,7 +53,9 @@ cat > /opt/cluster/data/ansible_local << EOF
 stretch ansible_host=stretch.local rpi_ip="10.0.2.15" rpi_racked="vm" rpi_mac="zz:zz:zz:zz:zz:zz"
 EOF
 
-ln -s -f /opt/cluster/data/ansible_local ~/.ansible_inv
+if [ ! ~/.ansible_inv ]; then
+	ln -s -f /opt/cluster/data/ansible_local ~/.ansible_inv
+fi
 
 # finish up --------------------------------------------------------------------
 

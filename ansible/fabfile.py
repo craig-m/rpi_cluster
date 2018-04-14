@@ -27,36 +27,9 @@ env.connection_attempts = 3
 env.parallel = False
 env.forward_agent = False
 
-def default_host_init():
-    " default Raspbian password "
-    env.user = 'pi'
-    env.password = 'raspberry'
-    env.disable_known_hosts = False
-    env.reject_unknown_hosts = False
-    env.no_agent = True
-    env.connection_attempts = 2
-    env.output_prefix = True
-
-
 """
 Tasks
 """
-
-@task
-def rpi_sshtest():
-    """ test default login """
-    with settings(warn_only=True):
-        """ test default ssh is up """
-        print("[*] testing SSH using password on %(host)s as %(user)s" % env)
-        execute(default_host_init)
-        run("hostname")
-        run("hostname -I")
-        print "MAC of eth0:"
-        run("cat /sys/class/net/eth0/address")
-        print "SSH fingerprints:"
-        sudo("ssh-keygen -lf /etc/ssh/ssh_host_ecdsa_key")
-        sudo("ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key")
-
 
 # ansible commands -------------------------------------------------------------
 
@@ -73,12 +46,19 @@ def ansible_ping():
     local('ansible all -m ping')
 
 @task
+def ansible_0_rpi_default():
+    """ setup ssh access - uses default raspberry pw (all)  """
+    local('ansible all -a "uname -a" -f 10 -e "ansible_user=pi ansible_ssh_pass=raspberry ansible_sudo_pass:raspberry host_key_checking=False"')
+    local('ansible-playbook play-rpi-all-ssh.yml -e "ansible_user=pi ansible_ssh_pass=raspberry ansible_sudo_pass:raspberry host_key_checking=False"')
+
+@task
 def ansible_1_deploy_rpi():
+    """ Playbook - Deployer (psi) """
     local('ansible-playbook play-deployer.yml -i inventory/deploy')
 
 @task
-def ansible_2_lansrv_main():
-    """ Playbook - LanServices - (alpha, beta, omega)  """
+def ansible_2_lan_services():
+    """ Playbook - LanServices (alpha, beta, omega)  """
     local('ansible-playbook play-rpi-services-main.yml -v')
     local('ansible-playbook play-rpi-services-misc.yml -v')
 
@@ -126,11 +106,13 @@ def deploy_omega_site():
     local('cd ../code/hugo-site/ && rsync -avr -- public/ pi@omega.local:/srv/nginx/hugo-site/')
     local ('logger -t rpicluster "fabfile.py finish deploy_omega_site "')
 
+
 # testing ----------------------------------------------------------------------
 
 @task
 def serverspec_tests():
     """ Run ServerSpec tests on cluster. """
     local('cd ../serverspec/ && bash run.sh')
+
 
 # EOF

@@ -68,7 +68,7 @@ if [ "$themasterpw" != "$themasterpw_conf" ]; then
 else
   echo -e "Passwords match OK.\n";
 fi
-
+keysandconf_gpg () {
 # created in tmpfs
 cat > /mnt/ramstore/data/gpg.batch << EOF
 Key-Type: 1
@@ -87,7 +87,6 @@ echo "* remove old ~/.gnupg files"
 rm -rfv -- ~/.gnupg/*
 mkdir -pv -- ~/.gnupg/private-keys-v1.d
 mkdir -pv -- ~/.gnupg/openpgp-revocs.d
-
 killall gpg-agent
 gpg-agent bash
 sleep 2s;
@@ -107,9 +106,12 @@ mypubkeyid=$(gpg2 --list-public-keys admin@localhost | head -n2 | tail -1 | tr -
 
 # GnuPG config
 cat > ~/.gnupg/gpg-agent.conf << EOF
-default-cache-ttl 3600
-max-cache-ttl 86400
+default-cache-ttl 172800
+max-cache-ttl 172800
 EOF
+}
+
+keysandconf_gpg
 
 
 # pass store -------------------------------------------------------------------
@@ -117,29 +119,30 @@ EOF
 # https://www.passwordstore.org/
 # https://docs.ansible.com/ansible/latest/plugins/lookup/passwordstore.html
 
+
+keysandconf_pass () {
 echo "* remove old ~/.password-store files"
 rm -rfv -- ~/.password-store/
 rm -rfv -- ~/rpi_cluster/vagrantvm/dotfiles/password-store
-
 echo "* initialize a new password storage"
 pass init ${mypubkeyid} || exit 1;
-
 # test passwords
 # note: only used for verification this script has run (etc),
 # these are not sensitive.
 echo "* create test passwords: "
-
 pass_id=$(uuid)
 echo ${pass_id} | pass insert --echo test/id || exit 1;
-
 atestpw=$(pwgen -1 -a)
 pass generate --no-symbols test/${atestpw} 10
 echo "* test password named: "
 pass test/${atestpw} || exit 1;
 pass generate --no-symbols test/test 10
-
 mv /home/vagrant/.password-store ~/rpi_cluster/vagrantvm/dotfiles/password-store
 ln -s -f ~/rpi_cluster/vagrantvm/dotfiles/password-store /home/vagrant/.password-store
+}
+
+keysandconf_pass;
+
 
 # ansible vault ----------------------------------------------------------------
 
@@ -179,7 +182,6 @@ else
   echo "* Continuing.";
 fi
 
-
 # encrypt all of the vault files in host_vars and group_vars
 echo "* encrypt the vault files with ansible-vault"
 
@@ -196,50 +198,33 @@ find \
 
 # SSH keys ---------------------------------------------------------------------
 
-# remove old
-rm -rfv -- ~/rpi_cluster/local_data/ssh/my-ssh-ca/ca
-rm -rfv -- ~/rpi_cluster/local_data/ssh/my-ssh-ca/ca.pub
-rm -rfv -- ~/rpi_cluster/local_data/ssh/id_ecdsa
-rm -rfv -- ~/rpi_cluster/local_data/ssh/id_ecdsa.pub
-rm -rfv -- ~/rpi_cluster/local_data/ssh/id_ecdsa-cert.pub
+keysandconf_ssh () {
+  # remove old
+  rm -rfv -- ~/rpi_cluster/local_data/ssh/*
+  rm -rfv -- ~/.ssh/
+  # --- create the CA certs ---
+  mkdir -pv ~/rpi_cluster/local_data/ssh/my-ssh-ca/ || exit 1
+  cd ~/rpi_cluster/local_data/ssh/my-ssh-ca/ || exit 1
+  # generate a password for the SSH CA
+  echo "* create a password for ssh CA"
+  pass generate --no-symbols ssh/CA 40
+  # get the password
+  thesshcapw=$(pass ssh/CA)
+  # generate the CA key pair (with password)
+  ssh-keygen -t rsa -b 4096 -C ~/rpi_cluster/local_data/ssh/my-ssh-ca/CA -f ~/rpi_cluster/local_data/ssh/my-ssh-ca/ca -P ${thesshcapw}
+  cp -fv ~/rpi_cluster/local_data/ssh/my-ssh-ca/ca.pub ~/.ssh/ca.pub
+  # --- SSH user keys ---
+  # generate our SSH key pair
+  ssh-keygen -P "" -f ~/.ssh/id_rsa -t rsa
+  # --- sign our SSH key with CA key ---
+  ssh-keygen -s ~/rpi_cluster/local_data/ssh/my-ssh-ca/ca -P ${thesshcapw} -I ${USER} -n pi -V +4w -z 1 ~/.ssh/id_rsa
+  # cleanup
+  thesshkeypw="x";
+  thesshcapw="x";
+}
 
+keysandconf_ssh;
 
-# ------ create the CA certs ------
-
-mkdir -pv ~/rpi_cluster/local_data/ssh/my-ssh-ca/ || exit 1
-cd ~/rpi_cluster/local_data/ssh/my-ssh-ca/ || exit 1
-
-# generate a password for the SSH CA
-echo "* create a password for ssh CA"
-pass generate --no-symbols ssh/CA 40
-# get the password
-thesshcapw=$(pass ssh/CA)
-
-# generate the CA key pair (with password)
-ssh-keygen -C ~/rpi_cluster/local_data/ssh/my-ssh-ca/CA -f ~/rpi_cluster/local_data/ssh/my-ssh-ca/ca -P ${thesshcapw} -C rpi_ssh_ca -I rpi_ssh_ca_1
-
-# echo $thesshcapw | ssh-add my-ssh-ca/ca
-
-# ------ SSH user keys ------
-
-# generate a password for the SSH private key
-echo "* create a password for ssh private key"
-pass generate --no-symbols ssh/id_rsa_pw 30
-# get the password
-thesshkeypw=$(pass ssh/id_rsa_pw)
-
-# generate our SSH key pair
-ssh-keygen -P ${thesshkeypw} -f ~/.ssh/id_rsa
-
-
-# ------ sign our SSH key with CA key ------
-
-# sign the SSH key
-ssh-keygen -s ~/rpi_cluster/local_data/ssh/my-ssh-ca/ca -I vagrant -P ${thesshcapw} -n pi -V +1w -z 1 ~/.ssh/id_rsa
-
- # cleanup
- thesshkeypw="x";
- thesshcapw="x";
 
 # ID ---------------------------------------------------------------------------
 
@@ -255,6 +240,7 @@ if [ ! -f /home/vagrant/rpi_cluster/local_data/keyset_id ]; then
   echo "boxbuild_id: ${vmbuild_id}" >> ~/rpi_cluster/local_data/keyset_id
 fi
 
+
 # Backup -----------------------------------------------------------------------
 
 rsync -avr \
@@ -262,5 +248,14 @@ rsync -avr \
   -- ~/.gnupg/ ~/rpi_cluster/local_data/pgp
 
 rpilogit "finished keysandconf_new.sh";
+
+# -- file start --
+cat > /etc/ansible/facts.d/keysandconf.fact << EOF
+#!/bin/bash
+echo '{ "keysandconf" : "true" }';
+EOF
+# -- file stop --
+
+chmod 755 /etc/ansible/facts.d/keysandconf.fact
 
 # EOF --------------------------------------------------------------------------

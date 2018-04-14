@@ -1,0 +1,10 @@
+---
+# setup access and secure vanilla Raspbian install.
+# default user/pass:   pi / raspberry
+
+
+- name: setup access to fresh Rpi
+  hosts: all
+  roles:
+    - userac
+    - ssh-server

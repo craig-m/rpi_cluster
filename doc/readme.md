@@ -120,14 +120,17 @@ Admin VM setup
 * Activate the environment. The tools we installed in requirements.txt are available now (ansible and fabric etc)
 
 ```
-vagrant@stretch:~/rpi_cluster/ansible$ pass ssh/id_rsa_pw
-vagrant@stretch:~/rpi_cluster/ansible$ ssh-agent bash
-vagrant@stretch:~/rpi_cluster/ansible$ ssh-add
-Enter passphrase for /home/vagrant/.ssh/id_rsa:
-vagrant@stretch:~/rpi_cluster/ansible$ source ~/env/bin/activate
+vagrant@stretch:~/rpi_cluster/vagrantvm$ source ~/env/bin/activate
+(env) vagrant@stretch:~/$ cd ~/rpi_cluster/ansible/
 (env) vagrant@stretch:~/rpi_cluster/ansible$
 ```
 
+* List the fabric tasks:
+
+```
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab -l
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_hostinfo
+```
 
 ---
 
@@ -138,43 +141,34 @@ Cluster setup
 * setup SSH keys, this will copy our public key to all of the new R-Pi:
 
 ```
-(env) vagrant@stretch:~/rpi_cluster/ansible$ ./copy_ssh_key.sh
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_0_rpi_default
 ```
-
-* List the fabric tasks:
-
-```
-(env) vagrant@stretch:~/rpi_cluster/ansible$ fab -l
-(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_hostinfo
-```
-
-  At this stage only the x4 admin nodes should respond.
 
 ## deployer
 
-* Setup the deployer R-Pi, psi, so we can also run Ansible + Fabric etc from there too.
+* Setup the deployer R-Pi, psi, so we can also run Ansible + Fabric etc from there too:
 
 ```
-(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_0_lansrv_deploy
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_1_deploy_rpi
 ```
 
 ## LanServices
 
-* Configure Lan Services main (Alpha, Beta). After this finishes the x4 compute nodes should have IP addresses.
+* Configure Lan Services. After this finishes the x4 compute nodes should have IP addresses:
 
 ```
-(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_1_lansrv_main
-```
-
-* Configure Lan Services misc (Omega):
-
-```
-(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_2_lansrv_misc
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_2_lan_services
 ```
 
 ## Compute nodes
 
-* Run Ansible on the Compute nodes (zeta, epsilon, delta, gamma):
+* Run Ansible on the Compute nodes (zeta, epsilon, delta, gamma). First setup SSH access:
+
+```
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_0_rpi_default
+```
+
+* Deploy!
 
 ```
 (env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_3_compute

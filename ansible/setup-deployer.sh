@@ -11,7 +11,7 @@ case "$rpi_hw" in
   echo 'Setting up Deployer VM'
   # Deployer is VM
   ansible-playbook --connection=local play-deployer.yml -i /opt/cluster/data/ansible_local
-  ansible-playbook -e "runtherole=group-deployer-ssh" single-role.yml --connection=local
+  ansible-playbook -e "runtherole=group-deployer-ssh-client" single-role.yml --connection=local
   ;;
 
   *)

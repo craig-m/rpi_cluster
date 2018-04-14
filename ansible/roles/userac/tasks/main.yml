@@ -33,15 +33,6 @@
   become: yes
 
 
-# Add SSH Pub key to ~/.ssh/authorized_keys
-- name: import ssh key
-  authorized_key:
-    state: present
-    user: "{{ ansible_user_id }}"
-    key: "{{ lookup('file', 'files/ssh-pub-user/' + item.key) }}"
-  with_items: "{{ sshpubkey }}"
-
-
 # PASSWORDS for system accounts!
 - name: update passwords
   user:
@@ -50,3 +41,7 @@
     password: "{{ item.hash }}"
   with_items: "{{ vault_user_pw }}"
   become: yes
+
+
+# ssh keys
+- import_tasks: keys.yml

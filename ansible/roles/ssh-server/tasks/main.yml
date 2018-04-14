@@ -26,6 +26,17 @@
   tags: [ssh]
 
 
+- name: upload ca.pub
+  copy:
+    src: ~/.ssh/ca.pub
+    dest: /etc/ssh/ca.pub
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+  become: True
+
+
 # SSHD Server config
 - name: sshd config file
   template:
@@ -53,11 +64,6 @@
   service: name=ssh state=started
   become: yes
   tags: [ssh]
-
-
-# SSH Key
-- import_tasks: keys.yml
-  tags: [ssh,sshkeys]
 
 
 - name: roles info txt

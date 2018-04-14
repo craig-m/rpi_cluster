@@ -1,5 +1,6 @@
 # {{ ansible_managed }}
 # sshd server config
+# setup by role: {{role_path|basename}}
 
 Port 22
 Port {{ ssh_group_port }}
@@ -13,12 +14,6 @@ HostKey /etc/ssh/ssh_host_ed25519_key
 
 # Privilege Separation is turned on for security
 UsePrivilegeSeparation yes
-
-# Lifetime and size of ephemeral version 1 server key
-KeyRegenerationInterval 3600
-
-# The default is 1024
-ServerKeyBits 2048
 
 # Logging
 SyslogFacility AUTH
@@ -34,7 +29,10 @@ TrustedUserCAKeys /etc/ssh/ca.pub
 
 # User SSH keys
 PubkeyAuthentication  yes
-AuthorizedKeysFile  %h/.ssh/authorized_keys
+
+AuthorizedKeysFile /dev/null
+
+#AuthorizedKeysFile  %h/.ssh/authorized_keys
 
 # Don't read the user's ~/.rhosts and ~/.shosts files
 IgnoreRhosts yes

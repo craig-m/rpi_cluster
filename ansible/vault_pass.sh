@@ -8,6 +8,7 @@ case "$rpi_hw" in
   cat /mnt/ramstore/data/.vaultpassword || exit 1;
   ;;
   False)
+  /etc/ansible/facts.d/vagrantvm.fact | grep boxbuild_id > /dev/null 2>&1;
   /usr/bin/pass ansible/vault/current || exit 1;
   ;;
 

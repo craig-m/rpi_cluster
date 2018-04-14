@@ -1,10 +1,11 @@
 # {{ ansible_managed }}
 # ssh client config of {{ ansible_hostname }}
+# setup by role: {{role_path|basename}}
 
 Host *
-#   ForwardAgent no
+    ForwardAgent no
     ForwardX11 no
-#   ForwardX11Trusted yes
+    ForwardX11Trusted no
 #   RhostsRSAAuthentication no
 #   RSAAuthentication yes
 #   PasswordAuthentication yes
