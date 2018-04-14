@@ -36,8 +36,6 @@ Vagrant.configure(VAGRANT_API_VER) do |config|
   config.vm.network :forwarded_port, guest: 80, host: 5550, host_ip: "127.0.0.1"
   # hugo
   config.vm.network :forwarded_port, guest: 1313, host: 5551, host_ip: "127.0.0.1"
-  # mariaDB
-  config.vm.network :forwarded_port, guest: 3306, host: 5552, host_ip: "127.0.0.1"
   # jenkins
   config.vm.network :forwarded_port, guest: 8080, host: 5553, host_ip: "127.0.0.1"
 
@@ -46,9 +44,10 @@ Vagrant.configure(VAGRANT_API_VER) do |config|
   config.vm.provision :shell, :path => "vagrantvm/vagrantfile_user.sh", :privileged => false
   config.vm.provision :shell, :path => "vagrantvm/jenkins/install.sh", :privileged => false
   config.vm.provision :shell, :path => "ansible/install-deploy-tools.sh", :privileged => false
-  config.vm.provision :shell, :path => "serverspec/install-serverspec.sh", :privileged => false
 
   # post up message
   config.vm.post_up_message = "----[ Berry Cluster Admin VM up! ]----"
 
 end
+
+# EOF

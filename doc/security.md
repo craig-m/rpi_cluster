@@ -3,6 +3,7 @@ security practices
 
 Some general guidelines and rules for keeping the cluster secure.
 
+
 guidelines
 ----------
 
@@ -12,7 +13,7 @@ guidelines
 
 * no network services to run as pi or root users (where possible)
 
-* no network services to run on 'deployer' R-Pi node (excluding sshd etc)
+* no network services to run on the 'deployer' R-Pi node (excluding sshd)
 
 * the Admin Service nodes have static arp entries set in /etc/ethers
 
@@ -22,7 +23,7 @@ guidelines
 
 * avoid logging in as the root user, only use "pi@host:~ $ sudo <cmd>"
 
-* check sha256 sums or pgp sigs of all downloaded files
+* check sha256 sums or PGP sigs of all downloaded files
 
 * do NOT pipe commands into shells, especially like: wget -O - http://example.net/install.sh | sudo sh
 
@@ -59,3 +60,10 @@ what setuid files are there?
 ```
 $ sudo find / -user root -perm -4000 -exec ls -ldb {} \;
 ```
+
+
+The 'to do' list
+----------------
+
+* remove the 'pi' user from all Raspbian installs
+* stop sudo without password for all users

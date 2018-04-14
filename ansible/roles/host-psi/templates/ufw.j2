@@ -4,7 +4,7 @@
 
 logger -t rpicluster "ufw.sh started";
 
-apt-get install -y ufw
+apt-get install -y ufw;
 
 ufw status verbose || exit 1
 

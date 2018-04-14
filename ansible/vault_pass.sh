@@ -1,15 +1,19 @@
 #!/bin/bash
+# provide vault password. Run automatically by ansible, specified in ansible.cfg
 
-#logger -t rpicluster "valut_pass.sh running"
+rpi_hw=$(/etc/ansible/facts.d/rpihw.fact | jq '.rpi_hw_mac' | tr -d '"')
 
-if [ -f /mnt/ramstore/data/.vaultpassword ]; then
-
-  cat /mnt/ramstore/data/.vaultpassword
-
-else
-
+case "$rpi_hw" in
+  True)
+  cat /mnt/ramstore/data/.vaultpassword || exit 1;
+  ;;
+  False)
   /usr/bin/pass ansible/vault/current || exit 1;
+  ;;
 
-fi
+  *)
+  echo "ERROR: keys not setup"
+  exit 1
+esac
 
 # EOF

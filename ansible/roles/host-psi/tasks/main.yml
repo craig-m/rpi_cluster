@@ -63,6 +63,7 @@
     owner: pi
     group: pi
     mode: 0440
+  become: true
   vars:
     myvaultpassword: "{{ lookup('passwordstore', 'ansible/vault/current returnall=true')}}"
 

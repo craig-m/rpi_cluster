@@ -3,6 +3,8 @@
 # desc: create new private SSH, PGP and Ansible vault files.
 # Used when standing up a R-Pi new cluster, with new configs (varible files).
 
+# run manually
+
 # pre-run checks ---------------------------------------------------------------
 
 # prompt before continue
@@ -103,6 +105,13 @@ fi
 # public key id
 mypubkeyid=$(gpg2 --list-public-keys admin@localhost | head -n2 | tail -1 | tr -d '\ ')
 
+# GnuPG config
+cat > ~/.gnupg/gpg-agent.conf << EOF
+default-cache-ttl 3600
+max-cache-ttl 86400
+EOF
+
+
 # pass store -------------------------------------------------------------------
 # the password store is encrypted with the GPG key we just created
 # https://www.passwordstore.org/
@@ -189,6 +198,7 @@ find \
 
 # remove old
 rm -rfv -- ~/rpi_cluster/local_data/ssh/my-ssh-ca/ca
+rm -rfv -- ~/rpi_cluster/local_data/ssh/my-ssh-ca/ca.pub
 rm -rfv -- ~/rpi_cluster/local_data/ssh/id_ecdsa
 rm -rfv -- ~/rpi_cluster/local_data/ssh/id_ecdsa.pub
 rm -rfv -- ~/rpi_cluster/local_data/ssh/id_ecdsa-cert.pub
@@ -208,6 +218,7 @@ thesshcapw=$(pass ssh/CA)
 # generate the CA key pair (with password)
 ssh-keygen -C ~/rpi_cluster/local_data/ssh/my-ssh-ca/CA -f ~/rpi_cluster/local_data/ssh/my-ssh-ca/ca -P ${thesshcapw} -C rpi_ssh_ca -I rpi_ssh_ca_1
 
+# echo $thesshcapw | ssh-add my-ssh-ca/ca
 
 # ------ SSH user keys ------
 
@@ -218,13 +229,13 @@ pass generate --no-symbols ssh/id_rsa_pw 30
 thesshkeypw=$(pass ssh/id_rsa_pw)
 
 # generate our SSH key pair
-ssh-keygen -t ecdsa -P ${thesshkeypw} -f ~/rpi_cluster/local_data/ssh/id_ecdsa
+ssh-keygen -P ${thesshkeypw} -f ~/.ssh/id_rsa
 
 
 # ------ sign our SSH key with CA key ------
 
 # sign the SSH key
-ssh-keygen -s ~/rpi_cluster/local_data/ssh/my-ssh-ca/ca -I vagrant -P ${thesshcapw} -n pi -V +1w -z 1 ~/rpi_cluster/local_data/ssh/id_ecdsa
+ssh-keygen -s ~/rpi_cluster/local_data/ssh/my-ssh-ca/ca -I vagrant -P ${thesshcapw} -n pi -V +1w -z 1 ~/.ssh/id_rsa
 
  # cleanup
  thesshkeypw="x";

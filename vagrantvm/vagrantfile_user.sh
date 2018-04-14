@@ -1,6 +1,6 @@
 #!/bin/bash
 # name: vagrantfile_user.sh
-# desc: Runs on Vagrant Provision, as Vagrant user.
+# desc: Runs automatically on Vagrant Provision, as Vagrant user.
 # Safe to re-run manually, multiple times over.
 
 # pre-run checks ---------------------------------------------------------------
@@ -48,10 +48,12 @@ if [ ! -d ${keyspgpdir}]; then
 fi
 
 # inventory for localhost
-cat > ~/.ansible_local << EOF
+cat > /opt/cluster/data/ansible_local << EOF
 [deploy]
 stretch ansible_host=stretch.local rpi_ip="10.0.2.15" rpi_racked="vm" rpi_mac="zz:zz:zz:zz:zz:zz"
 EOF
+
+ln -s -f /opt/cluster/data/ansible_local ~/.ansible_inv
 
 # finish up --------------------------------------------------------------------
 

@@ -73,13 +73,11 @@ def ansible_ping():
     local('ansible all -m ping')
 
 @task
-def ansible_0_lansrv_deploy():
-    """ Playbook - LanServices - Deployer R-Pi (psi)  """
-    local('ansible-playbook --connection=local -i ~/.ansible_local play-deployer.yml')
-    local('ansible-playbook -e "runtherole=group-deployer-ssh" single-role.yml --connection=local')
+def ansible_1_deploy_rpi():
+    local('ansible-playbook play-deployer.yml -i inventory/deploy')
 
 @task
-def ansible_1_lansrv_main():
+def ansible_2_lansrv_main():
     """ Playbook - LanServices - (alpha, beta, omega)  """
     local('ansible-playbook play-rpi-services-main.yml -v')
     local('ansible-playbook play-rpi-services-misc.yml -v')

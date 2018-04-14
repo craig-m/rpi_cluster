@@ -1,6 +1,6 @@
 #!/bin/bash
 # name: vagrantfile_root.sh
-# desc: Runs on Vagrant Provision, as root user. Install all dependencies.
+# desc: Runs automatically on Vagrant Provision, as root user.
 # output logged to ~/vagrantfile.sh.log. Safe to re-run manually, multiple times over.
 
 # pre-run checks and info ------------------------------------------------------
@@ -40,7 +40,7 @@ rpilogit "$myoutput";
 
 # run before?
 if [ ! -f /home/Vagrantfile.sh.txt ]; then
-  echo -e "Frist time running - new box!";
+  rpilogit "Frist time running - new box!";
   touch /home/Vagrantfile.sh.txt;
   chmod 444 /home/Vagrantfile.sh.txt;
   firtrun="true";
@@ -52,7 +52,7 @@ unset LD_PRELOAD
 
 # does not exist on fresh vanilla x86 Debian install
 if [ -f /etc/ld.so.preload ]; then
-  echo "Error: ld.so.preload should not exist";
+  rpilogit "Error: ld.so.preload should not exist";
   exit 1;
 fi
 
@@ -83,6 +83,7 @@ apt-get install -y -q \
 sudo apt-get install -y haveged;
 systemctl start haveged.service;
 systemctl enable haveged.service;
+/usr/lib/nagios/plugins/check_procs -C haveged 1:3 || exit 1;
 
 # Test programs were installed and are now in our path
 # ( ref http://wiki.bash-hackers.org/scripting/style )

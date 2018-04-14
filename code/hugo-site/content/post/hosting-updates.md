@@ -33,7 +33,7 @@ haproxy is the frontend you hit when visiting this site, with content served fro
 There are also some backends setup, to the Admin Alpha and Beta nodes.
 
 Locally:
-http://192.168.6.16/api/alpha/hello
+http://192.168.6.xx/api/alpha/hello
 
 From the frontend http-in section of haproxy. the L7 rules:
 
@@ -68,4 +68,4 @@ backend alpha
 ```
 
 The backend we reverse proxy to:
-http://192.168.6.66:1080/cgi-bin/hello
+http://192.168.6.xx:1080/cgi-bin/hello

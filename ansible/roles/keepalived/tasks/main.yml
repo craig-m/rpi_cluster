@@ -1,5 +1,6 @@
 ---
 # Keepalived
+# http://www.keepalived.org/
 - debug: msg="Keepalived install "
 - debug: msg="Floating IP is  {{ rpi_loadbal_float_ip }} "
 

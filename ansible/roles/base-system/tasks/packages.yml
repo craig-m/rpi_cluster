@@ -22,6 +22,7 @@
        - curl
        - dnsutils
        - socat
+       - libnss3-tools
   become: yes
   retries: 2
   tags: [common,commonpackage]

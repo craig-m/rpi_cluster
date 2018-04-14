@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# name:
+# name: install-deploy-tools.sh
 # desc: install tools in requirements.txt. Run on vagrant VM and the R-Pi psi.
 
 # pre-run sanity checks --------------------------------------------------------
@@ -11,7 +11,7 @@ if [[ root = "$(whoami)" ]]; then
   exit 1;
 fi
 
-# test /usr/bin/sudo <cmd> works.
+# test /usr/bin/sudo <cmd> works OK
 /usr/bin/sudo id | grep "uid=0(root)" > /dev/null 2>&1 || exit 1;
 
 # only allow one copy of this script to execute at a time
@@ -34,7 +34,7 @@ script_name=$(readlink -f "${BASH_SOURCE[0]}")
 scriptlines=$(cat "${script_name}" | wc -l)
 
 # output/log info
-rpilogit "**** Bootstrapping Deployer node, in only ${scriptlines} lines of bash! PID $BASHPID ****";
+rpilogit "**** Setup Deployer node, in only ${scriptlines} lines of bash! PID $BASHPID ****";
 
 # get SHA256 sum of this file
 scriptshasum=$(sha256sum "${script_name}")
@@ -51,6 +51,24 @@ fi
 
 # get arch
 bs_my_arch=$(uname -m | cut -c 1-3)
+
+# What is this deployer running on? Vagrant VM or PSI R-Pi node.
+# This is used to limit the ansible inventory to one host (the local deployer)
+
+if [ "pi" = "$(whoami)" ] && [ "arm" = "${bs_my_arch}" ]; then
+  rpi_mac=$(ip addr show eth0 | grep 'b8:27:eb:' | awk '{print $2'} | wc -c);
+  if [ $rpi_mac -eq "18" ]; then
+    rpilogit "running on R-Pi Hardware";
+  else
+    rpilogit "unsupported environment!";
+    exit 1;
+  fi
+fi
+
+if [ "vagrant" = "$(whoami)" ] && [ "x86" = "${bs_my_arch}" ]; then
+  rpilogit "running on in vagrant VM";
+  ln -s -f /opt/cluster/data/ansible_local ~/.ansible_inv
+fi
 
 # wait
 sleep 2s;
@@ -80,13 +98,8 @@ fi
 # https://github.com/RPi-Distro/repo/issues/28
 /usr/bin/sudo sed -i '/# The named pipe \/dev\/xconsole/,$d' /etc/rsyslog.conf;
 
-# check ansible vault password
-#rpilogit "check vault_pass.sh";
-#~/rpi_cluster/ansible/vault_pass.sh > /dev/null 2>&1 || exit 1;
-
-# move to this dir
-mypwd=$(dirname $(realpath $0));
-cd mypwd;
+CDPATH=~/rpi_cluster
+cd ansible;
 
 # wait
 sleep 2s;
@@ -172,7 +185,7 @@ if [ ! -d ~/env/ ]; then
 fi
 
 # move to this dir
-cd ~/rpi_cluster/ansible/;
+#cd ~/rpi_cluster/ansible/;
 
 # install python packages in venv
 PS1=""
@@ -217,19 +230,9 @@ ansible --version || exit 1;
 sleep 1s;
 
 # Make Ansible use the ARA callback plugin regardless of python version
-export ANSIBLE_CALLBACK_PLUGINS="$(python -c 'import os,ara; print(os.path.dirname(ara.__file__))')/plugins/callbacks"
-
-# Run Ansible locally on this deployer
-#ansible-playbook --connection=local -i ~/.ansible_local play-deployer.yml
-#ansible-playbook -e "runtherole=group-deployer-ssh" single-role.yml --connection=local
-
-# wait
-sleep 1s;
-
-# dump facts
-#ansible -i deploy -m setup --tree "${bs_dep_temp}"/facts > /dev/null 2>&1;
+export ANSIBLE_CALLBACK_PLUGINS="$(python -c 'import os,ara; print(os.path.dirname(ara.__file__))')/plugins/callbacks";
 
 touch ~/.rpibs/completed;
-rpilogit " finished"
+rpilogit "**** finished ****";
 
 #-------------------------------------------------------------------------------

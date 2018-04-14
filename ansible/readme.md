@@ -1,7 +1,7 @@
 About
 ------
 
- will setup the deploy host (Vagrant VM or 'psi' R-Pi), installing the tools listed in requirements.txt
+install-deploy-tools.sh will setup the deploy host (Vagrant VM or 'psi' R-Pi), installing the tools listed in requirements.txt.
 
 Assumes working from:
 
@@ -11,7 +11,7 @@ vagrant@stretch:~$ ssh-agent bash
 vagrant@stretch:~$ ssh-add
 Enter passphrase for /home/vagrant/.ssh/id_rsa:
 vagrant@stretch:~$ source ~/env/bin/activate
-(env) vagrant@stretch:~$ cd rpi_cluster/deploy/ansible/
+(env) vagrant@stretch:~$ cd rpi_cluster/ansible/
 ```
 
 ---
@@ -59,6 +59,16 @@ Ansible
 -------
 http://docs.ansible.com/ansible/latest/index.html
 
+Store facts in local Redis DB, from ansible.cfg
+
+```
+gathering = smart
+fact_caching = redis
+fact_caching_connection = localhost:6379:0
+fact_caching_timeout = 86400
+```
+
+
 Run 'id' as root on compute:
 
 ```
@@ -103,6 +113,16 @@ $ ansible all -m ping
 ```
 
 
+ARA
+---
+https://github.com/openstack/ara
+
+```
+(env) vagrant@stretch:~/rpi_cluster/ansible$ ansible-playbook play-deployer.yml
+(env) vagrant@stretch:~/rpi_cluster/ansible$ ara-manage runserver
+```
+
+
 ansible-lint
 ------------
 https://github.com/willthames/ansible-lint
@@ -112,6 +132,7 @@ vagrant@stretch:~$ source ~/env/bin/activate
 (env) vagrant@stretch:~$ cd rpi_cluster/ansible/
 (env) vagrant@stretch:~/rpi_cluster/ansible$ ansible-lint play-rpi-all-maint.yml
 ```
+
 
 testinfra
 ---------
