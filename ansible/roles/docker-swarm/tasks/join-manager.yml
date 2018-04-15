@@ -1,5 +1,4 @@
 ---
-
 - debug: msg="manger node on {{ inventory_hostname }} "
 
 
@@ -7,18 +6,22 @@
   stat: path=/opt/cluster/data/swarm_manager.txt
   register: swarm_manager_joined
 
+
 - name: pausing
   pause:
     seconds: 2
+
 
 - name: get manger token from localhost
   local_action: shell tail /opt/cluster/backup/delta/opt/cluster/data/swarm_manager_token.txt | tail -n 3 | grep "docker swarm join --token" | tr -d '\n'
   register: join_docker_manager
   changed_when: False
 
+
 - name: pausing
   pause:
     seconds: 2
+
 
 - name: join the swarm as manager
   shell: "{{ join_docker_manager.stdout }}"
@@ -27,9 +30,11 @@
   when:
     - "swarm_manager_joined.stat.exists == False"
 
+
 - name: pausing
   pause:
     seconds: 5
+
 
 - name: joined master - save info
   copy:
@@ -38,24 +43,26 @@
   when:
     - "swarm_manager_joined.stat.exists == False"
 
+
 - name: pausing
   pause:
     seconds: 2
 
 
 # don't deploy anything on this node
-
 - name: check if demoted
   stat:
     path: "/opt/cluster/data/swarm_demoted.txt"
   register: swarm_demoted_txt
   changed_when: False
 
+
 - name: managers dont work
   shell: "docker node update --availability drain {{ inventory_hostname }}"
   register: swarm_demoted
   when:
     - "swarm_demoted_txt.stat.exists == False"
+
 
 - name: save demoted satus
   copy:

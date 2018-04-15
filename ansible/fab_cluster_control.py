@@ -18,17 +18,20 @@ env.timeout = 15
 env.connection_attempts = 2
 env.hosts = [ 'alpha.local', 'beta.local', 'omega.local', 'gamma.local', 'delta.local', 'epsilon.local', 'zeta.local', 'psi.local' ]
 
+
 @task
 @parallel
 def rpi_sshtest():
     """ get ssh rsa keygen """
     run("/usr/bin/ssh-keygen -f /etc/ssh/ssh_host_rsa_key -l")
 
+
 @task
 @parallel
 def rpi_rpiledblink():
     """ rpi blink """
     run("/opt/cluster/bin/led-blink.sh")
+
 
 @task
 @parallel
@@ -39,11 +42,13 @@ def rpi_get_info():
     run("uptime")
     run("cat /sys/class/net/eth0/address")
 
+
 @task
 @parallel
 def rpi_get_temp():
     """ rpi temp """
     sudo("cat /sys/class/thermal/thermal_zone0/temp")
+
 
 @task
 @parallel
@@ -52,6 +57,7 @@ def rpi_powerdown():
     with settings(warn_only=True):
         run("logger -t rpicluster 'fabric powering down'")
         sudo("shutdown -h now")
+
 
 @task
 @parallel

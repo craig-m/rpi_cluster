@@ -7,8 +7,8 @@
   gather_facts: True
   roles:
     - ansible-pre-role
-    - userac
     - base-system
+    - userac
     - rpilog
     - ssh-server
     - haveged

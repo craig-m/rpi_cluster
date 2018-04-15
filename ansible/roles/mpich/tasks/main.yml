@@ -2,6 +2,7 @@
 # https://packages.debian.org/sid/mpich
 # https://www.mpich.org/
 
+
 - debug: msg="mpich role"
   tags: [mpich]
 
@@ -89,7 +90,7 @@
   become_user: mpiuser
   tags: [mpich]
 
-# mpic++ -o mpi_sample mpi_sample.c
+
 # mpirun -np 4 -hosts alpha.dc1.b3rry.clust0r,beta.dc1.b3rry.clust0r ~/bin/mpi_sample
 
 

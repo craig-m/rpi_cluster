@@ -1,5 +1,4 @@
 ansible
-ansible-container
 python-consul
 redis
 passlib

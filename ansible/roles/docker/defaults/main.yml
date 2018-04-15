@@ -10,7 +10,3 @@ rpi_docker_enabled: "false"
 
 # The version of Docker tested with Kubernetes
 docker_max_ver: ""
-
-## https://github.com/docker/machine/releases
-#docker_machine_url: "https://github.com/docker/machine/releases/download/v0.13.0/docker-machine-Linux-armhf"
-#docker_machine_sha: "572e797268f5582c5e1dc95e87bbbafe0352a7c17dfa6f9a8a07a7e7d1061abe"

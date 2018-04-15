@@ -26,9 +26,13 @@
   tags: [ssh]
 
 
+# SSHD will only accept keys signed this key pair
+# SSH CA key setup described at:
+# https://code.facebook.com/posts/365787980419535/scalable-and-secure-access-with-ssh/
+
 - name: upload ca.pub
   copy:
-    src: ~/.ssh/ca.pub
+    src: ~/.ssh/my-ssh-ca/ca.pub
     dest: /etc/ssh/ca.pub
     owner: root
     group: root

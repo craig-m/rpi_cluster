@@ -3,6 +3,7 @@
 - debug: msg="HAProxy install "
   tags: [haproxy]
 
+
 - debug: msg="config file {{ haproxy_cfg_file }} "
   tags: [haproxy]
 

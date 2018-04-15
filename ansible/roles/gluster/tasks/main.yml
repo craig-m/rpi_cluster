@@ -33,6 +33,7 @@
   tags: [glusterfs]
   when: rpi_glustersrv_enabled == true
 
+
 # started (if flagged on)
 - name: glusterfs started
   service: name=glusterfs-server.service state=started
@@ -47,6 +48,7 @@
   become: yes
   tags: [glusterfs]
   when: rpi_glustersrv_enabled == false
+
 
 - name: glusterfs stopped
   service: name=glusterfs-server.service state=stopped

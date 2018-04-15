@@ -8,6 +8,7 @@
   register: my_current_hostname
   changed_when: False
 
+
 - debug: msg="my_current_hostname {{ my_current_hostname}} "
 
 

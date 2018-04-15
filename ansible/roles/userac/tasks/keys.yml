@@ -5,6 +5,7 @@
 
 
 # Add SSH Pub key to ~/.ssh/authorized_keys
+# note: this is not used since sshd only accepts keys signed by our CA
 - name: import ssh key
   authorized_key:
     state: present

@@ -4,11 +4,14 @@
 
 - meta: clear_host_errors
 
+
 - name: ping
   ping:
 
+
 - name: Refresh inventory
   meta: refresh_inventory
+
 
 - name: "re-run setup "
   setup: ~
@@ -47,7 +50,7 @@
   ignore_errors: True
 
 
-- name: RedisDB set ip
+- name: store rpi IP in redis
   local_action: command /usr/bin/redis-cli set /rpi/{{ inventory_hostname }}/ip {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}
   changed_when: False
   run_once: True
@@ -55,7 +58,7 @@
   ignore_errors: True
 
 
-- name: RedisDB set MAC
+- name: store rpi MAC in redis
   local_action: command /usr/bin/redis-cli set /rpi/{{ inventory_hostname }}/mac {{ hostvars[inventory_hostname]['ansible_default_ipv4']['macaddress'] }}
   changed_when: False
   run_once: True

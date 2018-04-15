@@ -96,7 +96,6 @@
 # ssh-keygen -s ~/rpi_cluster/local_data/ssh/my-ssh-ca/ca -P ${thesshcapw} -I vagrant -n pi -V +4w -z 1 /opt/cluster/
 
 
-
 - name: output to rpicluster log
   shell: logger -t rpicluster host-psi role ran
   changed_when: False

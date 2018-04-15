@@ -21,28 +21,8 @@
   changed_when: False
 
 
-- name: ssh keyscan inventory_hostname .local
-  shell: ssh-keygen -R "{{ inventory_hostname }}.local"
-  delegate_to: localhost
-  changed_when: false
-  register: host_sshscan
-
-
-- name: known hosts
+- name: add host to known hosts - StrictHostKeyChecking FALSE
   shell: ssh -o StrictHostKeyChecking=false pi@{{ inventory_hostname }}.local hostname
   delegate_to: localhost
   changed_when: False
   ignore_errors: True
-
-
-# ssh-keyscan -4 -t ecdsa-sha2-nistp256 psi.local | ssh-keygen -lf - | awk '{print $2}'
-
-
-#- name: host in known_hosts
-#  lineinfile:
-#    dest: ~/.ssh/known_hosts
-#    create: yes
-#    state: present
-#    line: "{{ lookup('pipe', 'ssh-keyscan -4 -t ecdsa-sha2-nistp256 {{ inventory_hostname }}.local') }}"
-#    regexp: "^{{ inventory_hostname }}.local"
-#  delegate_to: localhost

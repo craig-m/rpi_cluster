@@ -1,6 +1,7 @@
 ---
 # run at the end of each playbook
 
+
 - debug: msg="ansible-post-role "
   tags: [ansiblepost]
 

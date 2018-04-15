@@ -1,5 +1,6 @@
 ---
 
+
 # restart DHCP server
 - name: isc-dhcp-server-reload
   service: name=isc-dhcp-server state=restarted

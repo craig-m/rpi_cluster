@@ -34,7 +34,7 @@ script_name=$(readlink -f "${BASH_SOURCE[0]}")
 scriptlines=$(cat "${script_name}" | wc -l)
 
 # output/log info
-rpilogit "**** Setup Deployer node, in only ${scriptlines} lines of bash! PID $BASHPID ****";
+rpilogit "**** install deploy tools - in only ${scriptlines} lines of bash! PID $BASHPID ****";
 
 # get SHA256 sum of this file
 scriptshasum=$(sha256sum "${script_name}")
@@ -67,7 +67,6 @@ fi
 
 if [ "vagrant" = "$(whoami)" ] && [ "x86" = "${bs_my_arch}" ]; then
   rpilogit "running on in vagrant VM";
-  ln -s -f /opt/cluster/data/ansible_local ~/.ansible_inv
 fi
 
 # wait
@@ -117,7 +116,7 @@ if [ ! -f ~/.rpibs/rpibs_packages ]; then
   sshfs tcpdump nmap netdiscover libncurses5-dev libsqlite3-dev sqlite3 \
   libssl-dev libyaml-dev libgmp-dev libgdbm-dev libffi-dev libpython-all-dev \
   monitoring-plugins-common monitoring-plugins-basic inotify-tools \
-  python-pip python-dev uuid-runtime uuid mpich pass;
+  python-pip python-dev uuid-runtime uuid mpich pass jq;
   sleep 2s;
   # upgrade
   /usr/bin/sudo apt-get -q -y upgrade || rpilogit "ERROR with apt upgrade";
@@ -191,12 +190,12 @@ fi
 PS1=""
 source ~/env/bin/activate;
 stat -t requirements.txt || exit 1;
-pip install -r requirements.txt || echo "ERROR installing requirements.txt";
+pip install -r requirements.txt
 sleep 1s;
 
 # Check programs were installed and are now in our path
 # (ref: http://wiki.bash-hackers.org/scripting/style)
-my_needed_commands="ansible fab diceware http testinfra py.test nmap screen tmux scanssh vim sshpass uuid"
+my_needed_commands="ansible fab diceware http testinfra py.test nmap screen tmux scanssh vim sshpass"
 missing_counter=0
 for needed_command in $my_needed_commands; do
   if ! hash "$needed_command" >/dev/null 2>&1; then

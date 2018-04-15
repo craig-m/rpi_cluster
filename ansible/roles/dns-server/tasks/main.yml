@@ -1,8 +1,8 @@
 ---
-# Named DNS server
-# Run by admin nodes
+# Named DNS server - run by admin nodes Alpha and Beta
 - debug: msg="DNS status {{ rpi_dnsd_status }} "
   tags: [bind]
+
 
 - debug: msg="Custom domain is {{ rpi_cust_domain }}.{{ rpi_cust_tld }} "
   tags: [bind]
@@ -151,6 +151,7 @@
   when: rpi_dnsd_enabled  == true
   tags: [bind]
 
+
 # started (if flagged on)
 - name: bind9 started
   service: name=bind9 state=started
@@ -165,6 +166,7 @@
   become: yes
   when: rpi_dnsd_enabled  == false
   tags: [bind]
+
 
 # stopped (if flagged off)
 - name: bind9 stopped

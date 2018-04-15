@@ -1,6 +1,8 @@
 ---
 # haveged - random number generator
 # http://www.issihosts.com/haveged/
+
+
 - debug: msg="common (haveged) "
 
 

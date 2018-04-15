@@ -148,7 +148,6 @@
   tags: [consul]
 
 
-
 - name: roles info txt
   lineinfile:
     path: /opt/cluster/data/info_roles.txt

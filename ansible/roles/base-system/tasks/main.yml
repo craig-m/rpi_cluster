@@ -1,7 +1,5 @@
 ---
 # Common base setup - run on all nodes
-
-
 - debug: msg="Base System "
   tags: [common]
 

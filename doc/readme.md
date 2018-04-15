@@ -13,13 +13,9 @@ Requires:
 Raspberry Pi preparation
 ------------------------
 
-* Download Raspbian lite, flash the image on to each SD card with DD or Etcher etc.
+* Download Raspbian lite, flash the image on to each SD card with DD or Etcher etc. I am using the 2017-11-29-raspbian-stretch-lite image.
 
-  I am using the 2017-11-29-raspbian-stretch-lite image.
-
-* Create the empty file /boot/ssh on each SDcard to enable SSH access.
-
-  Read https://www.raspberrypi.org/blog/a-security-update-for-raspbian-pixel/ for info.
+* Create the empty file /boot/ssh on each SDcard to enable SSH access. Read https://www.raspberrypi.org/blog/a-security-update-for-raspbian-pixel/ for info.
 
 * Join The R-Pi to a switch, enable DHCP somewhere on the LAN. I have a small OpenWRT router for this (my cluster has its own VLAN + subnet) for this. Changing from the 192.168.6.x subnet is untested so far (to do..).
 
@@ -70,11 +66,11 @@ vagrant@stretch:~$
 
   The folder ./rpi_cluster/ on your desktop is mounted at /home/vagrant/rpi_cluster/ - you can use a text editor from your desktop to alter these files.
 
-  ```
-  vagrant@stretch:~$ df -h | grep -e Filesystem -e rpi_cluster
-  Filesystem                Size  Used Avail Use% Mounted on
-  home_vagrant_rpi_cluster  xxxG  xxxG   xxG  50% /home/vagrant/rpi_cluster
-  ```
+```
+vagrant@stretch:~$ df -h | grep -e Filesystem -e rpi_cluster
+Filesystem                Size  Used Avail Use% Mounted on
+home_vagrant_rpi_cluster  xxxG  xxxG   xxG  50% /home/vagrant/rpi_cluster
+```
 
   You can carry on reading this document at http://localhost:5550/index.php?p=doc
 
@@ -117,11 +113,20 @@ vagrant@stretch:~/rpi_cluster/vagrantvm$ ./keysandconf_restore.sh
 Admin VM setup
 --------------
 
+
+* run playbooks on Admin VM
+
+```
+vagrant@stretch:~$ cd ~/rpi_cluster/ansible/
+vagrant@stretch:~/rpi_cluster/ansible$ ./install-deploy-tools.sh
+vagrant@stretch:~/rpi_cluster/ansible$ ./setup-deployer.sh
+```
+
+
 * Activate the environment. The tools we installed in requirements.txt are available now (ansible and fabric etc)
 
 ```
-vagrant@stretch:~/rpi_cluster/vagrantvm$ source ~/env/bin/activate
-(env) vagrant@stretch:~/$ cd ~/rpi_cluster/ansible/
+(env) vagrant@stretch:~/$ source ~/env/bin/activate
 (env) vagrant@stretch:~/rpi_cluster/ansible$
 ```
 

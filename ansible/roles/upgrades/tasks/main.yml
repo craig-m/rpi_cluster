@@ -31,7 +31,6 @@
 
 # Update R-Pi firmware in /boot/
 # (I've found that, on occasion, this will prevent the Pi from booting)
-#
 #- name: update kernel
 #  shell: SKIP_WARNING=1 /usr/bin/rpi-update
 #  become: yes

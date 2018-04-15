@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # Install MS DotNet
 # https://github.com/dotnet/core/blob/master/samples/RaspberryPiInstructions.md
 

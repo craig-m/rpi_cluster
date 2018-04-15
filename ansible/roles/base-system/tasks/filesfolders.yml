@@ -3,16 +3,6 @@
 - debug: msg="common (filesandfolders) "
 
 
-# Fix homedir folder perms
-- name: fix homedir perms
-  file:
-    path: /home/{{ ansible_user_id }}
-    state: directory
-    mode: 0700
-  become: yes
-  tags: [common]
-
-
 # create /opt/cluster/
 - name: R Pi cluster base dir
   file:
@@ -38,8 +28,8 @@
   tags: [common]
 
 
-# folders for this host
-- name: Create host folders
+# specific folders for this host
+- name: Create specific folders for this host
   file:
     path: "{{ item.dir }}"
     state: directory
@@ -74,18 +64,6 @@
   tags: [common]
 
 
-#- name: upload vagrant pub gpg key
-#  copy:
-#    src: "files/vagrant_pub_pgp.key"
-#    dest: "/opt/cluster/data/vagrant_pubpgp.key"
-#    mode: 0644
-#  register: vagrant_pgppub_up
-
-#- name: import vagrant pub gpg key
-#  command: "gpg --import /opt/cluster/data/vagrant_pubpgp.key"
-#  when: vagrant_pgppub_up.changed
-
-
 # detect R-Pi MAC - rpihw.fact
 - name: copy rpihw.fact
   copy:
@@ -104,7 +82,7 @@
   setup: filter=ansible_local
 
 
-# info_roles.txt
+# create info_roles.txt
 - name: info_roles txt
   copy:
     content: "--==[ Ansible Roles run against this host ]==--"

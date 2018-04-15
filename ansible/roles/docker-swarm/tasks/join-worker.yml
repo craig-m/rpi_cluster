@@ -1,5 +1,4 @@
 ---
-
 - debug: msg="workder node on {{ inventory_hostname }} "
 
 
@@ -31,6 +30,7 @@
 - name: pausing
   pause:
     seconds: 2
+
 
 - name: joined master - save info
   copy:

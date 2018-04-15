@@ -2,6 +2,7 @@
 # config json
 - debug: msg="consul config "
 
+
 # servers
 - name: conf config_server.json (server)
   template:
@@ -15,6 +16,7 @@
   tags: [consul]
   when: "'consul_server' in group_names"
 
+
 # servers
 - name: conf config_server.json (server)
   template:
@@ -27,7 +29,6 @@
   notify: restart-consul
   tags: [consul]
   when: "'consul_boot' in group_names"
-
 
 
 # clients

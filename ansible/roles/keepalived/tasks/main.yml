@@ -75,12 +75,19 @@
   tags: [keepalived]
 
 
-# Log to ARA
+# Log IP to ARA
 - name: Log floating IP to ARA
   ara_record:
     key: "website"
     type: "url"
     value: "{{ rpi_loadbal_float_ip }}"
+
+
+# Save IP in Redis
+- name: store float IP in redis
+  local_action: command /usr/bin/redis-cli set /rpi/keepalived/ip {{ rpi_loadbal_float_ip }}
+  changed_when: False
+  run_once: True
 
 
 # log

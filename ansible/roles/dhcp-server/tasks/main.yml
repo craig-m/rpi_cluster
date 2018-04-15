@@ -56,6 +56,7 @@
   tags: [dhcpserver]
   when: rpi_dhcpd_enabled == false
 
+
 # disabled on boot (if flagged off)
 - name: isc-dhcp-server enabled on boot
   service: name=isc-dhcp-server enabled=no
@@ -64,6 +65,7 @@
   when: rpi_dhcpd_enabled == false
 
 
+# pause
 - name: wait for hosts to get leases
   pause:
     seconds: 50

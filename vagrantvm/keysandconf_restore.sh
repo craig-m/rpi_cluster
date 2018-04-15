@@ -36,16 +36,29 @@ rpilogit "starting keysandconf_restore.sh";
 # SSH
 rsync -avr --exclude '*.DS_Store' --exclude 'ssh-copy-id_id.*' \
   -- ~/rpi_cluster/local_data/ssh/ ~/.ssh/
+
 chmod 700 ~/.ssh/
+
+# generate a new SSH key pair
+ssh-keygen -P "" -f ~/.ssh/id_rsa -t rsa
+
+# get the CA password
+thesshcapw=$(pass ssh/CA)
+
+# sign our SSH keys with the CA key
+ssh-keygen -s ~/rpi_cluster/local_data/ssh/my-ssh-ca/ca -P ${thesshcapw} -I ${USER} -n pi -V +4w -z 1 ~/.ssh/id_rsa
 
 # PGP
 rsync -avr --exclude '*.DS_Store' \
   -- ~/rpi_cluster/local_data/pgp/ ~/.gnupg/
+
 chmod 700 ~/.gnupg/
+
 /usr/bin/sudo chown $USER:$USER ~/.gnupg/*
+
 file ~/.gnupg/pubring.kbx | grep "GPG keybox database version 1" || exit 1
 
-if [ ! /home/vagrant/.password-store ]; then
+if [ ! -f /home/vagrant/.password-store ]; then
 	ln -s -f /home/vagrant/rpi_cluster/vagrantvm/dotfiles/password-store /home/vagrant/.password-store
 fi
 

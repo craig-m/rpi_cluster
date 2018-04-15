@@ -47,15 +47,12 @@ if [ ! -d ${keyspgpdir}]; then
 	chmod 700 ${keyspgpdir}
 fi
 
-# inventory for localhost
-cat > /opt/cluster/data/ansible_local << EOF
-[deploy]
-stretch ansible_host=stretch.local rpi_ip="10.0.2.15" rpi_racked="vm" rpi_mac="zz:zz:zz:zz:zz:zz"
-EOF
 
-if [ ! ~/.ansible_inv ]; then
-	ln -s -f /opt/cluster/data/ansible_local ~/.ansible_inv
+# backup authorized_keys (with default vagrant user key)
+if [ ! -f ~/.ssh/authorized_keys.vagrant ]; then
+	cp ~/.ssh/authorized_keys ~/.ssh/authorized_keys.vagrant
 fi
+
 
 # finish up --------------------------------------------------------------------
 

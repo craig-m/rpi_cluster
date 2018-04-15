@@ -10,9 +10,11 @@
   register: swarm_master_txt
   changed_when: False
 
+
 - name: pausing
   pause:
     seconds: 2
+
 
 - name: initialize the swarm
   shell: docker swarm init --advertise-addr {{ hostvars['delta']['ansible_eth0']['ipv4']['address'] }}
@@ -22,9 +24,11 @@
   register: rpi_swarm_init_new
   become: yes
 
+
 - name: pausing
   pause:
     seconds: 2
+
 
 - name: save swarm initialize info
   copy:
@@ -34,9 +38,11 @@
     - "swarm_master_txt.stat.exists == False"
     - "rpi_swarm_init_new.changed"
 
+
 - name: pausing
   pause:
     seconds: 2
+
 
 - name: fetch swarm initialize info
   fetch:
@@ -47,7 +53,6 @@
 
 
 # create Manager token on master node
-
 - name: check for manager token
   stat:
     path: "/opt/cluster/data/swarm_manager_token.txt"
@@ -62,9 +67,11 @@
   register: swarm_manager_new
   become: yes
 
+
 - name: pausing
   pause:
     seconds: 2
+
 
 - name: save manager token
   copy:
@@ -75,9 +82,11 @@
     - "swarm_manager_new.changed"
     - "swarm_manager_token.stat.exists == False"
 
+
 - name: pausing
   pause:
     seconds: 2
+
 
 - name: fetch manager token
   fetch:
@@ -88,12 +97,12 @@
 
 
 # don't deploy anything on this node
-
 - name: check if demoted
   stat:
     path: "/opt/cluster/data/swarm_demoted.txt"
   register: swarm_demoted_txt
   changed_when: False
+
 
 - name: masters dont work
   shell: "docker node update --availability drain {{ inventory_hostname }}"
@@ -101,9 +110,11 @@
   when:
     - "swarm_demoted_txt.stat.exists == False"
 
+
 - name: pausing
   pause:
     seconds: 2
+
 
 - name: save demoted satus
   copy:

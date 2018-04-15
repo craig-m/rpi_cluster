@@ -47,7 +47,6 @@
   tags: [lanservices]
 
 
-
 # systemd script
 - name: copy rpi lanservices systemd script
   copy:
