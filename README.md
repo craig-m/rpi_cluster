@@ -119,3 +119,54 @@ To play with services and offer hosting. Subdivided into a frontend and backend 
 * Hadoop (to do)
 
 Redundancy: x1 front and x1 back node can fail.
+
+
+---
+
+
+# tldr setup
+
+The short version.
+
+### New cluster
+
+```
+$ vagrant up
+$ vagrant ssh
+vagrant@stretch:~$ ./rpi_cluster/vagrantvm/keysandconf_new.sh
+vagrant@stretch:~$ cd rpi_cluster/ansible/
+vagrant@stretch:~/rpi_cluster/ansible$ ./setup-deployer.sh
+vagrant@stretch:~/rpi_cluster/ansible$ source ~/env/bin/activate
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab -l
+
+--==  rpi_cluster deployer fabric file  ==--
+
+Available commands:
+
+    ansible_0_rpi_default         setup ssh access - configure default raspbian install (all)
+    ansible_1_deploy_rpi          Playbook - Setup Deployer
+    ansible_2_lan_services        Playbook - LanServices (alpha, beta, omega)
+    ansible_3_compute             Playbook - Compute - base (gamma, delta, epsilon, zeta)
+    ansible_4_compute_webapp      Playbook - Compute - hosting
+    ansible_5_compute_containers  Playbook - Compute - Containers
+    ansible_hostinfo              Run setup module to gather facts on all hosts.
+    ansible_ping                  Run ping module.
+    cluster_maintainence          upgrades (includes rolling reboots)
+    cluster_shutdown              shutdown cluster - ansible (excludes deployer)
+    deploy_omega_site             code/hugo-site
+    serverspec_tests              Run ServerSpec tests on cluster.
+
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_0_rpi_default
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_ping
+```
+
+### Existing cluster
+
+```
+$ vagrant resume
+$ vagrant ssh
+vagrant@stretch:~$ ./rpi_cluster/vagrantvm/keysandconf_restore.sh
+vagrant@stretch:~$ cd rpi_cluster/ansible/
+vagrant@stretch:~/rpi_cluster/ansible$ source ~/env/bin/activate
+(env) vagrant@stretch:~/rpi_cluster/ansible$ fab -f fab_cluster_control.py rpi_get_temp
+```
