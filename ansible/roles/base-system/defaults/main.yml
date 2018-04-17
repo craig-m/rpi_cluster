@@ -15,11 +15,13 @@ common_dir: [
   { dir: '/mnt/sshfs/', mode: '0755', owner: 'root', group: 'root' }
 ]
 
+
 # copy files
 dotfiles: [
   {src: 'files/dotfiles/screenrc', dest: '~/.screenrc'},
   {src: 'files/dotfiles/vimrc', dest: '~/.vimrc'}
 ]
+
 
 # copy ./files/bash-script/x to ~/bin/ on each host
 binfile: [
@@ -28,8 +30,10 @@ binfile: [
   {file: 'led-blink.sh'},
   {file: 'disable-swap.sh'},
   {file: 'speedtest_100mbit.sh'},
-  {file: 'check-syshealth.sh'}
+  {file: 'check-syshealth.sh'},
+  {file: 'default-sshd-login.sh'}
 ]
+
 
 # remove these packages on all nodes
 package_remove: [

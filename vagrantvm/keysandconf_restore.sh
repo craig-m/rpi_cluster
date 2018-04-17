@@ -38,9 +38,12 @@ rsync -avr --exclude '*.DS_Store' --exclude 'ssh-copy-id_id.*' \
   -- ~/rpi_cluster/local_data/ssh/ ~/.ssh/
 
 chmod 700 ~/.ssh/
+cd ~/.ssh/ || exit 1;
 
 # generate a new SSH key pair
-ssh-keygen -P "" -f ~/.ssh/id_rsa -t rsa
+ssh-keygen -P "" -C "vagrantvmkeygen" -f ~/.ssh/id_rsa -t rsa
+
+file ~/.ssh/id_rsa | grep "PEM RSA private key" || exit 1;
 
 # get the CA password
 thesshcapw=$(pass ssh/CA)
@@ -53,6 +56,7 @@ rsync -avr --exclude '*.DS_Store' \
   -- ~/rpi_cluster/local_data/pgp/ ~/.gnupg/
 
 chmod 700 ~/.gnupg/
+cd ~/.gnupg/ || exit 1;
 
 /usr/bin/sudo chown $USER:$USER ~/.gnupg/*
 
@@ -61,6 +65,9 @@ file ~/.gnupg/pubring.kbx | grep "GPG keybox database version 1" || exit 1
 if [ ! -f /home/vagrant/.password-store ]; then
 	ln -s -f /home/vagrant/rpi_cluster/vagrantvm/dotfiles/password-store /home/vagrant/.password-store
 fi
+
+cd ~/.password-store || exit 1;
+
 
 # finish up --------------------------------------------------------------------
 

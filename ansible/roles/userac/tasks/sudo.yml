@@ -1,0 +1,7 @@
+---
+
+- name: remove passwordless sudo
+  file:
+    state: absent
+    path: "/etc/sudoers.d/010_pi-nopasswd"
+  become: true

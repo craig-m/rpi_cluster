@@ -34,17 +34,15 @@ fi
 # Vagrant VM files -------------------------------------------------------------
 
 # local_data ssh
-keyssshdir="~/rpi_cluster/local_data/ssh/my-ssh-ca"
-if [ ! -d ${keyssshdir} ]; then
-	mkdir -pv ${keyssshdir}
-	chmod 700 ${keyssshdir}
+if [ ! -d ~/rpi_cluster/local_data/ssh/my-ssh-ca ]; then
+	mkdir -pv ~/rpi_cluster/local_data/ssh/my-ssh-ca;
+	chmod 700 ~/rpi_cluster/local_data/ssh/my-ssh-ca;
 fi
 
 # local_data pgp
-keyspgpdir="~/rpi_cluster/local_data/pgp"
-if [ ! -d ${keyspgpdir}]; then
-	mkdir -pv ${keyspgpdir}
-	chmod 700 ${keyspgpdir}
+if [ ! -d ~/rpi_cluster/local_data/pgp ]; then
+	mkdir -pv ~/rpi_cluster/local_data/pgp;
+	chmod 700 ~/rpi_cluster/local_data/pgp;
 fi
 
 

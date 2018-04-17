@@ -10,7 +10,6 @@
     - base-system
     - userac
     - rpilog
-    - ssh-server
     - haveged
     - ntp-server
     - redis
@@ -24,6 +23,7 @@
   hosts: psi
   gather_facts: True
   roles:
+    - ssh-server
     - host-psi
 
 

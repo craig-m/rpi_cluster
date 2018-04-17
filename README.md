@@ -69,7 +69,7 @@ What the cluster is doing, more or less. The software stack for each group.
 
 ### Deployer
 
-The Deployer code (and Ansible playbooks) runs from x1 R-Pi, and in a Virtual Machine (debian/stretch64). This configures all of the other hosts.
+The Deployer code (and Ansible playbooks) runs from x1 R-Pi, and in a Virtual Machine (debian/stretch64). This configures all of the other hosts using:
 
 * Fabric (http://www.fabfile.org/)
 * Ansible (https://www.ansible.com/)
@@ -79,7 +79,7 @@ The Deployer code (and Ansible playbooks) runs from x1 R-Pi, and in a Virtual Ma
 
 ### LanServices - Main
 
-To provide redundant essential services for the LAN. Redundancy: x1 node can fail.
+To provide redundant essential services for the LAN.
 
 * DHCP Server (in high availability)
 * DNS Server (Bind with zone replication between master/slave)
@@ -87,10 +87,12 @@ To provide redundant essential services for the LAN. Redundancy: x1 node can fai
 * FTP Daemon
 * BusyBox httpd (running in chroot)
 
+Redundancy: x1 node can fail.
+
 
 ### LanServices - Misc
 
-For miscellaneous, non-essential, net services. Used for dev, reporting, testing, monitoring. Redundancy: not redundant, does not provide services for the LAN.
+For miscellaneous, non-essential, net services. Used for dev, reporting, testing, monitoring.
 
 * Redis
 * Nginx + PHP-FPM
@@ -100,10 +102,12 @@ For miscellaneous, non-essential, net services. Used for dev, reporting, testing
 * NFS server
 * Docker
 
+Redundancy: not redundant, does not provide services for the LAN.
+
 
 ### Compute / Worker
 
-To play with services and offer hosting. Subdivided into a frontend and backend group. Redundancy: x1 front and x1 back node can fail.
+To play with services and offer hosting. Subdivided into a frontend and backend group.
 
 * Keepalived (floating IP over x2 nodes)
 * Haproxy
@@ -113,3 +117,5 @@ To play with services and offer hosting. Subdivided into a frontend and backend 
 * Python MPICH (Message Passing Interface)
 * Docker swarm
 * Hadoop (to do)
+
+Redundancy: x1 front and x1 back node can fail.
