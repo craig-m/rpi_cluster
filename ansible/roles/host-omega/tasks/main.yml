@@ -46,6 +46,12 @@
     mode: 0755
     owner: pi
     group: pi
+  tags: [host-omega]
+
+
+- name: run sensehat welcome
+  shell: /opt/cluster/bin/sensehat-welcome.py
+  tags: [host-omega]
 
 
 # note: code runs from /opt/omegapyapi/app/

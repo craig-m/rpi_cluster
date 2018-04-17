@@ -1,5 +1,5 @@
 """
-rpi_cluster deployer fabric file
+--==  rpi_cluster deployer fabric file  ==--
 """
 # http://www.fabfile.org/
 
@@ -39,11 +39,13 @@ def ansible_hostinfo():
     local('export ANSIBLE_CONFIG="$PWD"')
     local('ansible all -m setup')
 
+
 @task
 def ansible_ping():
     """ Run ping module.  """
     local('export ANSIBLE_CONFIG="$PWD"')
     local('ansible all -m ping')
+
 
 @task
 def ansible_0_rpi_default():
@@ -52,10 +54,12 @@ def ansible_0_rpi_default():
     local('ansible-playbook -m file -a "dest=/etc/sudoers.d/010_pi-nopasswd state=absent" -e "ansible_user=pi ansible_ssh_pass=raspberry ansible_sudo_pass:raspberry host_key_checking=False"')
     local('ansible-playbook play-rpi-all-ssh.yml -e "ansible_user=pi ansible_ssh_pass=raspberry ansible_sudo_pass:raspberry host_key_checking=False"')
 
+
 @task
 def ansible_1_deploy_rpi():
     """ Playbook - Setup Deployer """
     local('ansible-playbook play-deployer.yml -i inventory/deploy -e "ansible_user=pi" --ask-become-pass')
+
 
 @task
 def ansible_2_lan_services():
@@ -63,26 +67,31 @@ def ansible_2_lan_services():
     local('ansible-playbook play-rpi-services-main.yml -v')
     local('ansible-playbook play-rpi-services-misc.yml -v')
 
+
 @task
 def ansible_3_compute():
     """ Playbook - Compute - base (gamma, delta, epsilon, zeta) """
     local('ansible-playbook play-rpi-compute.yml -v')
+
 
 @task
 def ansible_4_compute_webapp():
     """ Playbook - Compute - hosting """
     local('ansible-playbook play-rpi-compute-webfront.yml -v')
 
+
 @task
 def ansible_5_compute_containers():
     """ Playbook - Compute - Containers """
     local('ansible-playbook play-rpi-compute-containers.yml -v')
+
 
 @task
 def cluster_maintainence():
     """ upgrades (includes rolling reboots) """
     local('ansible-playbook play-rpi-all-maint.yml -v')
     #local('ansible-playbook -e "runtherole=upgrades" single-role.yml')
+
 
 @task
 def cluster_shutdown():

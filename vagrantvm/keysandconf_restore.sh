@@ -29,6 +29,15 @@ fi
 
 rpilogit "starting keysandconf_restore.sh";
 
+read -p "Type uppercase yes to contine:"$'\n\n' message
+echo " ";
+
+if [ "$message" != "YES" ]; then
+  echo "* Canceled, script exiting ";
+  exit
+else
+  echo "* Continuing.";
+fi
 
 # restore ----------------------------------------------------------------------
 # private keys are kept locally

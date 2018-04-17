@@ -13,9 +13,10 @@
 
 
 # misc
-#- name: misc
-#  apt: name={{ item }} state=present
-#  with_items:
-#       - spellcheck
-#  become: yes
-#  retries: 2
+- name: misc
+  apt: name={{ item }} state=present
+  with_items:
+       - siege
+       - libpwquality-tools
+  become: yes
+  retries: 2
