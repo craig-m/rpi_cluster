@@ -7,7 +7,7 @@ See doc/readme.me for the detailed cluster setup process.
 This is an experiment, and exists mainly for my own learning and tinkering when I have time.
 
 <p align="center">
-  <img width="460" height="300" src="https://github.com/craig-m/rpi_cluster/raw/master/doc/pictures/pi_towers1.jpg">
+  <img width="515" height="538" src="https://github.com/craig-m/rpi_cluster/raw/master/doc/pictures/pi_towers1.jpg">
 </p>
 
 ---
