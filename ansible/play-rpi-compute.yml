@@ -20,6 +20,7 @@
     - rpilog
     - ssh-server
     - haveged
+    - sysstat
     - ntp-client
     - nfs-client
     - distcc

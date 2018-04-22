@@ -1,0 +1,41 @@
+---
+
+- debug: msg="sysstat "
+
+
+- name: install sysstat
+  apt: state=present name=sysstat
+  tags: install
+  become: yes
+  register: aptinstsystat
+
+
+- name: systat enabled on boot
+  service: name=sysstat enabled=yes
+  become: yes
+
+
+- name: copy config
+  template:
+    src: default.j2
+    dest: /etc/default/sysstat
+    owner: root
+    group: root
+    mode: 0664
+    backup: yes
+  become: yes
+
+
+- name: systat started
+  service: name=sysstat state=started
+  become: yes
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{role_path|basename}}"
+    owner: root
+    group: root
+    mode: 0444
+  become: yes

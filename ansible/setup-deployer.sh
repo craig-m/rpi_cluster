@@ -33,23 +33,29 @@ EOF
   fi
 fi
 
+# log
+rpilogit () {
+	echo -e "rpicluster: $1 \\n";
+	logger -t rpicluster "$1";
+}
+
 #-------------------------------------------------------------------------------
 
 source ~/env/bin/activate
 
 case "$rpi_hw" in
   rpideployer)
-  echo 'Setting up psi';
-  ansible-playbook --connection=local play-deployer.yml
+  rpilogit 'Setting up psi';
+  ansible-playbook --connection=local play-rpi-deployer.yml
   ansible-playbook -e "runtherole=group-deployer-ssh-client" single-role.yml --connection=local
   ;;
   vmdeployer)
-  echo 'Setting up Deployer VM'
-  ansible-playbook --connection=local play-deployer.yml -i ~/.ansible_local
+  rpilogit 'Setting up Deployer VM';
+  ansible-playbook --connection=local play-vbox-deployer.yml -i ~/.ansible_local
   ansible-playbook -e "runtherole=group-deployer-ssh-client" single-role.yml --connection=local
   ;;
   *)
-  echo "ERROR: keys not setup"
+  rpilogit "ERROR: keys not setup";
   exit 1
 esac
 

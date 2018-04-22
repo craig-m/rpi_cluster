@@ -10,12 +10,6 @@ if [[ root = "$(whoami)" ]]; then
   exit 1;
 fi
 
-cat /etc/ansible/facts.d/keysandconf.fact | grep true > /dev/null 2>&1
-if [ $? -eq 1 ]; then
-  echo "ERROR: missing keysandconf";
-  exit 1;
-fi
-
 rpilogit () {
 	echo -e "rpicluster: $1 \\n";
 	logger -t rpicluster "$1";

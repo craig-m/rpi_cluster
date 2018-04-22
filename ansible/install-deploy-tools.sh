@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # name: install-deploy-tools.sh
-# desc: install tools in requirements.txt.
+# desc: install tools in requirements.txt, and packages from apt.
 # Run on vagrant VM and the R-Pi psi.
 
 # pre-run sanity checks --------------------------------------------------------

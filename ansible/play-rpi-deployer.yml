@@ -1,9 +1,9 @@
 ---
-# Deployers
+# Setup Rpi Deployer
 
 
 - name: Deployer
-  hosts: deploy
+  hosts: psi
   gather_facts: True
   roles:
     - ansible-pre-role
@@ -16,20 +16,7 @@
     - nodejs
     - docker
     - group-deployer
-    - ansible-post-role
-
-
-- name: rpi deployer
-  hosts: psi
-  gather_facts: True
-  roles:
     - host-psi
     - ssh-server
     - mpich
-
-
-- name: Deployer
-  hosts: stretch
-  gather_facts: True
-  roles:
-    - host-vagrantvm
+    - ansible-post-role

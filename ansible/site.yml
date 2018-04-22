@@ -1,7 +1,8 @@
 ---
-# rpi_cluster master playbook
+# rpi_cluster master playbook (excludes deployer r-pi)
 - import_playbook: play-rpi-services-main.yml
 - import_playbook: play-rpi-services-misc.yml
 - import_playbook: play-rpi-compute.yml
 - import_playbook: play-rpi-compute-webfront.yml
+- import_playbook: play-rpi-compute-containers.yml
 - import_playbook: play-rpi-all-maint.yml

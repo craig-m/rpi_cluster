@@ -57,7 +57,7 @@ def ansible_0_rpi_default():
 @task
 def ansible_1_deploy_rpi():
     """ Playbook - Setup Deployer (psi) """
-    local('ansible-playbook play-deployer.yml -i inventory/deploy -e "ansible_user=pi"')
+    local('ansible-playbook play-rpi-deployer.yml -i inventory/deploy -e "ansible_user=pi"')
 
 
 @task

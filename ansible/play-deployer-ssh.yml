@@ -1,8 +1,0 @@
----
-
-
-- name: Deployer
-  hosts: all
-  gather_facts: False
-  roles:
-    - group-deployer-ssh-client

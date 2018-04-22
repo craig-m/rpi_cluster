@@ -6,6 +6,9 @@ See doc/readme.me for the detailed cluster setup process.
 
 This is an experiment, and exists mainly for my own learning and tinkering when I have time.
 
+<p align="center">
+  <img width="460" height="300" src="https://github.com/craig-m/rpi_cluster/raw/master/doc/pictures/pi_towers1.jpg">
+</p>
 
 ---
 
@@ -170,6 +173,6 @@ $ vagrant ssh
 vagrant@stretch:~$ ./rpi_cluster/vagrantvm/keysandconf_restore.sh
 vagrant@stretch:~$ cd rpi_cluster/ansible/
 vagrant@stretch:~/rpi_cluster/ansible$ source ~/env/bin/activate
-(env) vagrant@stretch:~/rpi_cluster/ansible$ ./setup-deployer.sh 
+(env) vagrant@stretch:~/rpi_cluster/ansible$ ./setup-deployer.sh
 (env) vagrant@stretch:~/rpi_cluster/ansible$ fab -f fab_cluster_control.py rpi_get_temp
 ```
