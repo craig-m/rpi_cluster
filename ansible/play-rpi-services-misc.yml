@@ -26,12 +26,12 @@
     - dhcp-client
     - redis
     - dotnet
-    - mpich
     - docker
     - nodejs
     - php
     - nginx
     - haproxy
+    - mpich
     - host-omega
 
 

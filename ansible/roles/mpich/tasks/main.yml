@@ -91,7 +91,15 @@
   tags: [mpich]
 
 
-# mpirun -np 4 -hosts alpha.dc1.b3rry.clust0r,beta.dc1.b3rry.clust0r ~/bin/mpi_sample
+- name: Add mpiuser to sshd users group
+  user:
+    name: 'mpiuser'
+    groups: sshusers
+    append: yes
+  become: yes
+
+
+# mpirun -np 4 -hosts zeta.local,epsilon.local,gamma.local,delta.local ~/bin/mpi_sample
 
 
 - name: roles info txt

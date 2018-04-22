@@ -1,5 +1,8 @@
 #!/bin/bash
-# provide vault password. Run automatically by ansible, specified in ansible.cfg
+#
+# name: vault_pass.sh
+# desc: provide vault password. Run automatically by ansible, specified in ansible.cfg
+# Run on vagrant VM and the R-Pi psi.
 
 # pre-run checks ---------------------------------------------------------------
 

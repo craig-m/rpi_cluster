@@ -6,6 +6,7 @@ rpi_deployer_ssh_prv: "admin_id_rsa.vault"
 # Common host configs ----------------------------------------------------------
 
 host_dir: [
+  { dir: '/home/pi/.ssh/my-ssh-ca', mode: '0700', owner: '{{ ansible_user_id }}', group: '{{ ansible_user_id }}' },
   { dir: '/opt/cluster/backup', mode: '0770', owner: '{{ ansible_user_id }}', group: '{{ ansible_user_id }}' }
 ]
 

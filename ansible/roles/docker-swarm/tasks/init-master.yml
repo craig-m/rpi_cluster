@@ -122,3 +122,13 @@
     dest: "/opt/cluster/data/swarm_demoted.txt"
   when:
     - "swarm_demoted_txt.stat.exists == False"
+
+
+# swarm test service script
+- name: copy swarm test service scripts
+  copy:
+    src: swarm_test.sh
+    dest: /opt/cluster/docker/swarm_test.sh
+    mode: 0755
+    owner: pi
+    group: pi

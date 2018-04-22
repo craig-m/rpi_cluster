@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+# name: setup-deployer.sh
+# desc: run ansible playbooks locally, sets up ~/.ssh/config
+# Run on vagrant VM and the R-Pi psi.
 
 # pre-run checks ---------------------------------------------------------------
 
@@ -36,7 +40,8 @@ source ~/env/bin/activate
 case "$rpi_hw" in
   rpideployer)
   echo 'Setting up psi';
-  echo 'todo';
+  ansible-playbook --connection=local play-deployer.yml
+  ansible-playbook -e "runtherole=group-deployer-ssh-client" single-role.yml --connection=local
   ;;
   vmdeployer)
   echo 'Setting up Deployer VM'

@@ -162,11 +162,14 @@ Available commands:
 
 ### Existing cluster
 
+New VM, existing cluster:
+
 ```
-$ vagrant resume
+$ vagrant up
 $ vagrant ssh
 vagrant@stretch:~$ ./rpi_cluster/vagrantvm/keysandconf_restore.sh
 vagrant@stretch:~$ cd rpi_cluster/ansible/
 vagrant@stretch:~/rpi_cluster/ansible$ source ~/env/bin/activate
+(env) vagrant@stretch:~/rpi_cluster/ansible$ ./setup-deployer.sh 
 (env) vagrant@stretch:~/rpi_cluster/ansible$ fab -f fab_cluster_control.py rpi_get_temp
 ```

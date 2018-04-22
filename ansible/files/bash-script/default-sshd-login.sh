@@ -44,6 +44,10 @@ EOF
 systemctl restart ssh
 systemctl status ssh
 
+cat > /etc/sudoers.d/010_pi-nopasswd << EOF
+pi ALL=(ALL) NOPASSWD: ALL
+EOF
+
 echo "pi:raspberry" | chpasswd
 
 dpkg-reconfigure openssh-server

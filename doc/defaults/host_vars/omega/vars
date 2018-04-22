@@ -22,11 +22,9 @@ rpi_my_dns_server_2: "{{ hostvars['beta']['rpi_ip'] }}"
 
 # nginx config
 nginx_configs: [
-  {cfsource: 'sites-enabled/omega.j2', cfdest: '/etc/nginx/sites-enabled/omega.conf'}
+  {cfsource: 'sites-enabled/omega.j2', cfdest: '/etc/nginx/sites-enabled/omega.conf'},
+  {cfsource: 'sites-enabled/omega-php.j2', cfdest: '/etc/nginx/sites-enabled/omega-php.conf'}
 ]
-nginx_port: "88"
-nginx_port2: "3000"
-nginx_site_enabled: "omega"
 
 # haproxy server:
 rpi_haproxy_enabled: true

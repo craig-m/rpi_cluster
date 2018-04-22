@@ -109,7 +109,7 @@ backend back_apiv2
   http-response set-header X-haproxy-api %s
   #
   {% for host in groups['api_backend'] %}
-  server {{ host }} {{ hostvars[host]['ansible_default_ipv4']['address'] }}:8182
+  server {{ host }} {{ hostvars[host]['ansible_default_ipv4']['address'] }}:3000
   {% endfor %}
 
 

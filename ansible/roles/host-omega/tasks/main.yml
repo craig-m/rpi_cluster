@@ -12,6 +12,7 @@
        - tcpdump
        - sense-hat
        - python-pycurl
+       - siege
   retries: 1
   become: yes
   tags: [host-omega]
@@ -86,6 +87,18 @@
 # cron scripts
 #- import_tasks: cron.yml
 #  tags: [host-omega]
+
+
+# php pub
+- name: create /srv/php/omegaapp/pub
+  file:
+    path: "/srv/php/omegaapp/pub"
+    state: "directory"
+    mode: 0755
+    owner: pi
+    group: pi
+  become: yes
+  tags: [host-omega]
 
 
 - name: output to rpicluster log

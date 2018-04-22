@@ -8,7 +8,7 @@ global_defs {
 vrrp_instance VI_1 {
     state BACKUP
     interface eth0
-    virtual_router_id 51
+    virtual_router_id {{ keepalived_vrouteid }}
     priority 100
     advert_int 1
     authentication {

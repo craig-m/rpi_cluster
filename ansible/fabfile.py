@@ -51,14 +51,13 @@ def ansible_ping():
 def ansible_0_rpi_default():
     """ setup ssh access - configure default raspbian install (all)  """
     local('ansible all -a "uname -a" -f 10 -e "ansible_user=pi ansible_ssh_pass=raspberry ansible_sudo_pass:raspberry host_key_checking=False"')
-    local('ansible-playbook -m file -a "dest=/etc/sudoers.d/010_pi-nopasswd state=absent" -e "ansible_user=pi ansible_ssh_pass=raspberry ansible_sudo_pass:raspberry host_key_checking=False"')
     local('ansible-playbook play-rpi-all-ssh.yml -e "ansible_user=pi ansible_ssh_pass=raspberry ansible_sudo_pass:raspberry host_key_checking=False"')
 
 
 @task
 def ansible_1_deploy_rpi():
-    """ Playbook - Setup Deployer """
-    local('ansible-playbook play-deployer.yml -i inventory/deploy -e "ansible_user=pi" --ask-become-pass')
+    """ Playbook - Setup Deployer (psi) """
+    local('ansible-playbook play-deployer.yml -i inventory/deploy -e "ansible_user=pi"')
 
 
 @task
