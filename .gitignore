@@ -4,7 +4,9 @@ ignore_me/*
 local_data/*
 .vagrant/*
 nohup.out
-ansible/inventory/*
+ansible/inventory/compute
+ansible/inventory/deploy
+ansible/inventory/lanservices
 #
 # ---- code ----
 serverspec/reports/*
