@@ -101,6 +101,15 @@
   tags: [host-omega]
 
 
+- name: upload omega php file
+  copy:
+    src: omega_info.php
+    dest: /srv/php/omegaapp/pub/omega_info.php
+    owner: pi
+    group: pi
+    mode: 0644
+
+
 - name: output to rpicluster log
   shell: logger -t rpicluster host-Omega role ran
   changed_when: False

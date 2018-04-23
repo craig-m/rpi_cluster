@@ -58,7 +58,7 @@ file ~/.ssh/id_rsa | grep "PEM RSA private key" || exit 1;
 thesshcapw=$(pass ssh/CA)
 
 # sign our SSH keys with the CA key
-ssh-keygen -s ~/rpi_cluster/local_data/ssh/my-ssh-ca/ca -P "${thesshcapw}" -N "" -I ${USER} -n pi -V +4w -z 1 ~/.ssh/id_rsa
+echo "\n\n" | ssh-keygen -s ~/rpi_cluster/local_data/ssh/my-ssh-ca/ca -P "${thesshcapw}" -N "" -I ${USER} -n pi -V +4w -z 1 ~/.ssh/id_rsa
 
 # PGP
 rsync -avr --exclude '*.DS_Store' \

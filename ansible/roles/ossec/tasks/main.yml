@@ -3,3 +3,18 @@
 
 
 - debug: msg="install OSSEC"
+
+
+# create /root/ossec/
+- name: /root/ossec/
+  file:
+    path: /root/ossec/
+    state: directory
+    mode: 0755
+    owner: root
+    group: root
+  become: yes
+  tags: [ossec]
+
+
+# upload install script
