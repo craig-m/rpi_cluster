@@ -1,4 +1,4 @@
-Setup guidekeysandconf_new.sh
+Setup guide
 ===========
 
 Directions for bootstrapping this Raspberry Pi cluster.
