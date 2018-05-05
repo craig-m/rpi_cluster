@@ -1,13 +1,15 @@
 About
 ------
 
-install-deploy-tools.sh will setup the deploy host (Vagrant VM or 'psi' R-Pi), installing the tools listed in requirements.txt.
+Run rpi_cluster/ansible/setup/install-deploye-tools.sh to install these tools.
+
 
 Assumes working from:
 
 ```
-vagrant@stretch:~$ source ~/env/bin/activate
-(env) vagrant@stretch:~$ cd rpi_cluster/ansible/
+pi@psi:~ $ source ~/env/bin/activate
+(env) pi@psi:~ $ cd rpi_cluster/ansible/
+(env) pi@psi:~/rpi_cluster/ansible $
 ```
 
 ---
@@ -47,7 +49,6 @@ Run Ad hoc command with Fabric (on all hosts):
 
 ```
 $ fab -f fab_cluster_control.py -- uname -a | grep Linux
-<snip>
 ```
 
 
@@ -120,8 +121,8 @@ ARA
 https://github.com/openstack/ara
 
 ```
-(env) vagrant@stretch:~/rpi_cluster/ansible$ ansible-playbook play-deployer.yml
-(env) vagrant@stretch:~/rpi_cluster/ansible$ ara-manage runserver
+(env) pi@psi:~/rpi_cluster/ansible $ ansible-playbook play-deployer.yml
+(env) pi@psi:~/rpi_cluster/ansible $ ara-manage runserver
 ```
 
 
@@ -130,9 +131,9 @@ ansible-lint
 https://github.com/willthames/ansible-lint
 
 ```
-vagrant@stretch:~$ source ~/env/bin/activate
-(env) vagrant@stretch:~$ cd rpi_cluster/ansible/
-(env) vagrant@stretch:~/rpi_cluster/ansible$ ansible-lint play-rpi-all-maint.yml
+pi@psi:~ $ source ~/env/bin/activate
+(env) pi@psi:~ $ cd rpi_cluster/ansible/
+(env) pi@psi:~/rpi_cluster/ansible $ ansible-lint play-rpi-all-maint.yml
 ```
 
 
@@ -156,3 +157,14 @@ https://httpie.org/
 passlib
 -------
 https://passlib.readthedocs.io/en/stable/
+
+
+pytest
+------
+https://docs.pytest.org/en/latest/
+
+Test the local deployer:
+
+```
+pytest test-rpideployer.py
+```

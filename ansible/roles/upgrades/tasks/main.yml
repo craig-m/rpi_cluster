@@ -35,7 +35,7 @@
 #  shell: SKIP_WARNING=1 /usr/bin/rpi-update
 #  become: yes
 #  tags: [maintenance]
-#  when: "'vagrantvm' not in group_names"
+#  when: "'deployer' not in group_names"
 
 
 # systemctl daemon-reload

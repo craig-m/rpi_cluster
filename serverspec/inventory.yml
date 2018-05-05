@@ -3,22 +3,24 @@ alpha.local:
   :roles:
     - base
     - lanservice
-  :rpi_ip_addr: "192.168.6.66"
+  :rpi_ip_addr: "20.20.20.6"
   :rpi_dnsd_status: "master"
   :rpi_cust_domain: "b3rry"
   :rpi_cust_tld: "clust0r"
-  :rpi_net_wifi_gw: "192.168.6.2"
+  :rpi_net_default_gw: "20.20.20.1"
+  :rpi_net_wifi_gw: "20.20.20.2"
   :ssh_group_port: "2220"
 beta.local:
   :name: "beta"
   :roles:
     - base
     - lanservice
-  :rpi_ip_addr: "192.168.6.68"
+  :rpi_ip_addr: "20.20.20.8"
   :rpi_dnsd_status: "slave"
   :rpi_cust_domain: "b3rry"
   :rpi_cust_tld: "clust0r"
-  :rpi_net_wifi_gw: "192.168.6.2"
+  :rpi_net_default_gw: "20.20.20.1"
+  :rpi_net_wifi_gw: "20.20.20.2"
   :ssh_group_port: "2220"
 omega.local:
   :name: "omega"
@@ -27,7 +29,8 @@ omega.local:
     - omega
   :rpi_cust_domain: "b3rry"
   :rpi_cust_tld: "clust0r"
-  :rpi_net_wifi_gw: "192.168.6.2"
+  :rpi_net_default_gw: "20.20.20.1"
+  :rpi_net_wifi_gw: "20.20.20.2"
   :ssh_group_port: "2221"
 psi.local:
   :name: "psi"
@@ -36,5 +39,6 @@ psi.local:
     - deployer
   :rpi_cust_domain: "b3rry"
   :rpi_cust_tld: "clust0r"
-  :rpi_net_wifi_gw: "192.168.6.2"
+  :rpi_net_default_gw: "20.20.20.1"
+  :rpi_net_wifi_gw: "20.20.20.2"
   :ssh_group_port: "2222"

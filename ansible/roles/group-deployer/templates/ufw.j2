@@ -1,34 +1,29 @@
 #!/bin/bash
 # {{ ansible_managed }}
-# UFW setup script for omega
+# UFW setup script for psi
 
-apt-get install ufw -y
+logger -t rpicluster "ufw.sh started";
 
-ufw status verbose
+apt-get install -y ufw;
+
+ufw status verbose || exit 1
 
 echo 1 > /proc/sys/net/ipv4/tcp_syncookies
 echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
 
 # defaults
-ufw default deny incoming || exit 1;
+ufw default deny incoming || exit 1
 ufw default allow outgoing
+
+# log
+ufw logging on
 
 # incoming SSH from outside LAN
 ufw allow 22/tcp
 ufw allow {{ ssh_group_port }}/tcp
 
-# incoming web from outside LAN
-ufw allow 80/tcp
-ufw allow 443/tcp
-
-# allow all incoming from local LAN
-ufw allow from {{ rpi_net_id }}/{{ rpi_net_maskbit }}
-
-# log
-ufw logging on
-
 # enable FW
-ufw --force enable || exit 1;
+ufw --force enable || exit 1
 sleep 1s;
 ufw status
 

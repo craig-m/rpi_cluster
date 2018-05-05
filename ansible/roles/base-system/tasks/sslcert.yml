@@ -1,0 +1,13 @@
+---
+
+
+- name: Generate OpenSSL private key for host
+  openssl_privatekey:
+    path: /opt/cluster/data/ssl-privkey.pem
+
+
+- name: Generate an OpenSSL CSR.
+  openssl_csr:
+    path: /opt/cluster/data/{{ ansible_hostname }}.csr
+    privatekey_path: /opt/cluster/data/ssl-privkey.pem
+    common_name: "{{ ansible_hostname }}"

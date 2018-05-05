@@ -24,10 +24,9 @@ ufw allow from {{ rpi_net_id }}/{{ rpi_net_maskbit }}
 ufw logging on
 
 # enable FW
-ufw enable || exit 1;
+ufw --force enable || exit 1;
+sleep 1s;
 ufw status
-
-touch -fv /root/.ufw
 
 logger -t rpicluster "ufw enabled";
 

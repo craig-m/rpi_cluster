@@ -6,5 +6,5 @@
 - name: setup access to fresh Rpi
   hosts: all
   roles:
-    - userac
     - ssh-server
+    - userac

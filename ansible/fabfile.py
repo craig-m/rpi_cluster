@@ -48,48 +48,58 @@ def ansible_ping():
 
 
 @task
-def ansible_0_rpi_default():
-    """ setup ssh access - configure default raspbian install (all)  """
-    local('ansible all -a "uname -a" -f 10 -e "ansible_user=pi ansible_ssh_pass=raspberry ansible_sudo_pass:raspberry host_key_checking=False"')
-    local('ansible-playbook play-rpi-all-ssh.yml -e "ansible_user=pi ansible_ssh_pass=raspberry ansible_sudo_pass:raspberry host_key_checking=False"')
+def ansible_test_default():
+    """ test default login creds.  """
+    local('ansible all -a "uname -a" -f 10 -e "ansible_user=pi ansible_ssh_pass=raspberry host_key_checking=False"')
 
 
 @task
-def ansible_1_deploy_rpi():
-    """ Playbook - Setup Deployer (psi) """
-    local('ansible-playbook play-rpi-deployer.yml -i inventory/deploy -e "ansible_user=pi"')
+def ansible_localhost():
+    """ run on local deployer """
+    local('ansible-playbook --connection=local -i inventory/deploy -v play-rpi-deployer.yml')
+    local('ansible-playbook --connection=local -e "runtherole=group-deployer-ssh-client" -v single-role.yml')
 
 
 @task
-def ansible_2_lan_services():
-    """ Playbook - LanServices (alpha, beta, omega)  """
-    local('ansible-playbook play-rpi-services-main.yml -v')
-    local('ansible-playbook play-rpi-services-misc.yml -v')
+def ansible_1_lan_services():
+    """ setup ssh access - configure default SSHD (setup keys) """
+    local('ansible-playbook -i inventory/lanservices -e "ansible_user=pi ansible_ssh_pass=raspberry host_key_checking=False runtherole=ssh-server" -v single-role.yml')
 
 
 @task
-def ansible_3_compute():
+def ansible_2_lan_service_main():
+    """ Playbook - LanServices (alpha, beta)  """
+    local('ansible-playbook -v play-rpi-services-main.yml')
+
+
+@task
+def ansible_3_lan_service_misc():
+    """ Playbook - LanServices (omega)  """
+    local('ansible-playbook -v play-rpi-services-misc.yml')
+
+
+@task
+def ansible_4_compute():
     """ Playbook - Compute - base (gamma, delta, epsilon, zeta) """
-    local('ansible-playbook play-rpi-compute.yml -v')
+    local('ansible-playbook -v play-rpi-compute.yml')
 
 
 @task
-def ansible_4_compute_webapp():
+def ansible_5_compute_webapp():
     """ Playbook - Compute - hosting """
-    local('ansible-playbook play-rpi-compute-webfront.yml -v')
+    local('ansible-playbook -v play-rpi-compute-webfront.yml')
 
 
 @task
-def ansible_5_compute_containers():
+def ansible_6_compute_containers():
     """ Playbook - Compute - Containers """
-    local('ansible-playbook play-rpi-compute-containers.yml -v')
+    local('ansible-playbook -v play-rpi-compute-containers.yml')
 
 
 @task
 def cluster_maintainence():
     """ upgrades (includes rolling reboots) """
-    local('ansible-playbook play-rpi-all-maint.yml -v')
-    #local('ansible-playbook -e "runtherole=upgrades" single-role.yml')
+    local('ansible-playbook -v play-rpi-all-maint.yml')
 
 
 @task

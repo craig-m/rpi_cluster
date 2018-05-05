@@ -13,6 +13,7 @@
        - sense-hat
        - python-pycurl
        - siege
+       - nmap
   retries: 1
   become: yes
   tags: [host-omega]

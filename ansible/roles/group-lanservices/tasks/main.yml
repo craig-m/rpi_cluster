@@ -30,7 +30,6 @@
   shell: /root/ufw.sh
   args:
     chdir: /root/
-    creates: /root/.ufw
   become: yes
   tags: [lanservices]
 

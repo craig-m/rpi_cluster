@@ -17,6 +17,7 @@
        - emacs
        - ranger
        - mpich
+       - maven
   become: yes
   retries: 2
 

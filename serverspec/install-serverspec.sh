@@ -1,6 +1,6 @@
 #!/bin/bash
 # name: install.sh
-# desc: install serverspec on deployer node (VagrantVM or psi) http://serverspec.org/
+# desc: install serverspec - http://serverspec.org/
 
 # pre-run tasks ----------------------------------------------------------------
 

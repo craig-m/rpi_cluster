@@ -1,6 +1,0 @@
-{
-    "require": {
-        "erusev/parsedown": "@stable",
-        "deployer/deployer": "@stable"
-    }
-}

@@ -30,17 +30,18 @@
   when: go_bin_usrlocal.stat.exists == False
 
 
-- name: golang path
+- name: add golang bin to environment path
   shell: go version
   environment:
     PATH: $PATH:/usr/local/go/bin
+  changed_when: false
 
 
 - name: system wide PATH
   copy:
     dest: /etc/profile.d/golang-path.sh
     content: 'export PATH=$PATH:/usr/local/go/bin'
-  become: True
+  become: yes
 
 
 - name: copy build_go_hello

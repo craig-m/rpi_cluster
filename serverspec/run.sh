@@ -34,7 +34,7 @@ source ~/.rvm/scripts/rvm
 rvm gemset use serverspec
 
 # remove old reports
-rm -rvf -- reports/192.168.6.*
+rm -rvf -- reports/*.html reports/*.json
 
 # run
 #bundle exec rake spec

@@ -1,6 +1,0 @@
----
-allow_duplicates: no
-dependencies:
-  - { role: userac }
-  - { role: base-system }
-  - { role: group-deployer }

@@ -2,6 +2,14 @@
 - debug: msg="Lan Services main cron jobs "
 
 
+- name: add pathing to cron
+  cron:
+    name: PATH
+    env: yes
+    value: /root/bin/
+  become: yes
+
+
 - name: copy cron daily script
   template:
     src: lansrvmain-cron-daily.j2
@@ -9,14 +17,6 @@
     mode: 0755
     owner: root
     group: root
-  become: yes
-
-
-- name: add pathing
-  cron:
-    name: PATH
-    env: yes
-    value: /root/bin/
   become: yes
 
 
@@ -44,8 +44,8 @@
 - name: install hourly cron script
   cron:
     name: "lansrv main hourly"
-    hour: "1"
-    minute: "0"
+    minute: "30"
+    weekday: 7
     cron_file: "lansrvmain-cron-hourly"
     job: "/root/crontab/lansrvmain-cron-hourly"
     state: "present"

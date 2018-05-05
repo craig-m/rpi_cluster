@@ -4,16 +4,6 @@
   tags: [ssh]
 
 
-# Add SSH Pub key to ~/.ssh/authorized_keys
-# note: this is not used since sshd only accepts keys signed by our CA
-- name: import ssh key
-  authorized_key:
-    state: present
-    user: "{{ ansible_user_id }}"
-    key: "{{ lookup('file', 'files/ssh-pub-user/' + item.key) }}"
-  with_items: "{{ sshpubkey }}"
-
-
 # check for ~/.ssh/id_rsa
 - name: check ssh private key
   stat: path="~/.ssh/id_rsa"
@@ -43,9 +33,7 @@
 - name: backup user ssh dir on remote host
   archive:
     path: /home/{{ ansible_user_id }}/.ssh/
-    dest: "/opt/cluster/data/{{ inventory_hostname }}_ssh_bu.tgz"
-    owner: root
-    group: root
+    dest: "/home/pi/.{{ inventory_hostname }}_ssh_bu.tgz"
     mode: 0440
   become: yes
   when: sshpribackup.stat.exists == false

@@ -1,23 +1,22 @@
 # ---- ignore ----
 #
 ignore_me/*
-local_data/*
-.vagrant/*
 nohup.out
 ansible/inventory/compute
 ansible/inventory/deploy
 ansible/inventory/lanservices
 #
 # ---- code ----
+#
 serverspec/reports/*
 ansible/.pytest_cache/
 code/omegapyapi/flask/
 code/hugo-site/public/*
-vagrantvm/vboxphpcms/vendor/*
 yarn-error.log
 node_modules/
 #
 # ---- python ----
+#
 .cache
 __pycache__/
 *.py[cod]
@@ -31,6 +30,7 @@ venv/
 ENV/
 #
 # ---- Apple ----
+#
 *.DS_Store
 .AppleDouble
 .LSOverride

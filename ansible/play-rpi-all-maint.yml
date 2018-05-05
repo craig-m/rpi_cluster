@@ -31,7 +31,7 @@
 - name: compute nodes upgrades
   hosts: compute
   gather_facts: false
-  serial: 2
+  serial: 1
   roles:
     - upgrades
 

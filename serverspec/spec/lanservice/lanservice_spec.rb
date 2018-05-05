@@ -27,6 +27,5 @@ end
 
 # lanservices cron
 describe cron do
-  it { should have_entry('@hourly bash -c /opt/cluster/bin/lansrv-cron-hourly.sh > 2>&1').with_user('root') }
-  it { should have_entry('@daily bash -c /opt/cluster/bin/lansrv-cron-daily.sh > 2>&1').with_user('root') }
+  it { should have_entry('30 01 * * 7 /root/crontab/lansrvmain-cron-daily').with_user('root') }
 end

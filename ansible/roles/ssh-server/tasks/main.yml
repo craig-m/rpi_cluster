@@ -38,7 +38,8 @@
     group: root
     mode: 0644
     backup: yes
-  become: True
+  become: yes
+  tags: [ssh]
 
 
 # SSHD Server config
@@ -52,30 +53,12 @@
     validate: /usr/sbin/sshd -t -f %s
     backup: yes
   become: yes
-  notify: sshd_restart
   tags: [ssh]
 
 
-# enabled on boot
-- name: sshd enabled on boot
-  service: name=ssh enabled=yes
+# restart ssh
+- name: sshd_restart
+  service: name=ssh state=restarted
   become: yes
-  tags: [ssh]
-
-
-# started
-- name: sshd started
-  service: name=ssh state=started
-  become: yes
-  tags: [ssh]
-
-
-- name: roles info txt
-  lineinfile:
-    path: /opt/cluster/data/info_roles.txt
-    line: "{{role_path|basename}}"
-    owner: root
-    group: root
-    mode: 0444
-  become: yes
+  changed_when: False
   tags: [ssh]

@@ -3,7 +3,7 @@
 
 
 - name: Deployer
-  hosts: psi
+  hosts: deploy
   gather_facts: True
   roles:
     - ansible-pre-role
@@ -14,9 +14,10 @@
     - ntp-server
     - redis
     - nodejs
+    - golang
     - docker
     - group-deployer
-    - host-psi
     - ssh-server
     - mpich
+    - jenkins
     - ansible-post-role

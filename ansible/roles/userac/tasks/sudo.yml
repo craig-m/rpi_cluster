@@ -5,7 +5,7 @@
   file:
     state: absent
     path: "/etc/sudoers.d/010_pi-nopasswd"
-  become: true
+  become: yes
 
 # this file contains the line:
 #

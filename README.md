@@ -53,14 +53,11 @@ All run Raspbian GNU/Linux 9.3 (stretch), a Debian-based OS.
 
 The other bits and pieces:
 
-* A router (https://lede-project.org/ + https://www.gl-inet.com/)
+* PC Engines APU1 - Firewall with x3 ethernet ports (https://www.pcengines.ch/apu.htm)
 * D-Link 16 port switch (Gbit ethernet, unmanaged)
 * x2 6 Port RAVPower USB Chargers (each 60W 12A) (https://www.ravpower.com/6-port-usb-wall-charger-black-.html)
 * Raspberry Pi SenseHat (https://www.raspberrypi.org/products/sense-hat/)
 * Raspberry Pi Camera
-
-The switch is connected to a managed one, where the cluster has its own VLAN.
-
 
 ---
 
@@ -72,12 +69,13 @@ What the cluster is doing, more or less. The software stack for each group.
 
 ### Deployer
 
-The Deployer code (and Ansible playbooks) runs from x1 R-Pi, and in a Virtual Machine (debian/stretch64). This configures all of the other hosts using:
+The Deployer runs from x1 R-Pi. This configures all of the other hosts using:
 
 * Fabric (http://www.fabfile.org/)
 * Ansible (https://www.ansible.com/)
 * ServerSpec (http://serverspec.org/)
-* Redis DB for Ansible fact cache (https://redis.io/)
+
+It also acts as a Certificate Authority, for TLS and SSH.
 
 
 ### LanServices - Main
@@ -122,57 +120,3 @@ To play with services and offer hosting. Subdivided into a frontend and backend 
 * Hadoop (to do)
 
 Redundancy: x1 front and x1 back node can fail.
-
-
----
-
-
-# tldr setup
-
-The short version.
-
-### New cluster
-
-```
-$ vagrant up
-$ vagrant ssh
-vagrant@stretch:~$ ./rpi_cluster/vagrantvm/keysandconf_new.sh
-vagrant@stretch:~$ cd rpi_cluster/ansible/
-vagrant@stretch:~/rpi_cluster/ansible$ ./setup-deployer.sh
-vagrant@stretch:~/rpi_cluster/ansible$ source ~/env/bin/activate
-(env) vagrant@stretch:~/rpi_cluster/ansible$ fab -l
-
---==  rpi_cluster deployer fabric file  ==--
-
-Available commands:
-
-    ansible_0_rpi_default         setup ssh access - configure default raspbian install (all)
-    ansible_1_deploy_rpi          Playbook - Setup Deployer
-    ansible_2_lan_services        Playbook - LanServices (alpha, beta, omega)
-    ansible_3_compute             Playbook - Compute - base (gamma, delta, epsilon, zeta)
-    ansible_4_compute_webapp      Playbook - Compute - hosting
-    ansible_5_compute_containers  Playbook - Compute - Containers
-    ansible_hostinfo              Run setup module to gather facts on all hosts.
-    ansible_ping                  Run ping module.
-    cluster_maintainence          upgrades (includes rolling reboots)
-    cluster_shutdown              shutdown cluster - ansible (excludes deployer)
-    deploy_omega_site             code/hugo-site
-    serverspec_tests              Run ServerSpec tests on cluster.
-
-(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_0_rpi_default
-(env) vagrant@stretch:~/rpi_cluster/ansible$ fab ansible_ping
-```
-
-### Existing cluster
-
-New VM, existing cluster:
-
-```
-$ vagrant up
-$ vagrant ssh
-vagrant@stretch:~$ ./rpi_cluster/vagrantvm/keysandconf_restore.sh
-vagrant@stretch:~$ cd rpi_cluster/ansible/
-vagrant@stretch:~/rpi_cluster/ansible$ source ~/env/bin/activate
-(env) vagrant@stretch:~/rpi_cluster/ansible$ ./setup-deployer.sh
-(env) vagrant@stretch:~/rpi_cluster/ansible$ fab -f fab_cluster_control.py rpi_get_temp
-```

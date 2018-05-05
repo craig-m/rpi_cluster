@@ -3,7 +3,7 @@
 ; db_rpi.j2
 $TTL  604800
 @     IN  SOA   dns1.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. admin.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. (
-      2018042000    ; Serial
+      2018043000    ; Serial
           604800    ; Refresh
           86400     ; Retry
           2419200   ; Expire
@@ -49,7 +49,7 @@ float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A 
 float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "shared between delta and epsilon. "
 
 ; Omega - Mail
-mail.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  CNAME omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
+mail.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A {{ hostvars['omega']['ansible_default_ipv4']['address'] }}
 
 ; Omega - other
 status.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.  IN  CNAME omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
@@ -58,8 +58,5 @@ git.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.   IN  CNAME omega.{{ rpi_cust_doma
 ; floating IP web services
 www.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.   IN  CNAME float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
 api.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.   IN  CNAME float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
-
-; wpad
-wpad. IN  CNAME omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
 
 ; eof

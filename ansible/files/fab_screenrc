@@ -1,7 +1,0 @@
-deflog on
-
-shelltitle bs-deploy
-
-logfile ~/bs-depoyer.log
-
-logtstamp after 120

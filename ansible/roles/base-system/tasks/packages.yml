@@ -59,6 +59,7 @@
        - monitoring-plugins-common
        - monitoring-plugins-basic
        - libnss-myhostname
+       - libssl-dev
        - gfortran
        - libffi-dev
        - xsltproc
@@ -93,6 +94,13 @@
     name: virtualenv
   become: yes
   tags: [common,commonpackage]
+
+
+- name: install pyOpenSSL
+  pip:
+    name: pyOpenSSL
+    state: present
+  become: yes
 
 
 # Install Bash Automated Testing System

@@ -122,7 +122,7 @@
 - name: rpi reverse zone db
   template:
     src: db_reverse.j2
-    dest: /etc/bind/zones/{{ rpi_dnsd_status }}/db.reverse.{{ rpi_dnsd_status }}
+    dest: /etc/bind/zones/{{ rpi_dnsd_status }}/reverse-{{ rpi_dnsd_status }}.db
     owner: root
     group: bind
     mode: 0664
@@ -156,7 +156,7 @@
 - name: bind9 started
   service: name=bind9 state=started
   become: yes
-  when: rpi_dnsd_enabled  == true
+  when: rpi_dnsd_enabled == true
   tags: [bind]
 
 
@@ -164,7 +164,7 @@
 - name: bind9 enabled on boot
   service: name=bind9 enabled=no
   become: yes
-  when: rpi_dnsd_enabled  == false
+  when: rpi_dnsd_enabled == false
   tags: [bind]
 
 
@@ -172,7 +172,7 @@
 - name: bind9 stopped
   service: name=bind9 state=stopped
   become: yes
-  when: rpi_dnsd_enabled  == false
+  when: rpi_dnsd_enabled == false
   tags: [bind]
 
 

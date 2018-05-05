@@ -45,6 +45,11 @@
   tags: [common,commonpackage]
 
 
+# pki
+- import_tasks: sslcert.yml
+  tags: [common]
+  
+
 # log
 - name: output to rpicluster log
   shell: logger -t rpicluster ansible base-system roll ran

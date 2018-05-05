@@ -15,6 +15,25 @@
   tags: [deployer,yarn]
 
 
+- name: copy firewall script
+  template:
+    src: ufw.j2
+    dest: /root/ufw.sh
+    owner: root
+    group: root
+    mode: 0755
+  become: yes
+  changed_when: False
+
+
+- name: run firewall script
+  shell: /root/ufw.sh
+  args:
+    chdir: /root/
+    creates: /root/.ufw
+  become: yes
+
+
 # log
 - name: output to rpicluster log
   shell: logger -t rpicluster ansible deployer role ran

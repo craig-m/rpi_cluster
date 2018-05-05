@@ -17,7 +17,7 @@
 - name: put inventory into etc hosts
   template: src=etc_hosts.j2 dest=/etc/hosts
   delegate_to: localhost
-  become: True
+  become: yes
   changed_when: False
 
 
