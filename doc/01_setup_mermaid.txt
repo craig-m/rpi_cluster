@@ -1,9 +1,0 @@
-graph TD
-A[rpi_cluster source] -->|vagrant up| B[Admin VM]
-B --> || C>deployer role]
-C --> |ansible local|B
-B --> |scp/ssh|K
-B --> |ansible ssh|M((x7 R-Pi))
-K[R-Pi - deployer] -->|ansible ssh|M
-K --> || L>deployer role]
-L --> |ansible local|K

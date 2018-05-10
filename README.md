@@ -2,15 +2,18 @@
 
 An 8 node PoC Raspberry Pi Beowulf cluster project.
 
-See doc/readme.me for the detailed cluster setup process.
+See doc/readme.md for the detailed cluster setup process.
 
 This is an experiment, and exists mainly for my own learning and tinkering when I have time.
+
 
 <p align="center">
   <img width="515" height="538" src="https://github.com/craig-m/rpi_cluster/raw/master/doc/pictures/pi_towers1.jpg">
 </p>
 
+
 ---
+
 
 # Hardware Inventory
 
@@ -51,13 +54,25 @@ All run Raspbian GNU/Linux 9.3 (stretch), a Debian-based OS.
 
 ### Other parts
 
-The other bits and pieces:
+The other bits and pieces in this cluster:
 
-* PC Engines APU1 - Firewall with x3 ethernet ports (https://www.pcengines.ch/apu.htm)
+* PC Engines APU1 - Firewall with x3 ethernet ports for LAN, WAN, DMZ (https://www.pcengines.ch/apu.htm)
 * D-Link 16 port switch (Gbit ethernet, unmanaged)
 * x2 6 Port RAVPower USB Chargers (each 60W 12A) (https://www.ravpower.com/6-port-usb-wall-charger-black-.html)
 * Raspberry Pi SenseHat (https://www.raspberrypi.org/products/sense-hat/)
 * Raspberry Pi Camera
+
+
+
+---
+
+
+# Network
+
+<p align="center">
+  <img width="515" height="538" src="https://github.com/craig-m/rpi_cluster/raw/master/doc/pictures/rpi_clust_network.png">
+</p>
+
 
 ---
 
@@ -75,7 +90,7 @@ The Deployer runs from x1 R-Pi. This configures all of the other hosts using:
 * Ansible (https://www.ansible.com/)
 * ServerSpec (http://serverspec.org/)
 
-It also acts as a Certificate Authority, for TLS and SSH.
+It also acts as a Certificate Authority, for TLS and SSH. The deployer is in a different subnet, everything else is in a DMZ.
 
 
 ### LanServices - Main
@@ -93,7 +108,7 @@ Redundancy: x1 node can fail.
 
 ### LanServices - Misc
 
-For miscellaneous, non-essential, net services. Used for dev, reporting, testing, monitoring.
+For miscellaneous, non-essential, net services. Used for dev, reporting, testing , monitoring etc.
 
 * Redis
 * Nginx + PHP-FPM
@@ -120,3 +135,6 @@ To play with services and offer hosting. Subdivided into a frontend and backend 
 * Hadoop (to do)
 
 Redundancy: x1 front and x1 back node can fail.
+
+
+---

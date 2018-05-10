@@ -3,6 +3,12 @@ Setup guide
 
 Directions for bootstrapping this Raspberry Pi cluster.
 
+Design decisions:
+
+* Start with vanilla Raspbian installation, with default SSH.
+* High availability of services, ability to easily rebuild any failed R-Pi node.
+* The R-Pi cluster should be self contained, minimise any external DHCP + DNS dependencies.
+
 
 ---
 
@@ -14,7 +20,7 @@ Preparation
 
 * Create the empty file /boot/ssh on each SDcard to enable SSH access. Read https://www.raspberrypi.org/blog/a-security-update-for-raspbian-pixel/ for info.
 
-* Join The R-Pi to a switch. Setup a DHCP server and make sure it is configured to only give out IP addresses to known hosts. You need to set static IPs for the Alpha, Beta, Omega and Psi hosts.
+* Join The R-Pi to a switch. Setup a DHCP server and make sure it is configured to only give out IP addresses to known hosts, I use my pfSense firewall. You need to set static IPs for the Alpha, Beta, Omega and Psi hosts.
 
   The R-Pi in the Compute group (zeta, epsilon, gamma, delta) will get IP addresses from the Alpha and Beta R-Pi, once they have been configured. After the setup process the Alpha and Beta nodes will have static IP addresses, DHCP is needed for initial setup/bootstrap only (the cluster is not reliant on the DHCP server anymore).
 
@@ -27,31 +33,39 @@ Preparation
 new deploy
 ----------
 
+
 Copy the code to the R-Pi that will be the deployer. I have port forwarding setup infront of my Pi so the port is different:
 
 ```
 $ scp -P 2222 -r rpi_cluster/ pi@192.168.6.200:~/
 ```
 
-Connect to the deployer:
+
+Connect to the deployer R-Pi:
 
 ```
 $ ssh -p 2222 pi@192.168.6.200
+```
+
+
+Install tools from apt and requirements.txt (ansible, fabric etc):
+
+```
 $ cd rpi_cluster/ansible/setup/
-pi@raspberrypi:~/rpi_cluster/ansible/setup $
-```
-
-Install tools and their requirements:
-
-```
 pi@raspberrypi:~/rpi_cluster/ansible/setup $ ./install-deploy-tools.sh
 ```
+
+
+Generate SSH CA keys, SSH keys, GPG keys, encrypt Ansible vault files.
+
+You will need to edit the Ansible inventory and variable files.
 
 ```
 pi@raspberrypi:~/rpi_cluster/ansible/setup $ ./keysandconf_new.sh
 ```
 
-activate the environment
+
+Activate the virtual python environment
 
 ```
 pi@psi:~ $ cd rpi_cluster/ansible/
@@ -59,7 +73,9 @@ pi@psi:~/rpi_cluster/ansible $ source ~/env/bin/activate
 (env) pi@psi:~/rpi_cluster/ansible $
 ```
 
-The fabric tasks
+
+The fabric tasks can be followed in order to setup the cluster.
+
 
 ```
 (env) pi@psi:~/rpi_cluster/ansible $ fab -l
@@ -83,5 +99,6 @@ Available commands:
     deploy_omega_site             code/hugo-site
     serverspec_tests              Run ServerSpec tests on cluster.
 ```
+
 
 ---
