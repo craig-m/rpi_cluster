@@ -228,6 +228,7 @@ if [ ! -d /etc/ansible/ ]; then
   /usr/bin/sudo chmod 750 /etc/ansible/;
   /usr/bin/sudo chown "$USER:$USER" /etc/ansible/;
   mkdir -pv /etc/ansible/facts.d/;
+  mkdir -pv /etc/ansible/inventory/;
   mkdir -pv /etc/ansible/group_vars/{all,compute,lanservices}/;
   mkdir -pv /etc/ansible/host_vars/{alpha,beta,omega,psi}/;
 fi
@@ -242,15 +243,20 @@ EOF
 chmod 755 /etc/ansible/facts.d/deploytool.fact
 
 
-# check ansible .cfg and version
+# check ansible .cfg
 stat -t ansible.cfg || exit 1;
 export ANSIBLE_CONFIG="$PWD"
+
+# Load environment variables that inform Ansible to use ARA
+# regardless of its location or python version
+source <(python -m ara.setup.env)
+
+# check ansible version
 ansible --version || exit 1;
 sleep 1s;
 
-# Make Ansible use the ARA callback plugin regardless of python version
-export ANSIBLE_CALLBACK_PLUGINS="$(python -c 'import os,ara; print(os.path.dirname(ara.__file__))')/plugins/callbacks";
 
+# done
 touch ~/.rpibs/completed;
 rpilogit "**** finished ****";
 

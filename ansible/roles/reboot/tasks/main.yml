@@ -35,9 +35,9 @@
 # get uptime
 - name: uptime
   shell: uptime
-  tags: [maintenance]
   register: rpi_my_uptime
   changed_when: False
+  tags: [maintenance]
 
 
 # show upttime

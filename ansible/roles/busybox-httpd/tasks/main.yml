@@ -43,6 +43,7 @@
   tags:
    - bbhttpd
    - skip_ansible_lint
+  tags: [bbhttpd]
 
 
 # index.html

@@ -22,6 +22,15 @@ else
   echo "* Continuing.";
 fi
 
+# do not run this script as root
+if [[ root = "$(whoami)" ]]; then
+  echo "ERROR: do not run as root";
+  exit 1;
+fi
+
+echo "* check install-deploy-tools.sh ran";
+/etc/ansible/facts.d/deploytool.fact || exit 1;
+
 # log
 rpilogit () {
 	echo -e "rpicluster: $1 \n";
@@ -129,21 +138,34 @@ keysandconf_pass;
 # generate a password for the new vault files, stored in pass
 pass generate --no-symbols ansible/vault/current 40
 
-# copy example files from /doc/defaults/{host_vars,group_vars} to deploy/ansible/{host_vars,group_vars}
+# copy example files from /doc/defaults/{host_vars,group_vars} to /etc/ansible/{host_vars,group_vars}
 echo "* copy /doc/default var files"
 
 rsync -avr -- \
   ~/rpi_cluster/ansible/setup/defaults/host_vars/* \
-  ~/rpi_cluster/ansible/host_vars/
+  /etc/ansible/host_vars/
 
 rsync -avr -- \
   ~/rpi_cluster/ansible/setup/defaults/group_vars/* \
-~/rpi_cluster/ansible/group_vars/
+  /etc/ansible/group_vars/
+
+rsync -avr -- \
+  ~/rpi_cluster/ansible/setup/defaults/inventory/* \
+  /etc/ansible/inventory/
+
+cp -v ~/rpi_cluster/ansible/ansible.cfg \
+  /etc/ansible/ansible.cfg
+
+
+# todo: remove the need for this symlink
+ln /etc/ansible/host_vars/ ~/rpi_cluster/ansible/host_vars -sf
+ln /etc/ansible/group_vars/ ~/rpi_cluster/ansible/group_vars -sf
+
 
 # edit the var files - this is a manual step
-echo "you need to edit files in ./group_vars and ./host_vars to suit your needs."
-echo "The vault files will be encrypted when you are done. \n"
-read -p "Type uppercase yes to contine:"$'\n\n' message
+echo -e "\n Check /etc/ansible/ config is ok. ";
+echo -e " The vault files will be encrypted when you are done. \n ";
+read -p " Type uppercase yes to contine: "$'\n\n' message;
 echo " ";
 if [ "$message" != "YES" ]; then
   echo "* Canceled, script exiting ";
@@ -157,15 +179,13 @@ echo "* encrypt the vault files with ansible-vault"
 
 source ~/env/bin/activate;
 
-cd /home/pi/rpi_cluster/ansible/
-
 find \
-   /home/pi/rpi_cluster/ansible/group_vars/* \
+   /etc/ansible/group_vars/* \
   -iname vault \
   -exec ansible-vault encrypt {} \;
 
 find \
-   /home/pi/rpi_cluster/ansible/host_vars/* \
+   /etc/ansible/host_vars/* \
   -iname vault \
   -exec ansible-vault encrypt {} \;
 

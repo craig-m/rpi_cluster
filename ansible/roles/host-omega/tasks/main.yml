@@ -109,6 +109,7 @@
     owner: pi
     group: pi
     mode: 0644
+  tags: [host-omega]
 
 
 - name: output to rpicluster log

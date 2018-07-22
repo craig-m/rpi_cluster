@@ -31,8 +31,8 @@ fi
 
 # check failover node
 pingresult=$(/usr/lib/nagios/plugins/check_host {{ rpi_failover_ip }});
-logger -t rpicluster "ping failover host: $pingresult"
+logger -t rpicluster "lanservices-boot.sh ping failover: $pingresult"
 
-logger -t rpicluster "lanservices-boot.sh ran OK"
+logger -t rpicluster "lanservices-boot.sh finished"
 
 #-------------------------------------------------------------------------------

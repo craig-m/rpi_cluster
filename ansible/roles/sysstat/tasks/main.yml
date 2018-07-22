@@ -8,11 +8,13 @@
   tags: install
   become: yes
   register: aptinstsystat
+  tags: [sysstat]
 
 
 - name: systat enabled on boot
   service: name=sysstat enabled=yes
   become: yes
+  tags: [sysstat]
 
 
 - name: copy config
@@ -24,11 +26,13 @@
     mode: 0664
     backup: yes
   become: yes
+  tags: [sysstat]
 
 
 - name: systat started
   service: name=sysstat state=started
   become: yes
+  tags: [sysstat]
 
 
 - name: roles info txt
@@ -39,3 +43,4 @@
     group: root
     mode: 0444
   become: yes
+  tags: [sysstat]

@@ -69,6 +69,7 @@
   notify: static-arp-ethers
   when:
     -  "{{ ansible_local.rpihw.rpi_hw_mac }} == 'True'"
+  tags: [lanservices]
 
 
 # rpi-lanservices.service enabled on boot

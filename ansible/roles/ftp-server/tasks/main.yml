@@ -65,6 +65,7 @@
 - name: notify rpicluster log
   shell: logger -t rpicluster ansible installed tftpd
   changed_when: false
+  tags: [ftpd]
 
 
 - name: roles info txt

@@ -8,25 +8,28 @@
 
 - name: install haveged
   apt: state=present name=haveged
-  tags: install
   become: yes
   register: aptinsthaveged
+  tags: haveged
 
 
 - name: haveged enabled on boot
   service: name=haveged enabled=yes
   become: yes
+  tags: haveged
 
 
 - name: haveged started
   service: name=haveged state=started
   become: yes
+  tags: haveged
 
 
 - name: notify rpicluster log
   shell: logger -t rpicluster installed haveged
   changed_when: false
   when: aptinsthaveged.changed
+  tags: haveged
 
 
 - name: roles info txt
@@ -37,3 +40,4 @@
     group: root
     mode: 0444
   become: yes
+  tags: haveged

@@ -16,7 +16,7 @@ freebefore=$(free -k | awk '/^Mem:/{print $4}')
 
 # need to sync first
 /usr/bin/sudo sync
-/usr/bin/sudo echo 3 > /proc/sys/vm/drop_caches
+/usr/bin/sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches';
 
 freeafter=$(free -k | awk '/^Mem:/{print $4}')
 

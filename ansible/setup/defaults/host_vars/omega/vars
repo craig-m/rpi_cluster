@@ -26,6 +26,8 @@ nginx_configs: [
   {cfsource: 'sites-enabled/omega-php.j2', cfdest: '/etc/nginx/sites-enabled/omega-php.conf'}
 ]
 
+nginx_port2: "82"
+
 # haproxy server:
 rpi_haproxy_enabled: true
 haproxy_cfg_file: "omega"

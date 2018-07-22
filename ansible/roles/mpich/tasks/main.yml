@@ -97,6 +97,7 @@
     groups: sshusers
     append: yes
   become: yes
+  tags: [mpich]
 
 
 # mpirun -np 4 -hosts zeta.local,epsilon.local,gamma.local,delta.local ~/bin/mpi_sample

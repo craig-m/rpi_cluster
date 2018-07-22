@@ -16,7 +16,7 @@ rpi_dnsd_notify: "yes"
 # rpi_dnsd_masters: "192.168.x.x"
 # /etc/resolv.conf:
 rpi_my_dns_server_1: "127.0.0.1"
-rpi_my_dns_server_2: "192.168.XX.XX"
+rpi_my_dns_server_2: "20.20.20.8"
 
 # Failover host (beta):
 rpi_failover_hostname: "beta"

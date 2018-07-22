@@ -12,7 +12,9 @@
 
 # yarn
 - import_tasks: yarn.yml
-  tags: [deployer,yarn]
+  tags:
+    - deployer
+    - yarn
 
 
 - name: copy firewall script
@@ -24,6 +26,7 @@
     mode: 0755
   become: yes
   changed_when: False
+  tags: [deployer]
 
 
 - name: run firewall script
@@ -32,6 +35,7 @@
     chdir: /root/
     creates: /root/.ufw
   become: yes
+  tags: [deployer]
 
 
 # log

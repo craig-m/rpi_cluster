@@ -63,8 +63,8 @@
 - pause:
     seconds: 6
   when: keepalived_changed.changed
-  tags: [keepalived]
   changed_when: false
+  tags: [keepalived]
 
 
 # ping IP
@@ -81,6 +81,7 @@
     key: "website"
     type: "url"
     value: "{{ rpi_loadbal_float_ip }}"
+  tags: [keepalived]
 
 
 # Save IP in Redis
@@ -88,6 +89,7 @@
   local_action: command /usr/bin/redis-cli set /rpi/keepalived/ip {{ rpi_loadbal_float_ip }}
   changed_when: False
   run_once: True
+  tags: [keepalived]
 
 
 # log

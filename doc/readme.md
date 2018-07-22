@@ -3,12 +3,6 @@ Setup guide
 
 Directions for bootstrapping this Raspberry Pi cluster.
 
-Design decisions:
-
-* Start with vanilla Raspbian installation, with default SSH.
-* High availability of services, ability to easily rebuild any failed R-Pi node.
-* The R-Pi cluster should be self contained, minimise any external DHCP + DNS dependencies.
-
 
 ---
 
@@ -16,7 +10,7 @@ Design decisions:
 Preparation
 -----------
 
-* Download Raspbian lite, flash the image on to each SD card with DD or Etcher etc. I am using the 2017-11-29-raspbian-stretch-lite image.
+* Download Raspbian lite, flash the image on to each SD card with DD or Etcher etc. I am using the 2018-06-27 Raspbian stretch lite image.
 
 * Create the empty file /boot/ssh on each SDcard to enable SSH access. Read https://www.raspberrypi.org/blog/a-security-update-for-raspbian-pixel/ for info.
 
@@ -30,15 +24,17 @@ Preparation
 ---
 
 
-new deploy
-----------
+Setup the Deployer
+------------------
 
 
-Copy the code to the R-Pi that will be the deployer. I have port forwarding setup infront of my Pi so the port is different:
+Copy the code (this repo) to the R-Pi that will be the deployer. I have port forwarding setup infront of my Pi so the port is different:
 
 ```
 $ scp -P 2222 -r rpi_cluster/ pi@192.168.6.200:~/
 ```
+
+It expects to be stored in /home/pi/rpi_cluster/
 
 
 Connect to the deployer R-Pi:
@@ -48,7 +44,7 @@ $ ssh -p 2222 pi@192.168.6.200
 ```
 
 
-Install tools from apt and requirements.txt (ansible, fabric etc):
+Install our tools (ansible, ARA, invoke etc) and requirements for the deployer:
 
 ```
 $ cd rpi_cluster/ansible/setup/
@@ -56,48 +52,124 @@ pi@raspberrypi:~/rpi_cluster/ansible/setup $ ./install-deploy-tools.sh
 ```
 
 
-Generate SSH CA keys, SSH keys, GPG keys, encrypt Ansible vault files.
-
-You will need to edit the Ansible inventory and variable files.
-
-```
-pi@raspberrypi:~/rpi_cluster/ansible/setup $ ./keysandconf_new.sh
-```
+Edit ~/rpi_cluster/ansible/setup/defaults to suit your environment.
 
 
-Activate the virtual python environment
+Generate SSH CA and GPG keys, encrypt Ansible vault files:
 
 ```
-pi@psi:~ $ cd rpi_cluster/ansible/
-pi@psi:~/rpi_cluster/ansible $ source ~/env/bin/activate
-(env) pi@psi:~/rpi_cluster/ansible $
+pi@raspberrypi:~/rpi_cluster/ansible/setup $ ./keysandconf-new.sh
 ```
 
 
-The fabric tasks can be followed in order to setup the cluster.
-
+Activate the virtual python environment:
 
 ```
-(env) pi@psi:~/rpi_cluster/ansible $ fab -l
+pi@raspberrypi:~ $ cd ~/rpi_cluster/ansible/
+pi@raspberrypi:~/rpi_cluster/ansible $ source ~/env/bin/activate
+```
 
 
---==  rpi_cluster deployer fabric file  ==--
+List the tasks:
 
-Available commands:
+```
+(env) pi@raspberrypi:~/rpi_cluster/ansible $ invoke -l
+Available tasks:
+```
 
-    ansible_1_lan_services        setup ssh access - configure default SSHD (setup keys)
-    ansible_2_lan_services        Playbook - LanServices (alpha, beta, omega)
-    ansible_3_compute             Playbook - Compute - base (gamma, delta, epsilon, zeta)
-    ansible_4_compute_webapp      Playbook - Compute - hosting
-    ansible_5_compute_containers  Playbook - Compute - Containers
-    ansible_hostinfo              Run setup module to gather facts on all hosts.
-    ansible_localhost             run on local deployer
-    ansible_ping                  Run ping module.
-    ansible_test_default          test default login creds.
-    cluster_maintainence          upgrades (includes rolling reboots)
-    cluster_shutdown              shutdown cluster - ansible (excludes deployer)
-    deploy_omega_site             code/hugo-site
-    serverspec_tests              Run ServerSpec tests on cluster.
+
+Setup the deployer, this runs Ansible on the local deployer:
+
+```
+(env) pi@raspberrypi:~/rpi_cluster/ansible $ invoke deployer-ansible
+Running play-rpi-deployer.yml
+```
+
+
+Create ~/.ssh/config on the deployer (from the hosts in the Ansible inventory):
+
+```
+(env) pi@raspberrypi:~/rpi_cluster/ansible $ invoke deployer-ssh-config
+```
+
+
+The deployer is all setup now, you can reboot it (optional but recommended).
+
+
+---
+
+
+Setup the cluster hosts
+-----------------------
+
+
+## LanServices group
+
+The new Alpha, Beta and Omega nodes should all be up, with the default SSH settings/password. The other hosts will not have IP addresses yet.
+
+```
+(env) pi@psi:~/rpi_cluster/ansible $ invoke ansible-test-default
+```
+
+Change default SSH access on the hosts (disable password auth):
+
+```
+(env) pi@psi:~/rpi_cluster/ansible $ invoke ansible-sshd alpha
+(env) pi@psi:~/rpi_cluster/ansible $ invoke ansible-sshd beta
+(env) pi@psi:~/rpi_cluster/ansible $ invoke ansible-sshd omega
+```
+
+Configure Alpha + Beta nodes:
+
+```
+(env) pi@psi:~/rpi_cluster/ansible $ invoke lanservices-main-ansible
+```
+
+Configure Omega node:
+
+```
+(env) pi@psi:~/rpi_cluster/ansible $ invoke lanservices-misc-ansible
+```
+
+
+## Compute group
+
+Change the default password on the new hosts:
+
+```
+(env) pi@psi:~/rpi_cluster/ansible $ invoke ansible-sshd zeta
+(env) pi@psi:~/rpi_cluster/ansible $ invoke ansible-sshd epsilon
+(env) pi@psi:~/rpi_cluster/ansible $ invoke ansible-sshd gamma
+(env) pi@psi:~/rpi_cluster/ansible $ invoke ansible-sshd delta
+```
+
+Compute base setup:
+
+```
+(env) pi@psi:~/rpi_cluster/ansible $ invoke ansible_gather_facts
+(env) pi@psi:~/rpi_cluster/ansible $ invoke compute_ansible
+```
+
+Compute hosting setup:
+
+```
+(env) pi@psi:~/rpi_cluster/ansible $ invoke compute-web-ansible
+(env) pi@psi:~/rpi_cluster/ansible $ invoke compute-cont-ansible
+```
+
+
+## Cluster admin
+
+Test the cluster, all hosts and services:
+
+```
+(env) pi@psi:~/rpi_cluster/ansible $ invoke cluster-serverspec
+```
+
+A role to apt-upgrade and reboot all servers (one by one):
+
+```
+(env) pi@psi:~/rpi_cluster/ansible $ invoke ansible-maint
 ```
 
 

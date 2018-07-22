@@ -24,15 +24,21 @@ LoginGraceTime 120
 PermitRootLogin No
 StrictModes yes
 
-# accept SSH keys signed by our CA
+# User SSH keys
+PubkeyAuthentication yes
+
+{% if not 'deploy' in group_names %}
+# Only accept SSH keys signed by our CA
 TrustedUserCAKeys /etc/ssh/ca.pub
 
-# User SSH keys
-PubkeyAuthentication  yes
-
+# do not accept other key files
 AuthorizedKeysFile /dev/null
+{% endif %}
 
-#AuthorizedKeysFile  %h/.ssh/authorized_keys
+{% if 'deploy' in group_names %}
+# deployer can manage own keys
+AuthorizedKeysFile /home/pi/.ssh/authorized_keys
+{% endif %}
 
 # Don't read the user's ~/.rhosts and ~/.shosts files
 IgnoreRhosts yes
@@ -57,7 +63,7 @@ TCPKeepAlive yes
 #Banner /etc/issue.net
 
 # Allow client to pass locale environment variables
-AcceptEnv LANG LC_*
+# AcceptEnv LANG LC_*
 
 Subsystem sftp /usr/lib/openssh/sftp-server
 

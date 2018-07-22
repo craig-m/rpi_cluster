@@ -129,7 +129,9 @@
     backup: yes
   become: yes
   notify: bind-restart
-  tags: [bind,dns-server-zone]
+  tags:
+    - bind
+    - dns-server-zone
 
 
 #- name: bats test

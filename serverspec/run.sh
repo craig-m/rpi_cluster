@@ -43,10 +43,8 @@ rake spec
 # make reports/index.html file
 rake gen_report
 
-if [ "$(whoami)" == "vagrant" ]; then
-  rake pub_report:vbox
-  rsync -avr -- reports/* pi@omega.local:/srv/nginx/hugo-site/serverspec/reports
-fi
+#rake pub_report:vbox
+#rsync -avr -- reports/* pi@omega.local:/srv/nginx/hugo-site/serverspec/reports
 
 rpilogit "finished serverspec tests";
 

@@ -21,7 +21,8 @@
   gather_facts: false
   roles:
     - docker
-    - docker-swarm
+    - kubernetes 
+    #- docker-swarm
 
 
 - name: gather facts on nodes

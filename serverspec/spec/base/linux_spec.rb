@@ -4,6 +4,7 @@ require 'spec_helper'
 describe file('/etc/debian_version') do
  it { should be_file }
  it { should be_owned_by 'root' }
+ its(:content) { should contain('9') }
 end
 
 describe command('whoami') do

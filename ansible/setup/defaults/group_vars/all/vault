@@ -1,35 +1,27 @@
 # R-Pi cluster vault file
 
-# Passwords --------------------------------------------------------------------
-
-# password for the Pi user on all hosts:
-passwd_pi_admin: "example_rpi.pw"
-passwd_pi_omega: "example_rpi.pw"
-passwd_pi_front: "example_rpi.pw"
-passwd_pi_back: "example_rpi.pw"
-
 # Network settings -------------------------------------------------------------
 
 # R-Pi LAN settings
-rpi_net_id: "192.168.6.0"
-rpi_net_range: "192.168.6.1-254"
-rpi_net_bcast: "192.168.6.255"
+rpi_net_id: "20.20.20.0"
+rpi_net_range: "20.20.20.1-254"
+rpi_net_bcast: "20.20.20.255"
 rpi_net_snet: "255.255.255.0"
 rpi_net_maskbit: "24"
 
 # reverse DNS
-rpi_domain_arpa: "6.168.192"
+rpi_domain_arpa: "20.20.20"
 
 # LanServices: dhcp server settings
-rpi_dhcp_range_start: "192.168.6.140"
-rpi_dhcp_range_stop: "192.168.6.190"
+rpi_dhcp_range_start: "20.20.20.140"
+rpi_dhcp_range_stop: "20.20.20.160"
 
 # LanServices: dhcp server advertise these DNS servers
-rpi_dhcp_dns1: "192.168.6.66"
-rpi_dhcp_dns2: "192.168.6.68"
+rpi_dhcp_dns1: "20.20.20.6"
+rpi_dhcp_dns2: "20.20.20.8"
 
 # LAN default gateway
-rpi_net_default_gw: "192.168.6.6"
+rpi_net_default_gw: "20.20.20.1"
 rpi_net_default_gw_mac: "00:0d:b9:XX:XX:XX"
 
 # WiFi AP (OpenWRT router)
@@ -37,6 +29,6 @@ rpi_net_wifi_gw: "192.168.6.2"
 rpi_net_wifi_gw_mac: "E4:95:6E:XX:XX:XX"
 
 # This IP will float between two of the Compute nodes. Managed by keepalived
-rpi_loadbal_float_ip: "192.168.6.111"
+rpi_loadbal_float_ip: "20.20.20.111"
 
 #-------------------------------------------------------------------------------

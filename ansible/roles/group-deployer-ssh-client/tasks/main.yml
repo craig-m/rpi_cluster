@@ -21,8 +21,22 @@
   changed_when: False
 
 
-- name: add host to known hosts - StrictHostKeyChecking FALSE
-  shell: ssh -o StrictHostKeyChecking=false pi@{{ inventory_hostname }}.local hostname
+- name: empty known_hosts file
+  shell: echo "" > ~/.ssh/known_hosts
+  delegate_to: localhost
+  changed_when: False
+  ignore_errors: True
+
+
+- name: add host.local to known_hosts - StrictHostKeyChecking FALSE
+  shell: ssh-keyscan {{ inventory_hostname }}.local >> ~/.ssh/known_hosts
+  delegate_to: localhost
+  changed_when: False
+  ignore_errors: True
+
+
+- name: add host to known_hosts
+  shell: ssh-keyscan -t ecdsa {{ inventory_hostname }} >> ~/.ssh/known_hosts
   delegate_to: localhost
   changed_when: False
   ignore_errors: True

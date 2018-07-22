@@ -50,7 +50,7 @@
 
 - name: pause
   pause:
-    seconds: 20
+    seconds: 25
   when: kube_aptinst.changed
   tags: [kube]
 

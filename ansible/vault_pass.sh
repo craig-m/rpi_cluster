@@ -1,4 +1,5 @@
 #!/bin/bash
+# https://www.passwordstore.org/
 
 /usr/bin/pass ansible/vault/current
 

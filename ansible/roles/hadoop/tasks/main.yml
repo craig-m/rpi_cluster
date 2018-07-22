@@ -31,7 +31,7 @@
 
 - name: pause
   pause:
-    seconds: 2
+    seconds: 3
   tags: [hadoop]
   when: hadoopsrctargz_dl.changed
 

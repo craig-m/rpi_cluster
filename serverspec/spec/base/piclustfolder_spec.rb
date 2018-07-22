@@ -1,5 +1,12 @@
 require 'spec_helper'
 
+describe file('/home/pi') do
+  it { should be_directory }
+  it { should be_owned_by 'pi' }
+  it { should be_grouped_into 'pi' }
+  it { should be_mode 700 }
+end
+
 describe file('/home/pi/tmp') do
   it { should be_directory }
   it { should be_owned_by 'pi' }

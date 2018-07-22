@@ -14,6 +14,7 @@
     name: sshusers
     state: present
   become: yes
+  tags: userac
 
 
 # Create {{ rpi_clust_user }} user on all hosts
@@ -25,12 +26,17 @@
     createhome: yes
     home: "/home/{{ rpi_clust_user }}"
   become: yes
+  tags: userac
 
 
 # fix home dir defaults of drwxr-xr-x for {{ rpi_clust_user }} :(
 - name: fix homedir perms
-  file: path="/home/{{ rpi_clust_user }}" state=directory mode=0700
+  file:
+    path: "/home/{{ rpi_clust_user }}"
+    state: directory 
+    mode: 0700
   become: yes
+  tags: userac
 
 
 # PASSWORDS for system accounts!
@@ -41,7 +47,9 @@
     password: "{{ item.hash }}"
   with_items: "{{ vault_user_pw }}"
   become: yes
+  tags: userac
 
 
 # ssh keys
 - import_tasks: keys.yml
+  tags: userac

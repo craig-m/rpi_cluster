@@ -109,6 +109,7 @@
 - name: notify rpicluster log
   shell: logger -t rpicluster installed haproxy with {{ haproxy_cfg_file }} config
   changed_when: false
+  tags: [haproxy]
 
 
 - name: roles info txt

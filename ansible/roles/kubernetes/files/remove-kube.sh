@@ -11,7 +11,7 @@ rm -rfv -- $HOME/.kube/
 
 /usr/bin/sudo rm -rfv -- /root/.kube/
 
-rm -rfv -- /etc/apt/sources.list.d/kubernetes.list
+/usr/bin/sudo rm -rfv -- /etc/apt/sources.list.d/kubernetes.list
 
 rm -rfv -- /opt/cluster/data/.setup-kube
 rm -rfv -- /opt/cluster/data/kube_info.txt

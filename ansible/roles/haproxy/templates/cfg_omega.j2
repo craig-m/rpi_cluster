@@ -62,6 +62,8 @@ frontend http-in
   rspadd Strict-Transport-Security:\ max-age=31536000;\ includeSubdomains;\ preload
   rspadd X-Frame-Options:\ DENY
   #
+  http-response set-header X-haproxy-misc %s
+  #
   # Gzip compression between HAProxy and client
   compression algo gzip
   compression type text/html text/plain text/javascript application/javascript application/xml text/css

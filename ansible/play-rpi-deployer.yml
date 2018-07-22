@@ -1,5 +1,5 @@
 ---
-# Setup Rpi Deployer
+# Setup Rpi Deployer (Psi)
 
 
 - name: Deployer
@@ -9,6 +9,7 @@
     - ansible-pre-role
     - base-system
     - userac
+    - ssh-server
     - rpilog
     - haveged
     - ntp-server
@@ -17,7 +18,6 @@
     - golang
     - docker
     - group-deployer
-    - ssh-server
     - mpich
     - jenkins
     - ansible-post-role

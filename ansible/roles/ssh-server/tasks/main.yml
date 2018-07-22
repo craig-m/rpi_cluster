@@ -26,7 +26,7 @@
   tags: [ssh]
 
 
-# SSHD will only accept keys signed this key pair
+# SSHD will only accept keys signed this key pair (excludes deployer)
 # SSH CA key setup described at:
 # https://code.facebook.com/posts/365787980419535/scalable-and-secure-access-with-ssh/
 

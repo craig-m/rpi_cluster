@@ -3,20 +3,13 @@
 
 name = "berrycluster"
 license = "MIT"
-licenselink = "https://github.com/yourname/yourtheme/blob/master/LICENSE.md"
 description = "Raspberry Pi Cluster"
-homepage = "http://siteforthistheme.com/"
+homepage = "www.b3rry.clust0r"
 tags = []
 features = []
 min_version = "0.21"
 SectionPagesMenu = "main"
 
 [author]
-  name = ""
-  homepage = ""
-
-# If porting an existing theme
-[original]
-  name = ""
-  homepage = ""
-  repo = ""
+  name = "crgm"
+  homepage = "www.b3rry.clust0r"

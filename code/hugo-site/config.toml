@@ -3,6 +3,7 @@ baseURL = "/"
 buildDrafts = false
 theme = "berrycluster"
 copyright = "Nope"
+DefaultContentLanguage = "en"
 
 [author]
     name = "crgm"

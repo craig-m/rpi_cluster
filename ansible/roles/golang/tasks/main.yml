@@ -6,6 +6,7 @@
 - name: check if go installed
   stat: path=/usr/local/go/bin/go
   register: go_bin_usrlocal
+  tags: [golang]
 
 
 - name: download go binary
@@ -14,11 +15,13 @@
     dest: /opt/cluster/mysrc/
     checksum: sha256:{{ golang_shasum }}
   when: go_bin_usrlocal.stat.exists == False
+  tags: [golang]
 
 
 - name: check if go installed
   stat: path=/usr/local/go/bin/go
   register: go_bin_usrlocal
+  tags: [golang]
 
 
 - name: unarchive go
@@ -28,6 +31,7 @@
     dest: /usr/local/
     remote_src: True
   when: go_bin_usrlocal.stat.exists == False
+  tags: [golang]
 
 
 - name: add golang bin to environment path
@@ -35,6 +39,7 @@
   environment:
     PATH: $PATH:/usr/local/go/bin
   changed_when: false
+  tags: [golang]
 
 
 - name: system wide PATH
@@ -42,6 +47,7 @@
     dest: /etc/profile.d/golang-path.sh
     content: 'export PATH=$PATH:/usr/local/go/bin'
   become: yes
+  tags: [golang]
 
 
 - name: copy build_go_hello
@@ -49,12 +55,14 @@
     src: build_go_hello.j2
     dest: /opt/cluster/bin/build_go_hello.sh
     mode: 0755
+  tags: [golang]
 
 
 - name: run build_go_hello
   shell: /opt/cluster/bin/build_go_hello.sh
   args:
     creates: ~/go/src/hello/hello
+  tags: [golang]
 
 
 - name: roles info txt
@@ -62,3 +70,4 @@
     path: /opt/cluster/data/info_roles.txt
     line: "{{role_path|basename}}"
   become: yes
+  tags: [golang]

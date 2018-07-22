@@ -3,6 +3,16 @@
 - debug: msg="common (filesandfolders) "
 
 
+# fix home dir defaults of drwxr-xr-x
+- name: fix homedir perms
+  file:
+    path: "/home/pi/"
+    state: directory
+    mode: 0700
+  become: yes
+  tags: [common]
+
+
 # create /opt/cluster/
 - name: R Pi cluster base dir
   file:

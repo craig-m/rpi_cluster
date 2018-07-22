@@ -3,6 +3,7 @@ python-consul
 redis
 passlib
 fabric
+invoke
 httpie
 testinfra
 diceware

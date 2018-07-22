@@ -1,8 +1,9 @@
 About
 ------
 
-Run rpi_cluster/ansible/setup/install-deploye-tools.sh to install these tools.
+On the Deployer R-Pi (psi) run ~/rpi_cluster/ansible/setup/install-deploye-tools.sh to install these tools (Ansible).
 
+Then ~/rpi_cluster/ansible/setup/keysandconf-new.sh to create new host/group var, and inventory files.
 
 Assumes working from:
 
@@ -33,23 +34,6 @@ alpha
 ```
 
 ---
-
-
-Fabric
-------
-http://www.fabfile.org/
-
-List all tasks in a specific fabric file (fab command by default reads fabfile.py):
-
-```
-$ fab -f fab_cluster_control.py -l
-```
-
-Run Ad hoc command with Fabric (on all hosts):
-
-```
-$ fab -f fab_cluster_control.py -- uname -a | grep Linux
-```
 
 
 Ansible
@@ -168,3 +152,5 @@ Test the local deployer:
 ```
 pytest test-rpideployer.py
 ```
+
+---

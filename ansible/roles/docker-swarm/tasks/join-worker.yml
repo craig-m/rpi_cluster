@@ -1,5 +1,5 @@
 ---
-- debug: msg="workder node on {{ inventory_hostname }} "
+- debug: msg="worker node on {{ inventory_hostname }} "
 
 
 - name: check if part of the swarm
