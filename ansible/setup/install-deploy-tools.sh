@@ -88,6 +88,11 @@ fi
 # https://github.com/RPi-Distro/repo/issues/28
 /usr/bin/sudo sed -i '/# The named pipe \/dev\/xconsole/,$d' /etc/rsyslog.conf;
 
+# get kernel config
+/usr/bin/sudo modprobe configs;
+gunzip -dc /proc/config.gz > ~/.rpibs/proc-config
+
+# working dir
 CDPATH=~/rpi_cluster
 cd ansible;
 
@@ -96,13 +101,13 @@ sleep 2s;
 
 # create a 2MB tmpfs
 if [ ! -f /mnt/ramstore/data/test.txt ]; then
-  sudo mkdir /mnt/ramstore;
-  sudo mount -t tmpfs -o size=2m tmpfs /mnt/ramstore;
-  sudo mkdir /mnt/ramstore/data;
+  /usr/bin/sudo mkdir /mnt/ramstore;
+  /usr/bin/sudo mount -t tmpfs -o size=2m tmpfs /mnt/ramstore;
+  /usr/bin/sudo mkdir /mnt/ramstore/data;
   # these files exist in Volatile memory!
-  sudo touch /mnt/ramstore/data/test.txt
-  sudo chown pi:pi /mnt/ramstore/data;
-  sudo chmod 700 /mnt/ramstore/data;
+  /usr/bin/sudo touch /mnt/ramstore/data/test.txt
+  /usr/bin/sudo chown pi:pi /mnt/ramstore/data;
+  /usr/bin/sudo chmod 700 /mnt/ramstore/data;
   rpilogit "created /mnt/ramstore/data";
 fi
 
@@ -233,16 +238,6 @@ if [ ! -d /etc/ansible/ ]; then
   mkdir -pv /etc/ansible/host_vars/{alpha,beta,omega,psi}/;
 fi
 
-# -- file start --
-cat > /etc/ansible/facts.d/deploytool.fact << EOF
-#!/bin/bash
-echo '{ "deploytool" : "installed" }';
-EOF
-# -- file stop --
-
-chmod 755 /etc/ansible/facts.d/deploytool.fact
-
-
 # check ansible .cfg
 stat -t ansible.cfg || exit 1;
 export ANSIBLE_CONFIG="$PWD"
@@ -254,6 +249,15 @@ source <(python -m ara.setup.env)
 # check ansible version
 ansible --version || exit 1;
 sleep 1s;
+
+# -- file start --
+cat > /etc/ansible/facts.d/deploytool.fact << EOF
+#!/bin/bash
+echo '{ "deploytool" : "installed" }';
+EOF
+# -- file stop --
+
+chmod 755 /etc/ansible/facts.d/deploytool.fact;
 
 
 # done

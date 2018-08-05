@@ -19,6 +19,12 @@
   tags: [maintenance]
 
 
+- name: pause
+  pause:
+    seconds: 2
+  tags: [maintenance]
+
+
 # Upgrade all Apt packages
 - name: Upgrade all packages to the latest version
   apt:
@@ -26,6 +32,12 @@
     state: latest
   retries: 2
   become: yes
+  tags: [maintenance]
+
+
+- name: pause
+  pause:
+    seconds: 2
   tags: [maintenance]
 
 
@@ -42,6 +54,12 @@
 - name: systemctl-daemon-reload
   command: systemctl daemon-reload
   become: yes
+  tags: [maintenance]
+
+
+- name: pause
+  pause:
+    seconds: 2
   tags: [maintenance]
 
 

@@ -19,7 +19,7 @@
 
 
 - name: test for cmdline options
-  command: 'grep "cgroup_enable=cpuset cgroup_memory=1" /boot/cmdline.txt'
+  command: 'grep "cgroup_enable=cpuset cgroup_memory=memory" /boot/cmdline.txt'
   register: check_cmdlineopt
   ignore_errors: yes
   changed_when: False
@@ -31,7 +31,7 @@
     backrefs: True
     state: present
     regexp: '(.*)$'
-    line: '\1 cgroup_enable=cpuset cgroup_memory=1'
+    line: '\1 cgroup_enable=cpuset cgroup_memory=memory'
   when: check_cmdlineopt.stdout == ""
   become: yes
   register: kube_bootopts

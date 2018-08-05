@@ -61,9 +61,29 @@ what setuid files are there?
 $ sudo find / -user root -perm -4000 -exec ls -ldb {} \;
 ```
 
+Fix homedir perms
+```
+$ chmod 700 /home/pi/
+```
+Most files on Raspbian by default are world readable.
+
 
 The 'to do' list
 ----------------
 
 * remove the 'pi' user from all Raspbian installs
 * stop sudo without password for all users
+
+
+Raspbian issues:
+----------------
+
+To get the kernel config:
+```
+sudo modprobe configs;
+gunzip -dc /proc/config.gz
+```
+
+* No AppArmor support
+* No SELinux support
+* No support for auditd

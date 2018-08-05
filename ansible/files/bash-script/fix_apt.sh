@@ -7,6 +7,9 @@ rpilogit () {
 
 rpilogit "started fix_apt.sh";
 
+# test /usr/bin/sudo <cmd> works OK
+/usr/bin/sudo id | grep "uid=0(root)" > /dev/null 2>&1 || exit 1;
+
 # only removes files that cannot be downloaded anymore (obsolete)
 /usr/bin/sudo apt-get autoclean
 /usr/bin/sudo apt-get autoremove

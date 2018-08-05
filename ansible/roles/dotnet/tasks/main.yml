@@ -26,8 +26,15 @@
   args:
     chdir: /opt/cluster/mysrc/
   retries: 2
+  register: dotnetinstsh
   when: dotnetinst_state.stat.exists == False
   tags: [dotnet]
+
+
+- name: pausing
+  pause:
+    seconds: 2
+  when: dotnetinstsh.changed
 
 
 # check dotnet install info

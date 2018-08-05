@@ -9,9 +9,21 @@
   changed_when: False
 
 
+- name: kubeadm init reset
+  shell: kubeadm reset -f
+  when:
+    - "kube_info_txt.stat.exists == False"
+    - "rpi_docker_enabled == True"
+    - "'docker_master' in group_names"
+  become: yes
+
+
+# restart daemon
+
+
 # initialize the cluster
 - name: kubeadm init apiserver
-  shell: kubeadm init --ignore-preflight-errors=cri --pod-network-cidr 10.244.0.0/16 --apiserver-advertise-address={{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}
+  shell: kubeadm init --token-ttl 0 --ignore-preflight-errors --pod-network-cidr 10.244.0.0/16 --apiserver-advertise-address {{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}
   when:
     - "kube_info_txt.stat.exists == False"
     - "rpi_docker_enabled == True"
@@ -41,7 +53,7 @@
 
 - name: pausing
   pause:
-    seconds: 10
+    seconds: 12
   when: initialized_main_node.changed
 
 
@@ -53,7 +65,7 @@
     mode: 0775
 
 
-- name: run setup
+- name: run setup-kube.sh
   shell: /opt/cluster/mysrc/setup-kube.sh
   args:
     chdir: /opt/cluster/mysrc/

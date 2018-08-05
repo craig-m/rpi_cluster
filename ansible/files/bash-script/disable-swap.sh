@@ -9,6 +9,9 @@ rpilogit () {
 
 rpilogit "started disable-swap.sh";
 
+# test /usr/bin/sudo <cmd> works OK
+/usr/bin/sudo id | grep "uid=0(root)" > /dev/null 2>&1 || exit 1;
+
 /usr/bin/sudo dphys-swapfile swapoff
 
 /usr/bin/sudo dphys-swapfile uninstall

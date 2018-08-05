@@ -28,16 +28,15 @@
   tags: [common,commonpackage]
 
 
-- name: System console
+- name: System misc util
   apt: name={{ item }} state=present
   with_items:
        - linuxlogo
        - vim
        - htop
        - multitail
-       - busybox
+       - yara
        - exiftool
-       - lsof
        - zip
        - unzip
        - jq
@@ -55,6 +54,8 @@
   with_items:
        - apt-transport-https
        - apt-show-versions
+       - lsof
+       - busybox
        - ntpstat
        - monitoring-plugins-common
        - monitoring-plugins-basic

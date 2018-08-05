@@ -22,6 +22,14 @@
   args:
     chdir: /opt/cluster/mysrc/
     creates: /etc/apt/sources.list.d/kubernetes.list
+  register: installkubesh
+  tags: [kube]
+
+
+- name: pausing
+  pause:
+    seconds: 2
+  when: installkubesh.changed
   tags: [kube]
 
 

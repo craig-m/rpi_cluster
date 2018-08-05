@@ -10,4 +10,4 @@ ln -s ~/.kube/ ~/kube
 
 touch -f /opt/cluster/data/.setup-kube
 
-sleep 3s;
+sleep 5s;

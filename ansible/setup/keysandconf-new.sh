@@ -196,6 +196,7 @@ keysandconf_ssh () {
   # --- create the CA certs ---
   mkdir -pv ~/.ssh/my-ssh-ca/ || exit 1
   cd ~/.ssh/my-ssh-ca/ || exit 1
+  mkdir -pv ~/.ssh/old-keys
   # generate a password for the SSH CA
   echo "* create a password for ssh CA"
   pass generate --no-symbols ssh/CA 40
@@ -204,9 +205,13 @@ keysandconf_ssh () {
   # generate the CA key pair (with password)
   ssh-keygen -t rsa -b 4096 -C ~/.ssh/my-ssh-ca/CA -f ~/.ssh/my-ssh-ca/ca -P ${thesshcapw}
   # --- SSH user keys ---
-  # generate our SSH key pair
-  ssh-keygen -P "" -f ~/.ssh/id_rsa -t rsa
+  # password for ssh pair
+  pass generate --no-symbols ssh/id_rsa 30
+  id-rsa-pass=$(pass ssh/id_rsa)
+  # generate our pub+priv ssh rsa keys
+  ssh-keygen -P "${id-rsa-pass}" -o -f ~/.ssh/id_rsa -t rsa
   # --- sign our SSH key with CA key ---
+  # note: keys are valid for 1 week
   ssh-keygen -s ~/.ssh/my-ssh-ca/ca -P ${thesshcapw} -I ${USER} -n pi -V +1w -z 1 ~/.ssh/id_rsa
   # cleanup
   thesshkeypw="x";

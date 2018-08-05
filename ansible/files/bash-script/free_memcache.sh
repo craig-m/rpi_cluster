@@ -14,6 +14,9 @@ rpilogit "starting free_memcache.sh"
 
 freebefore=$(free -k | awk '/^Mem:/{print $4}')
 
+# test /usr/bin/sudo <cmd> works OK
+/usr/bin/sudo id | grep "uid=0(root)" > /dev/null 2>&1 || exit 1;
+
 # need to sync first
 /usr/bin/sudo sync
 /usr/bin/sudo bash -c 'echo 3 > /proc/sys/vm/drop_caches';
