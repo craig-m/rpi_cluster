@@ -1,6 +1,7 @@
 ---
 # DHCP server -  Run by admin alpha and beta
 # https://www.isc.org/downloads/dhcp/
+# https://kb.isc.org/article/AA-01043/183/Recommendations-for-restarting-a-DHCP-failover-pair.html
 - debug: msg="dhcp SERVER role "
 - debug: msg="dhcpd status {{ rpi_dhcpd_status }} "
 
@@ -23,6 +24,7 @@
     group: root
     mode: 0644
     backup: yes
+    validate: /usr/sbin/dhcpd -t -cf /etc/dhcp/dhcpd.conf %s
   become: yes
   notify: isc-dhcp-server-reload
   tags: [dhcpserver]
@@ -87,7 +89,7 @@
 - name: roles info txt
   lineinfile:
     path: /opt/cluster/data/info_roles.txt
-    line: "{{role_path|basename}}"
+    line: "{{ role_path|basename }}"
     owner: root
     group: root
     mode: 0444

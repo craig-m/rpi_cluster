@@ -1,20 +1,19 @@
 ---
 # tasks just for Omega
-
-
 - debug: msg="Omega node setup "
   tags: [host-omega]
 
 
-- name: install programs
+- name: install extra programs on omega
   apt: name={{ item }} state=present
   with_items:
        - tcpdump
+       - lynx
        - sense-hat
        - python-pycurl
        - siege
        - nmap
-  retries: 1
+  retries: 2
   become: yes
   tags: [host-omega]
 
@@ -40,54 +39,19 @@
   tags: [host-omega]
 
 
-# Copy SenseHat welcome script
-- name: copy sensehat welcome
-  copy:
-    src: sensehat-welcome.py
-    dest: /opt/cluster/bin/sensehat-welcome.py
-    mode: 0755
-    owner: pi
-    group: pi
-  tags: [host-omega]
+# Raspberry Pi Astro SenseHAt
+- import_tasks: sensehat.yml
+  tags: [sensehat]
 
 
-- name: run sensehat welcome
-  shell: /opt/cluster/bin/sensehat-welcome.py
-  tags: [host-omega]
-
-
-# note: code runs from /opt/omegapyapi/app/
-- name: copy omegapyapi code
-  synchronize:
-    src: ~/rpi_cluster/code/omegapyapi
-    dest: /srv/python/
-  changed_when: False
-  tags: [host-omega]
-
-
-- name: run omegapyapi installer
-  shell: /srv/python/omegapyapi/install.sh
-  args:
-    chdir: /srv/python/omegapyapi
-    creates: /opt/omegapyapi/omegapyapi.socket
-  tags: [host-omega]
-
-
-- name: omegapyapi service started
-  service: name=omegapyapi state=started
-  become: yes
-  tags: [host-omega]
-
-
-- name: omegapyapi enabled on boot
-  service: name=omegapyapi enabled=yes
-  become: yes
-  tags: [host-omega]
+# omegapyapi
+- import_tasks: omegapyapi.yml
+  tags: [omegapyapi]
 
 
 # cron scripts
-#- import_tasks: cron.yml
-#  tags: [host-omega]
+- import_tasks: cron.yml
+  tags: [host-omega]
 
 
 # php pub
@@ -121,7 +85,7 @@
 - name: roles info txt
   lineinfile:
     path: /opt/cluster/data/info_roles.txt
-    line: "{{role_path|basename}}"
+    line: "{{ role_path|basename }}"
     owner: root
     group: root
     mode: 0444

@@ -1,0 +1,13 @@
+---
+
+bashscriptk8: [
+  {file: 'install-kube-apt.sh'},
+  {file: 'remove-kube.sh'},
+  {file: 'setup-kube.sh'}
+  ]
+
+bashscriptsysopt: [
+  {file: 'gen-bootcmd.sh'},
+  {file: 'check-bootcmd.sh'},
+  {file: 'check-cgroups-on.sh'}
+  ]

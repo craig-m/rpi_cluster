@@ -17,6 +17,7 @@
   roles:
     - userac
     - base-system
+    - hostsfile
     - rpilog
     - ssh-server
     - haveged

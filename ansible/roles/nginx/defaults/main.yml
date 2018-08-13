@@ -5,3 +5,9 @@ nginx_configs: [
 ]
 
 nginx_port: "81"
+
+nginx_dir: [
+  { dir: '/var/www/', mode: '0775', owner: '{{ ansible_user_id }}', group: 'www-data' },
+  { dir: '/var/www/html', mode: '0775', owner: '{{ ansible_user_id }}', group: '{{ ansible_user_id }}' },
+  { dir: '/srv/nginx/default', mode: '0775', owner: '{{ ansible_user_id }}', group: 'root' }
+]

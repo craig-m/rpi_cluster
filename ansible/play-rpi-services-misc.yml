@@ -16,6 +16,7 @@
     - ansible-pre-role
     - userac
     - base-system
+    - hostsfile
     - rpilog
     - ssh-server
     - haveged

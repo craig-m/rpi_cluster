@@ -1,13 +1,11 @@
 ---
-# run at the end of each playbook
-
-
+# Run at the end of each playbook
 - debug: msg="ansible-post-role "
   tags: [ansiblepost]
 
 
 # keep a tally of how many times ansible has run
-- name: incr rpi deployer ansible runcount
+- name: increment rpi deployer ansible runcount
   local_action: command /usr/bin/redis-cli incr /rpi/deployer/ansible/runcount
   ignore_errors: False
   check_mode: no

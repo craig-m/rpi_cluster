@@ -10,7 +10,6 @@
     state: directory
     mode: 0700
   become: yes
-  tags: [common]
 
 
 # create /opt/cluster/
@@ -22,7 +21,6 @@
     group: "{{ ansible_user_id }}"
     mode: 0770
   become: yes
-  tags: [common]
 
 
 # create folders
@@ -35,7 +33,6 @@
     group: "{{ item.group }}"
   with_items: "{{ common_dir }}"
   become: yes
-  tags: [common]
 
 
 # specific folders for this host
@@ -49,7 +46,6 @@
     group: "{{ item.group }}"
   with_items: "{{ host_dir }}"
   become: yes
-  tags: [common]
 
 
 # copy ~/. dot files
@@ -59,7 +55,6 @@
     dest: "{{ item.dest }}"
     mode: 0640
   with_items: "{{ dotfiles }}"
-  tags: [common]
 
 
 # copy bash scripts
@@ -71,7 +66,6 @@
     group: "{{ ansible_user_id }}"
     mode: 0755
   with_items: "{{ binfile }}"
-  tags: [common]
 
 
 # detect R-Pi MAC - rpihw.fact
@@ -84,7 +78,6 @@
     group: root
   become: yes
   changed_when: False
-  tags: [common]
 
 
 # so the fact above is available
@@ -102,7 +95,6 @@
     owner: root
     group: root
   become: yes
-  tags: [common]
 
 
 # info_host.txt
@@ -115,7 +107,6 @@
     group: root
   become: yes
   changed_when: False
-  tags: [common]
 
 
 # fetch

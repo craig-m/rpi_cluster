@@ -11,3 +11,17 @@ describe 'redis Port open' do
     it { should be_listening.with('tcp') }
   end
 end
+
+describe user('redis') do
+  it { should exist }
+  it { should have_login_shell '/bin/false' }
+end
+
+describe process("/usr/bin/redis-server") do
+  its(:count) { should eq 1 }
+end
+
+describe command('/usr/bin/redis-cli -h localhost -p 6379 ping') do
+  let(:disable_sudo) { true }
+  its(:stdout) { should match 'PONG' }
+end

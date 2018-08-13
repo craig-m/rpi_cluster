@@ -1,4 +1,5 @@
 ---
+# R-Pi cluster SSL
 
 
 - name: Generate OpenSSL private key for host

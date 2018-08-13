@@ -1,35 +1,30 @@
 ---
-# install master/boss node
-- debug: msg="kubernetes master boss node "
+- debug: msg="Kubernetes master setup"
 
 
-# check if alreadly initialized
-- stat: path=/opt/cluster/data/kube_info.txt
+# check if the cluster is alreadly initialized
+- name: check for kube_info.txt
+  stat: path=/opt/cluster/data/kube_info.txt
   register: kube_info_txt
   changed_when: False
 
 
-- name: kubeadm init reset
-  shell: kubeadm reset -f
-  when:
-    - "kube_info_txt.stat.exists == False"
-    - "rpi_docker_enabled == True"
-    - "'docker_master' in group_names"
-  become: yes
-
-
-# restart daemon
-
-
-# initialize the cluster
-- name: kubeadm init apiserver
-  shell: kubeadm init --token-ttl 0 --ignore-preflight-errors --pod-network-cidr 10.244.0.0/16 --apiserver-advertise-address {{ hostvars[inventory_hostname]['ansible_eth0']['ipv4']['address'] }}
+# initialize the cluster (if not yet)
+- name: kubeadm init master node
+  command: kubeadm init
   when:
     - "kube_info_txt.stat.exists == False"
     - "rpi_docker_enabled == True"
     - "'docker_master' in group_names"
   register: initialized_main_node
   become: yes
+
+
+# pause after init
+- name: pausing
+  pause:
+    seconds: 15
+  when: initialized_main_node.changed
 
 
 # save init info to kube_info.txt
@@ -40,6 +35,7 @@
   when:
     - initialized_main_node.changed
     - "kube_info_txt.stat.exists == False"
+  register: created_kube_info_txt
 
 
 # fetch init details
@@ -48,35 +44,24 @@
     src: /opt/cluster/data/kube_info.txt
     dest: /opt/cluster/backup
   when:
-    - initialized_main_node.changed
+    - created_kube_info_txt.changed
 
 
 - name: pausing
   pause:
-    seconds: 12
-  when: initialized_main_node.changed
-
-
-# copy setup script
-- name: copy setup-kube.sh
-  copy:
-    src: setup-kube.sh
-    dest: /opt/cluster/mysrc/setup-kube.sh
-    mode: 0775
+    seconds: 5
 
 
 - name: run setup-kube.sh
-  shell: /opt/cluster/mysrc/setup-kube.sh
+  shell: /opt/cluster/bin/setup-kube.sh
   args:
-    chdir: /opt/cluster/mysrc/
+    chdir: /opt/cluster/bin/
     creates: /opt/cluster/data/.setup-kube
 
 
-- name: kubectl cluster info
+- name: get cluster info
   shell: kubectl cluster-info
   changed_when: False
-  become: yes
-  ignore_errors: true
 
 
 # log

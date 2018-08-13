@@ -15,7 +15,7 @@ if [ -f reboot_setuid ]; then
 fi
 
 # compile (static linking)
-gcc -static -fpic -fpie reboot_setuid.c -o reboot_setuid
+gcc -static -fpic -fpie reboot_setuid.c -o reboot_setuid || exit 1;
 
 # perms
 /usr/bin/sudo chown root:root reboot_setuid

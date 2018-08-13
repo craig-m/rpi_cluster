@@ -12,7 +12,7 @@ See doc/readme.md for the detailed cluster setup process.
 
 # Design decisions
 
-* Start with vanilla Raspbian installation, with default SSH access.
+* Start with vanilla Raspbian installations, with default SSH access.
 * Operate all critical services in high availability.
 * Ability to easily rebuild any failed R-Pi node, expect that nodes might randomly fail.
 * The R-Pi cluster should be self contained, minimise any external DHCP + DNS dependencies.
@@ -70,7 +70,6 @@ The other bits and pieces in this cluster:
 * D-Link 16 port switch (Gbit ethernet, unmanaged)
 * x2 6 Port RAVPower USB Chargers (each 60W 12A) (https://www.ravpower.com/6-port-usb-wall-charger-black-.html)
 * Raspberry Pi SenseHat (https://www.raspberrypi.org/products/sense-hat/)
-* Raspberry Pi Camera
 * x12 ethernet cables
 * x9 micro usb cables (for power)
 * x1 multiboard for power
@@ -91,16 +90,15 @@ The other bits and pieces in this cluster:
 
 # Overview of roles
 
-What the cluster is doing, more or less. The software stack for each group.
-
 
 ### Deployer
 
-The Deployer runs from x1 R-Pi. This configures all of the other hosts using:
+The Deployer runs from x1 R-Pi. This configures all of the other hosts.
 
 * Ansible (https://www.ansible.com/)
 * Invoke (http://www.pyinvoke.org/)
 * ServerSpec (http://serverspec.org/)
+* Jenkins
 
 It also acts as a Certificate Authority, for TLS and SSH. The deployer is in a different subnet, everything else is in a DMZ.
 
@@ -140,9 +138,8 @@ To play with services and offer hosting. Subdivided into a frontend and backend 
 * HAproxy
 * Nginx
 * DistCC (for distributed compiling)
-* Python MPICH (Message Passing Interface)
-* Docker
-* Hadoop (to do)
+* c MPICH (Message Passing Interface)
+* Docker + Kubernetes
 
 Redundancy: x1 front and x1 back node can fail.
 

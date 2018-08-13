@@ -10,13 +10,12 @@ unset LD_PRELOAD
 
 #-------------------------------------------------------------------------------
 
-sync
-
-# sleep
-/bin/sleep 5m;
-
 # check disk
 /usr/lib/nagios/plugins/check_disk -x /dev/sda1;
+
+# 
+
+#-------------------------------------------------------------------------------
 
 /usr/bin/logger -t rpicluster "lansrv-cron-daily.sh finished"
 

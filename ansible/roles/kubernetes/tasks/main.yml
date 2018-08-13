@@ -3,22 +3,23 @@
 - debug: msg="kubernetes setup "
 
 
-# System (swap, /boot/cmdline.txt)
+# System prerequisites
 - include: systemopts.yml
 
 
-# copy install script
-- name: copy install-kube.sh
+# copy bash scripts
+- name: copy bash scripts
   copy:
-    src: install-kube.sh
-    dest: /opt/cluster/mysrc/install-kube.sh
-    mode: 0775
-  tags: [kube]
+    src: "{{ item.file }}"
+    dest: "/opt/cluster/bin/{{ item.file }}"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: 0755
+  with_items: "{{ bashscriptk8 }}"
 
 
-# sort pgp key and apt repo out, update apt cache
-- name: run installer
-  shell: /opt/cluster/mysrc/install-kube.sh
+- name: setup kubernetes apt repo
+  shell: /opt/cluster/bin/install-kube-apt.sh
   args:
     chdir: /opt/cluster/mysrc/
     creates: /etc/apt/sources.list.d/kubernetes.list
@@ -28,18 +29,8 @@
 
 - name: pausing
   pause:
-    seconds: 2
+    seconds: 5
   when: installkubesh.changed
-  tags: [kube]
-
-
-# update Apt cache
-- name: update apt cache
-  apt: update_cache=yes
-  become: yes
-  retries: 2
-  check_mode: no
-  changed_when: False
   tags: [kube]
 
 
@@ -48,8 +39,11 @@
   apt: name={{ item }} state=present
   with_items:
        - kubeadm
+       - kubelet
        - kubectl
        - kubelet
+       - kubernetes-cni
+       - policykit-1
   become: yes
   retries: 2
   tags: [kube]
@@ -58,8 +52,28 @@
 
 - name: pause
   pause:
-    seconds: 25
+    seconds: 5
   when: kube_aptinst.changed
+  tags: [kube]
+
+
+- name: force systemd to reread configs
+  systemd:
+    daemon_reload: yes
+  become: yes
+  when: kube_aptinst.changed
+  changed_when: False
+  tags: [kube]
+
+
+- name: restart kubelet.service
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: kubelet.service
+  become: yes
+  when: kube_aptinst.changed
+  changed_when: False
   tags: [kube]
 
 
@@ -71,7 +85,7 @@
     - "rpi_docker_enabled == True"
 
 
-# join kube master
+# join kube master (docker_worker group)
 - import_tasks: join_master.yml
   tags: [kube,kubemaster]
   when:
@@ -79,16 +93,15 @@
     - "rpi_docker_enabled == True"
 
 
-# copy uninstall script
-- name: copy uninstall script
-  copy:
-    src: "remove-kube.sh"
-    dest: "/opt/cluster/bin/"
-    owner: "{{ ansible_user_id }}"
-    group: "{{ ansible_user_id }}"
-    mode: 0755
-  tags: [docker]
-
+# show nodes in cluster
+- name: get nodes
+  shell: kubectl get nodes
+  tags: [kube]
+  changed_when: False
+  when:
+    - "'docker_master' in group_names"
+    - "rpi_docker_enabled == True"
+    
 
 # log
 - name: output to rpicluster log
@@ -100,6 +113,6 @@
 - name: roles info txt
   lineinfile:
     path: /opt/cluster/data/info_roles.txt
-    line: "{{role_path|basename}}"
+    line: "{{ role_path|basename }}"
   become: yes
   tags: [kube]

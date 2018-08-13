@@ -1,5 +1,5 @@
 ---
-
+# setup requirements, enable cgroups etc
 - debug: msg="kubernetes system setup "
 
 
@@ -18,28 +18,34 @@
     dest: /opt/cluster/backup
 
 
-- name: test for cmdline options
-  command: 'grep "cgroup_enable=cpuset cgroup_memory=memory" /boot/cmdline.txt'
+# copy bash scripts
+- name: copy bash scripts
+  copy:
+    src: "{{ item.file }}"
+    dest: "/opt/cluster/bin/{{ item.file }}"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: 0755
+  with_items: "{{ bashscriptsysopt }}"
+
+
+- name: check right options set in cmdline.txt
+  shell: /opt/cluster/bin/check-bootcmd.sh
   register: check_cmdlineopt
   ignore_errors: yes
   changed_when: False
 
 
-- name: cmdline boot options
-  lineinfile:
-    path: /boot/cmdline.txt
-    backrefs: True
-    state: present
-    regexp: '(.*)$'
-    line: '\1 cgroup_enable=cpuset cgroup_memory=memory'
-  when: check_cmdlineopt.stdout == ""
+- name: add boot options and reboot
+  shell: /opt/cluster/bin/gen-bootcmd.sh
+  when: check_cmdlineopt.stdout == "0"
   become: yes
   register: kube_bootopts
 
 
 - name: pause
   pause:
-    seconds: 3
+    seconds: 5
   when: kube_bootopts.changed
 
 
@@ -49,12 +55,9 @@
   when: kube_bootopts.changed
 
 
-- debug: msg="rebooting host "
-
-
 # reboot if cmdline.txt changes
 # reboot host
-- name: reboot host
+- name: rebooting host after change
   shell: sleep 2 && reboot now
   become: yes
   async: 30
@@ -65,14 +68,20 @@
 
 
 # wait for host
-- name: wait for host to restart
+- name: waiting for reboot
   wait_for:
     host: '{{ ansible_default_ipv4.address }}'
     port: 22
     state: started
-    delay: 65
+    delay: 60
     timeout: 240
   with_items: '{{ play_hosts }}'
   connection: local
   tags: [kube]
   when: kube_bootopts.changed
+
+
+# check cgroups
+- name: test cgroups are OK
+  shell: /opt/cluster/bin/check-cgroups-on.sh
+  changed_when: False

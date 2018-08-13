@@ -12,12 +12,12 @@
     - ssh-server
     - rpilog
     - haveged
+    - uptimed
     - ntp-server
     - redis
     - nodejs
     - golang
     - docker
     - group-deployer
-    - mpich
     - jenkins
     - ansible-post-role

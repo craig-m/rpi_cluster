@@ -1,7 +1,7 @@
 #!/bin/bash
 
 /usr/bin/sudo kubectl delete node --all
-/usr/bin/sudo kubeadm reset
+/usr/bin/sudo kubeadm reset -f
 
 /usr/bin/sudo apt-get -y remove kubeadm kubectl kubernetes-cni kubelet
 

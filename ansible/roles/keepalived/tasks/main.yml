@@ -1,9 +1,11 @@
 ---
 # Keepalived
 # http://www.keepalived.org/
+# http://www.keepalived.org/doc/introduction.html
 - debug: msg="Keepalived install "
-- debug: msg="Floating IP is  {{ rpi_loadbal_float_ip }} "
+- debug: msg="Floating IP is {{ rpi_loadbal_float_ip }} "
 
+# keepalived will ensure this shared IP address will be present in *at least* one place.
 
 # install packages (if missing)
 - name: install Keepalived programs
@@ -14,6 +16,13 @@
   environment:
     # do not start Keepalived at the end of install
     RUNLEVEL: 1
+  tags: [keepalived]
+
+#-------------------------------------------------------------------------------
+
+- name: primary keepalived
+  debug: msg="primary keepalived "
+  when: "'loadbal_prime' in group_names"
   tags: [keepalived]
 
 
@@ -29,6 +38,13 @@
   when: "'loadbal_prime' in group_names"
   tags: [keepalived]
 
+#-------------------------------------------------------------------------------
+
+- name: secondary keepalived
+  debug: msg="secondary keepalived "
+  when: "'loadbal_second' in group_names"
+  tags: [keepalived]
+
 
 - name: keepalived conf for Secondary
   template:
@@ -42,6 +58,7 @@
   when: "'loadbal_second' in group_names"
   tags: [keepalived]
 
+#-------------------------------------------------------------------------------
 
 # enabled on boot
 - name: keepalived enabled on boot
@@ -102,6 +119,6 @@
 - name: roles info txt
   lineinfile:
     path: /opt/cluster/data/info_roles.txt
-    line: "{{role_path|basename}}"
+    line: "{{ role_path|basename }}"
   become: yes
   tags: [keepalived]

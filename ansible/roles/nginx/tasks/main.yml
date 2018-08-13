@@ -30,36 +30,15 @@
   tags: [nginx]
 
 
-- name: www perms
+# create folders
+- name: Create nginx folders
   file:
-    owner: "{{ ansible_user_id }}"
-    group: "www-data"
-    path: /var/www/
+    path: "{{ item.dir }}"
     state: directory
-    mode: 0775
-  become: yes
-  tags: [nginx]
-
-
-- name: www html perms
-  file:
-    owner: "{{ ansible_user_id }}"
-    group: "{{ ansible_user_id }}"
-    path: /var/www/html
-    state: directory
-    mode: 0775
-  become: yes
-  tags: [nginx]
-
-
-# create /srv/nginx/default/
-- name: make /srv/nginx/default/
-  file:
-    path: /srv/nginx/default
-    state: directory
-    mode: 0775
-    owner: "{{ ansible_user_id }}"
-    group: root
+    mode: "{{ item.mode }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+  with_items: "{{ nginx_dir }}"
   become: yes
   tags: [nginx]
 
@@ -146,6 +125,6 @@
 - name: roles info txt
   lineinfile:
     path: /opt/cluster/data/info_roles.txt
-    line: "{{role_path|basename}}"
+    line: "{{ role_path|basename }}"
   become: yes
   tags: [nginx]

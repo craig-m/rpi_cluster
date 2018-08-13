@@ -68,12 +68,13 @@ docker_manager
 docker_worker
 
 [docker_master]
-delta
-
-[docker_manager]
 epsilon
 
+[docker_manager]
+delta
+
 [docker_worker]
+delta
 gamma
 zeta
 

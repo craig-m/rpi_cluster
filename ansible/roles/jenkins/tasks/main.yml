@@ -59,3 +59,14 @@
 
 
 # wget localhost:8080/jnlpJars/jenkins-cli.jar
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{ role_path|basename }}"
+    owner: root
+    group: root
+    mode: 0444
+  become: yes
+  tags: [jenkins]

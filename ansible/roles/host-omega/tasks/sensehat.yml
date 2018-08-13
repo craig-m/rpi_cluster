@@ -1,0 +1,17 @@
+---
+
+
+# Copy SenseHat welcome script to test
+- name: copy sensehat welcome
+  copy:
+    src: sensehat-welcome.py
+    dest: /opt/cluster/bin/sensehat-welcome.py
+    mode: 0755
+    owner: pi
+    group: pi
+
+
+# run welcome script on the first time - LED welcome lights!
+- name: run sensehat welcome
+  shell: /opt/cluster/bin/sensehat-welcome.py
+  creates: /home/pi/.config/sensehatwelcomed

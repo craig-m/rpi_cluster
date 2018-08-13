@@ -1,5 +1,6 @@
 # Common Vars for all hosts
 
+
 # create folders (on every R-Pi)
 common_dir: [
   { dir: '/opt/cluster/', mode: '0770', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
@@ -7,6 +8,7 @@ common_dir: [
   { dir: '/opt/cluster/bin/', mode: '0755', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
   { dir: '/etc/ansible/', mode: '0755', owner: 'root', group: 'root' },
   { dir: '/etc/ansible/facts.d/', mode: '0755', owner: 'root', group: 'root' },
+  { dir: '/home/{{ ansible_user_id }}/.config/htop/', mode: '0750', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
   { dir: '/home/{{ ansible_user_id }}/tmp/', mode: '0750', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
   { dir: '/root/bin/', mode: '0750', owner: 'root', group: 'root' },
   { dir: '/root/tmp/', mode: '0750', owner: 'root', group: 'root' },
@@ -19,6 +21,7 @@ common_dir: [
 # copy files
 dotfiles: [
   {src: 'files/dotfiles/screenrc', dest: '~/.screenrc'},
+  {src: 'files/dotfiles/htoprc', dest: '~/.config/htop/htoprc'},
   {src: 'files/dotfiles/vimrc', dest: '~/.vimrc'}
 ]
 

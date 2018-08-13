@@ -1,0 +1,39 @@
+title = "R-Pi Cluster portal"
+baseURL = ""
+buildDrafts = false
+theme = "berrycluster"
+copyright = "Nope"
+
+[author]
+    name = "crgm"
+    email = "crgm@crgm.net"
+
+[taxonomies]
+  category = "categories"
+  tag = "tags"
+
+[params]
+  description = "Local blog for my Pi cluster."
+  author = "crgm"
+  debug_page_name = false
+
+[[menu.main]]
+    name = "lanservice"
+    pre = "<span class='nav-link'>"
+    weight = -100
+    url = "/lanservice/"
+[[menu.main]]
+    name = "serverspec"
+    pre = "<span class='nav-link'>"
+    weight = -100
+    url = "/serverspec/"
+[[menu.main]]
+    name = "compute"
+    pre = "<span class='nav-link'>"
+    weight = -100
+    url = "/compute/"
+[[menu.main]]
+    name = "about"
+    pre = "<span class='nav-link'>"
+    weight = -100
+    url = "/about/"

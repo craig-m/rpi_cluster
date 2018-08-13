@@ -31,7 +31,7 @@
   tags: [haproxy]
 
 
-# config
+# config file (checked below)
 - name: haproxy config
   template:
     src: cfg_{{ haproxy_cfg_file }}.j2
@@ -115,6 +115,6 @@
 - name: roles info txt
   lineinfile:
     path: /opt/cluster/data/info_roles.txt
-    line: "{{role_path|basename}}"
+    line: "{{ role_path|basename }}"
   become: yes
   tags: [haproxy]

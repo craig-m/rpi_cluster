@@ -1,4 +1,5 @@
 #!/usr/bin/python
+import os
 from time import sleep
 from sense_hat import SenseHat
 
@@ -13,5 +14,8 @@ sleep(2)
 sense.show_message("SenseHat Up!", text_colour=coltxt, back_colour=colback)
 
 sleep(2)
+
+if not os.path.exists("/home/pi/.config/sensehatwelcomed"):
+    os.mknod("/home/pi/.config/sensehatwelcomed")
 
 sense.clear()

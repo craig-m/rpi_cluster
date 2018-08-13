@@ -7,31 +7,53 @@
   tags: [mpich]
 
 
+# install packages
+- name: mpich packages needed
+  apt: name={{ item }} state=present
+  with_items:
+       - mpich
+       - mpich-doc
+       - gfortran
+  become: yes
+  retries: 2
+  tags: [mpich]
+
+
 # create user
-- name: create mpiuser
+- name: create user for mpich
   user:
-    name: mpiuser
+    name: "{{ mpichuser }}"
     shell: /bin/bash
   become: yes
   tags: [mpich]
 
 
-# bin folder
-- name: create /home/mpiuser/bin/
+# user homedir perm
+- name: fix homedir perms
   file:
-    path: "/home/mpiuser/bin/"
+    path: "/home/{{ mpichuser }}/"
+    state: directory
+    mode: 0700
+  become: yes
+  tags: [mpich]
+
+
+# bin folder
+- name: bin dir
+  file:
+    path: "/home/{{ mpichuser }}/bin/"
     state: "directory"
     mode: 0755
-    owner: mpiuser
-    group: mpiuser
+    owner: "{{ mpichuser }}"
+    group: "{{ mpichuser }}"
   become: yes
   tags: [mpich]
 
 
 # user ssh key pair
-- name: create mpiuser keypair
+- name: create keypair
   user:
-    name: mpiuser
+    name: "{{ mpichuser }}"
     generate_ssh_key: yes
     ssh_key_bits: 2048
     ssh_key_file: .ssh/id_rsa
@@ -39,24 +61,12 @@
   tags: [mpich]
 
 
-# saves to /opt/cluster/backup/<host>/home/mpiuser/.ssh/
+# saves to /opt/cluster/backup/<host>/home/{{ mpichuser }}/.ssh/ (on the deployer node)
 - name: fetch the ssh public key
   fetch:
-    src: /home/mpiuser/.ssh/id_rsa.pub
+    src: "/home/{{ mpichuser }}/.ssh/id_rsa.pub"
     dest: /opt/cluster/backup
   become: yes
-  tags: [mpich]
-
-
-# install packages
-- name: packages needed
-  apt: name={{ item }} state=present
-  with_items:
-       - mpich
-       - mpich-doc
-       - gfortran
-  become: yes
-  retries: 1
   tags: [mpich]
 
 
@@ -64,9 +74,9 @@
 - name: copy mpi_sample.c
   copy:
     src: mpi_sample.c
-    dest: /home/mpiuser/mpi_sample.c
-    owner: mpiuser
-    group: mpiuser
+    dest: "/home/{{ mpichuser }}/mpi_sample.c"
+    owner: "{{ mpichuser }}"
+    group: "{{ mpichuser }}"
     mode: 0644
   become: yes
   tags: [mpich]
@@ -75,37 +85,53 @@
 # Check mpi_sample.c
 - name: check mpi_sample
   stat:
-    path: "/home/mpiuser/mpi_sample"
+    path: "/home/{{ mpichuser }}/bin/mpi_sample.c"
   register: mpi_sample_c
   changed_when: False
+  become: yes
   tags: [mpich]
 
 
+# make mpi_sample.c
 - name: compile mpi_sample
-  command: mpic++ -o mpi_sample mpi_sample.c
+  command: mpic++ -o ~/bin/mpi_sample mpi_sample.c
   args:
-    chdir: /home/mpiuser/
+    chdir: "/home/{{ mpichuser }}/"
   when: mpi_sample_c.stat.exists == False
   become: yes
-  become_user: mpiuser
+  become_user: "{{ mpichuser }}"
   tags: [mpich]
 
 
 - name: Add mpiuser to sshd users group
   user:
-    name: 'mpiuser'
+    name: "{{ mpichuser }}"
     groups: sshusers
     append: yes
   become: yes
   tags: [mpich]
 
 
-# mpirun -np 4 -hosts zeta.local,epsilon.local,gamma.local,delta.local ~/bin/mpi_sample
+# on psi:
+
+# mpikeytemp=$(mktemp -d)
+# cd $mpikeytemp;
+# cp /opt/cluster/backup/omega/home/mpiuser/.ssh/* .
+# thesshcapw=$(pass ssh/CA)
+# ssh-keygen -s ~/.ssh/my-ssh-ca/ca -P ${thesshcapw} -I mpiuser -n mpiuser -V +2w -z 1 ${mpikeytemp}/id_rsa.pub
+# scp -v id_rsa-cert.pub pi@omega:~/
+# ssh pi@omega sudo mv id_rsa-cert.pub /home/mpiuser/.ssh/id_rsa-cert.pub -v
+# ssh pi@omega sudo chown mpiuser:mpiuser /home/mpiuser/.ssh/id_rsa-cert.pub
+
+# on omega:
+
+# sudo su -l mpiuser
+# mpirun -l -np 16 -hosts 20.20.20.31,20.20.20.32,20.20.20.33,20.20.20.34 ~/bin/mpi_sample
 
 
 - name: roles info txt
   lineinfile:
     path: /opt/cluster/data/info_roles.txt
-    line: "{{role_path|basename}}"
+    line: "{{ role_path|basename }}"
   become: yes
   tags: [mpich]
