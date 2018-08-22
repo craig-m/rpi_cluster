@@ -107,7 +107,7 @@ It also acts as a Certificate Authority, for TLS and SSH. The deployer is in a d
 
 To provide redundant essential services for the LAN.
 
-* DHCP Server (isc.org server in HA.)
+* DHCP Server (isc.org server in HA)
 * DNS Server (Bind with zone replication between master/slave)
 * NTP Server
 * FTP Daemon (for BOOTP clients)
@@ -125,20 +125,20 @@ For miscellaneous, non-essential, net services. Used for dev, reporting, testing
 * HAproxy
 * Hugo (static website generator)
 * Yarn
-* Docker
+* Docker (standalone)
 
 Redundancy: not redundant, does not provide services for the LAN.
 
 
 ### Compute / Worker
 
-To play with services and offer hosting. Subdivided into a frontend and backend group.
+To play with services, hosted on Kubernetes. Subdivided into a frontend and backend group.
 
 * Keepalived (floating IP over x2 nodes)
 * HAproxy
 * Nginx
 * DistCC (for distributed compiling)
-* c MPICH (Message Passing Interface)
+* C mpich (Message Passing Interface - mpich.org)
 * Docker + Kubernetes
 
 Redundancy: x1 front and x1 back node can fail.

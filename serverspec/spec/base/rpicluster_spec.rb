@@ -1,6 +1,7 @@
 require 'spec_helper'
 # R-Pi Cluster common
 
+
 describe file('/opt/cluster/data/info_host.txt') do
  it { should be_file }
  it { should be_owned_by 'root' }

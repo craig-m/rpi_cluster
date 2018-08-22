@@ -1,10 +1,12 @@
 ---
 - debug: msg="Kubernetes master setup"
 
+#-------------------------------------------------------------------------------
+# init
 
 # check if the cluster is alreadly initialized
 - name: check for kube_info.txt
-  stat: path=/opt/cluster/data/kube_info.txt
+  stat: path=/opt/cluster/docker/kubecnf/kube_info.txt
   register: kube_info_txt
   changed_when: False
 
@@ -23,7 +25,7 @@
 # pause after init
 - name: pausing
   pause:
-    seconds: 15
+    seconds: 30
   when: initialized_main_node.changed
 
 
@@ -31,7 +33,7 @@
 - name: "initialization info"
   copy:
     content: "{{ initialized_main_node.stdout }}"
-    dest: "/opt/cluster/data/kube_info.txt"
+    dest: "/opt/cluster/docker/kubecnf/kube_info.txt"
   when:
     - initialized_main_node.changed
     - "kube_info_txt.stat.exists == False"
@@ -41,23 +43,43 @@
 # fetch init details
 - name: fetch kube master api info
   fetch:
-    src: /opt/cluster/data/kube_info.txt
+    src: /opt/cluster/docker/kubecnf/kube_info.txt
     dest: /opt/cluster/backup
   when:
     - created_kube_info_txt.changed
 
+#-------------------------------------------------------------------------------
 
 - name: pausing
   pause:
     seconds: 5
 
-
 - name: run setup-kube.sh
-  shell: /opt/cluster/bin/setup-kube.sh
+  shell: /opt/cluster/docker/scripts/setup-kube.sh
   args:
-    chdir: /opt/cluster/bin/
-    creates: /opt/cluster/data/.setup-kube
+    creates: /opt/cluster/docker/kubecnf/admin.conf
 
+#-------------------------------------------------------------------------------
+# Setup networking with Weave
+
+- name: check for kube_net.txt
+  stat: path=/opt/cluster/docker/kubecnf/kube_net.txt
+  register: kube_net_txt
+  changed_when: False
+
+- name: weave networking
+  shell: kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')" > /opt/cluster/docker/kubecnf/kube_net.txt
+  when:
+    - "kube_net_txt.stat.exists == False"
+  register: kube_net_apply
+
+# will take much longer to complete
+- name: pausing
+  pause:
+    seconds: 45
+  when: kube_net_apply.changed
+
+#-------------------------------------------------------------------------------
 
 - name: get cluster info
   shell: kubectl cluster-info

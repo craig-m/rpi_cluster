@@ -2,18 +2,18 @@
 - debug: msg="kubernetes join a master node "
 
 
-- name: get kube init info
-  local_action: shell tail -n1 /opt/cluster/backup/epsilon/opt/cluster/data/kube_info.txt | grep -e kubeadm -e token -e discovery -e hash
+- name: get kube init api info
+  local_action: shell tail -n1 /opt/cluster/backup/epsilon/opt/cluster/docker/kubecnf/kube_info.txt | grep -e kubeadm -e token -e discovery -e hash
   register: join_kube_mast
   changed_when: False
 
 
 - name: check kube_cli.txt
-  stat: path=/opt/cluster/data/kube_joined_cli.txt
+  stat: path=/opt/cluster/docker/kubecnf/joined_cli.txt
   register: kube_clitxt
 
 
-- name: join master
+- name: join the master
   shell: "{{ join_kube_mast.stdout }}"
   become: yes
   register: joined_master
@@ -24,12 +24,12 @@
 
 - name: pausing
   pause:
-    seconds: 10
+    seconds: 15
   when: joined_master.changed
 
 
-- name: joined master
-  shell: touch /opt/cluster/data/kube_joined_cli.txt
+- name: joined a master
+  shell: touch /opt/cluster/docker/kubecnf/joined_cli.txt
   when: joined_master.changed
 
 

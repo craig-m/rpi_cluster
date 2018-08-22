@@ -1,18 +1,31 @@
 ---
-# Docker
 - debug: msg="Installing Docker container engine "
 - debug: msg="enabled and started {{ rpi_docker_enabled }} "
 
 
-# copy uninstall script
-- name: copy uninstall script
+# folder structure
+- name: Create docker folders
+  file:
+    path: "{{ item.dir }}"
+    state: directory
+    recurse: yes
+    mode: "{{ item.mode }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+  with_items: "{{ docker_dir }}"
+  become: yes
+  tags: [docker]
+
+
+# copy docker scripts
+- name: copy bash scripts
   copy:
-    src: "remove_docker.sh"
-    dest: "/opt/cluster/bin/"
+    src: "{{ item.file }}"
+    dest: "/opt/cluster/docker/scripts/{{ item.file }}"
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_id }}"
     mode: 0755
-  tags: [docker]
+  with_items: "{{ docker_script }}"
 
 
 # check for docker bin
@@ -22,29 +35,19 @@
   tags: [docker]
 
 
-# copy install script
-- name: copy getdocker.sh
-  copy:
-    src: getdocker.sh
-    dest: /opt/cluster/mysrc/getdocker.sh
-    mode: 0775
-  tags: [docker]
-
-
-# run installer
+# run docker-engine installer
 - name: run installer
-  shell: /opt/cluster/mysrc/getdocker.sh
+  shell: /opt/cluster/docker/scripts/getdocker.sh
   args:
-    chdir: /opt/cluster/mysrc/
+    chdir: /opt/cluster/docker/scripts/
   when: usrbin_docker.stat.exists == False
   tags: [docker]
   register: rangetdocker
 
 
-# wait for daemon to start
 - name: pause
   pause:
-    seconds: 25
+    seconds: 10
   when: rangetdocker.changed
   tags: [docker]
 
@@ -60,6 +63,8 @@
   when: rangetdocker.changed
 
 
+#-------------------------------------------------------------------------------
+
 # enabled: START on boot
 - name: docker enabled on boot
   service: name=docker enabled=yes
@@ -67,6 +72,11 @@
   tags: [docker]
   when: rpi_docker_enabled == true
 
+- name: docker.socket enabled on boot
+  service: name=docker.socket enabled=yes
+  become: yes
+  tags: [docker]
+  when: rpi_docker_enabled == true
 
 # enabled: daemon START
 - name: docker started
@@ -74,6 +84,19 @@
   become: yes
   tags: [docker]
   when: rpi_docker_enabled  == true
+  register: dockerdaemonstarted
+
+- name: docker socket started
+  service: name=docker.socket state=started
+  become: yes
+  tags: [docker]
+  when: rpi_docker_enabled  == true
+  register: dockerdaemonstarted
+
+- name: pause after starting docker service
+  pause:
+    seconds: 20
+  when: dockerdaemonstarted.changed
 
 
 # disabled: STOP on boot
@@ -91,6 +114,7 @@
   tags: [docker]
   when: rpi_docker_enabled == false
 
+#-------------------------------------------------------------------------------
 
 # add user to docker group
 - name: add user to docker group
@@ -102,24 +126,30 @@
   tags: [docker]
 
 
-# folder structure
-- name: Create docker folders
-  file:
-    path: "{{ item.dir }}"
-    state: directory
-    recurse: yes
-    mode: "{{ item.mode }}"
-    owner: "{{ item.owner }}"
-    group: "{{ item.group }}"
-  with_items: "{{ docker_dir }}"
-  become: yes
-  tags: [docker]
-
-
 # tools for managing docker containers/images
 - import_tasks: manage_tools.yml
   tags: [docker]
 
+#-------------------------------------------------------------------------------
+# Test docker daemon is OK by running hello-world
+# https://hub.docker.com/_/hello-world/
+
+- name: docker pull hello-world
+  shell: docker pull hello-world
+  changed_when: false
+
+#- name: pull hello-world
+#  docker_image:
+#    name: _/hello-world
+
+- name: test docker - run hello-world
+  shell: docker run hello-world | grep "installation appears to be working correctly"
+  changed_when: false
+  register: docker_hello_world
+  failed_when:
+    - "'installation appears to be working correctly' not in docker_hello_world.stdout"
+
+#-------------------------------------------------------------------------------
 
 # log
 - name: output to rpicluster log

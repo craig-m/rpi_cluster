@@ -9,20 +9,12 @@
     - ansible-pre-role
 
 
-#- name: consul
-#  hosts: compute
-#  gather_facts: false
-#  roles:
-#    - consul
-
-
 - name: containers
   hosts: docker
   gather_facts: false
   roles:
     - docker
-    - kubernetes 
-    #- docker-swarm
+    - kubernetes
 
 
 - name: gather facts on nodes

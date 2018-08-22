@@ -1,13 +1,13 @@
-# docker build -t python_app .
-# docker run -p 4000:8080 python_app
+# Dockerfile for R-pi hostinfo.
 
-FROM armhf/debian:stretch
+FROM resin/rpi-raspbian
 
+# packages for app
 ENV DEBIAN_FRONTEND noninteractive
-
 RUN apt-get update
 RUN apt-get install -y python-pip python-dev libpython-all-dev
 
+# user for app to run under
 RUN groupadd -r pyapp && \
     useradd -r -g pyapp -d /app -s /sbin/nologin -c "pyapp" pyapp
 
@@ -21,15 +21,15 @@ WORKDIR /app
 
 RUN chown -R pyapp:pyapp /app/
 
+RUN pip install -r /app/requirements.txt
+
 # Change to the app user.
 USER pyapp
 
-RUN pip install -r /app/requirements.txt
-
 # Define environment variable
-ENV NAME cluster-user
+ENV NAME rpi-cluster-user
 
 # Run app.py when the container launches
 CMD ["python", "app.py"]
 
-EXPOSE 8182
+EXPOSE 4000

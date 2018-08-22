@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe user('mpiuser') do
   it { should exist }
+  it { should have_home_directory '/home/mpiuser' }
   it { should have_login_shell '/bin/bash' }
 end
 

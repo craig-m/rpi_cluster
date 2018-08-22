@@ -24,7 +24,6 @@
     group: root
     mode: 0644
     backup: yes
-    validate: /usr/sbin/dhcpd -t -cf /etc/dhcp/dhcpd.conf %s
   become: yes
   notify: isc-dhcp-server-reload
   tags: [dhcpserver]
@@ -38,6 +37,7 @@
     group: root
     mode: 0644
     backup: yes
+    validate: /usr/sbin/dhcpd -t -cf %s
   become: yes
   notify: isc-dhcp-server-reload
   tags: [dhcpserver]

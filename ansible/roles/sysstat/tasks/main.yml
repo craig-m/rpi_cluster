@@ -5,7 +5,6 @@
 
 - name: install sysstat
   apt: state=present name=sysstat
-  tags: install
   become: yes
   register: aptinstsystat
   tags: [sysstat]

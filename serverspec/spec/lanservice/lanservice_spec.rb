@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-
 describe file('/opt/cluster/data/info_roles.txt') do
  it { should be_file }
  it { should be_owned_by 'root' }
@@ -8,9 +7,17 @@ describe file('/opt/cluster/data/info_roles.txt') do
  it { should be_mode 444 }
 end
 
-
 describe service('rpi-lanservices.service') do
   it { should be_enabled }
+end
+
+# no docker on these older slow r-pi
+describe file('/usr/bin/docker') do
+  it { should_not exist }
+end
+
+describe file('/home/mpiuser/') do
+  it { should_not exist }
 end
 
 describe file('/opt/cluster/bin/lanservices-boot.sh') do

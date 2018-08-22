@@ -16,6 +16,12 @@ describe command('whoami') do
   its(:stdout) { should match 'root' }
 end
 
+describe user('pi') do
+  it { should have_uid 1000 }
+  it { should have_login_shell '/bin/bash' }
+  it { should have_home_directory '/home/pi' }
+end
+
 describe user('root') do
   it { should have_uid 0 }
   it { should have_login_shell '/bin/bash' }

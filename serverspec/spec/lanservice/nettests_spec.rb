@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-
 describe port("#{property[:ssh_group_port]}") do
   it { should be_listening.with('tcp') }
 end

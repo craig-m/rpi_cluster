@@ -1,5 +1,11 @@
 require 'spec_helper'
 
+# time and date
+describe command('timedatectl status') do
+  its(:stdout) { should contain('Time zone: UTC') }
+  its(:stdout) { should contain('NTP synchronized: yes') }
+end
+
 describe package('ntp') do
   it { should be_installed }
 end

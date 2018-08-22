@@ -1,13 +1,15 @@
 ---
 
+k8_dir: [
+  { dir: '/opt/cluster/docker/kubecnf/', mode: '0775', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
+  { dir: '/opt/cluster/docker/yml/', mode: '0775', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
+  { dir: '/opt/cluster/docker/data/', mode: '0775', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" }
+]
+
 bashscriptk8: [
   {file: 'install-kube-apt.sh'},
   {file: 'remove-kube.sh'},
-  {file: 'setup-kube.sh'}
-  ]
-
-bashscriptsysopt: [
+  {file: 'setup-kube.sh'},
   {file: 'gen-bootcmd.sh'},
-  {file: 'check-bootcmd.sh'},
   {file: 'check-cgroups-on.sh'}
-  ]
+]

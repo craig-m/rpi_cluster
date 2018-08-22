@@ -9,3 +9,5 @@ testinfra
 diceware
 ansible-lint
 ara
+docker-py
+docker-compose

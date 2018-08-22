@@ -77,7 +77,6 @@ List the tasks:
 Available tasks:
 ```
 
-
 Setup the deployer, this runs Ansible on the local deployer:
 
 ```
@@ -97,6 +96,13 @@ The deployer is all setup now, you can reboot it (optional but recommended).
 
 
 ---
+
+
+```
+(env) pi@raspberrypi:~/rpi_cluster/ansible $ eval `ssh-agent`
+(env) pi@raspberrypi:~/rpi_cluster/ansible $ pass ssh/id_rsa
+(env) pi@raspberrypi:~/rpi_cluster/ansible $ ssh-add
+```
 
 
 Setup the cluster hosts

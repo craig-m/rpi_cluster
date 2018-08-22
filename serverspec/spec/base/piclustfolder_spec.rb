@@ -46,8 +46,12 @@ end
 
 describe file('/mnt/usbkey') do
   it { should be_directory }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
 end
 
 describe file('/mnt/sshfs') do
   it { should be_directory }
+  it { should be_owned_by 'root' }
+  it { should be_grouped_into 'root' }
 end

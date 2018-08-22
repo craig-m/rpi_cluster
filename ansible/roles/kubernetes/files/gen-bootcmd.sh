@@ -1,4 +1,6 @@
 #!/bin/bash
+# this will enable cgroups in Raspberry Pi cmdline.txt
+# I found i needed the cgroup options before "rootwait"
 
 DISKMAIN=$(blkid -o export /dev/mmcblk0p2 | grep "PARTUUID")
 

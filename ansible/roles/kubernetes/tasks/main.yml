@@ -1,25 +1,37 @@
 ---
-# install kubernetes
-- debug: msg="kubernetes setup "
+# install kubernetes on compute nodes
+- debug: msg="kubernetes setup on compute nodes "
 
 
-# System prerequisites
-- include: systemopts.yml
+- name: make folder structure
+  file:
+    path: "{{ item.dir }}"
+    state: directory
+    recurse: yes
+    mode: "{{ item.mode }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+  with_items: "{{ k8_dir }}"
+  become: yes
 
 
 # copy bash scripts
 - name: copy bash scripts
   copy:
     src: "{{ item.file }}"
-    dest: "/opt/cluster/bin/{{ item.file }}"
+    dest: "/opt/cluster/docker/scripts/{{ item.file }}"
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_id }}"
     mode: 0755
   with_items: "{{ bashscriptk8 }}"
 
 
+# System prerequisites
+- include: systemopts.yml
+
+
 - name: setup kubernetes apt repo
-  shell: /opt/cluster/bin/install-kube-apt.sh
+  shell: /opt/cluster/docker/scripts/install-kube-apt.sh
   args:
     chdir: /opt/cluster/mysrc/
     creates: /etc/apt/sources.list.d/kubernetes.list
@@ -77,7 +89,9 @@
   tags: [kube]
 
 
-# The Kube master node (docker_master group)
+#-------------------------------------------------------------------------------
+
+# docker_master group
 - import_tasks: master_boss_node.yml
   tags: [kube,kubemaster]
   when:
@@ -85,13 +99,14 @@
     - "rpi_docker_enabled == True"
 
 
-# join kube master (docker_worker group)
+# docker_worker group
 - import_tasks: join_master.yml
   tags: [kube,kubemaster]
   when:
     - "'docker_worker' in group_names"
     - "rpi_docker_enabled == True"
 
+#-------------------------------------------------------------------------------
 
 # show nodes in cluster
 - name: get nodes
@@ -101,7 +116,18 @@
   when:
     - "'docker_master' in group_names"
     - "rpi_docker_enabled == True"
-    
+
+# show pod servic
+- name: kubectl get pods
+  shell: kubectl get pods --namespace=kube-system
+  tags: [kube]
+  changed_when: False
+  when:
+    - "'docker_master' in group_names"
+    - "rpi_docker_enabled == True"
+
+#-------------------------------------------------------------------------------
+
 
 # log
 - name: output to rpicluster log

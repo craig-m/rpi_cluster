@@ -14,6 +14,7 @@ rpilogit () {
 
 rpilogit "removing all traces of docker"
 
+# Purge all Images + Containers + Networks + Volumes
 docker system prune -a -f
 
 # stop daemon
@@ -29,11 +30,6 @@ rm -rfv -- /etc/docker/
 rm -fv -- /usr/local/bin/docker-machine
 rm -fv -- /opt/cluster/mysrc/getdocker.sh
 rm -rfv -- /opt/cluster/mysrc/docker-gc
-
-# if exists:
-rm -fv -- /opt/cluster/data/swarm_master.txt
-rm -fv -- /opt/cluster/data/swarm_worker.txt
-rm -fv -- /opt/cluster/data/swarm_manager_token.txt
 
 rpilogit "removed docker"
 

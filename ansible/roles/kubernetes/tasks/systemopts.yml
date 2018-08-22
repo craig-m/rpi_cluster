@@ -18,19 +18,8 @@
     dest: /opt/cluster/backup
 
 
-# copy bash scripts
-- name: copy bash scripts
-  copy:
-    src: "{{ item.file }}"
-    dest: "/opt/cluster/bin/{{ item.file }}"
-    owner: "{{ ansible_user_id }}"
-    group: "{{ ansible_user_id }}"
-    mode: 0755
-  with_items: "{{ bashscriptsysopt }}"
-
-
 - name: check right options set in cmdline.txt
-  shell: /opt/cluster/bin/check-bootcmd.sh
+  shell: grep "cgroup_enable=memory cgroup_memory=1" /boot/cmdline.txt | wc -l
   register: check_cmdlineopt
   ignore_errors: yes
   changed_when: False
@@ -45,7 +34,7 @@
 
 - name: pause
   pause:
-    seconds: 5
+    seconds: 15
   when: kube_bootopts.changed
 
 

@@ -16,6 +16,10 @@ describe file('/etc/haproxy/haproxy.cfg') do
  its(:content) { should match /R-Pi Cluster Ansible managed file/ }
 end
 
+describe command('haproxyctl configcheck') do
+  its(:exit_status) { should eq 0 }
+end
+
 describe host("localhost") do
   it { should be_reachable.with( :port => 80, :proto => 'tcp' ) }
 end

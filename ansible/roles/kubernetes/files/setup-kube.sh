@@ -5,8 +5,10 @@ mkdir -p -v /home/pi/.kube
 ln -s ~/.kube/ ~/kube
 
 /usr/bin/sudo cp -i -v -- /etc/kubernetes/admin.conf /home/pi/.kube/config
-
 /usr/bin/sudo chown pi:pi /home/pi/.kube/config
+
+/usr/bin/sudo cp -i -v -- /etc/kubernetes/admin.conf /opt/cluster/docker/kubecnf/admin.conf
+/usr/bin/sudo chown pi:pi /opt/cluster/docker/kubecnf/admin.conf
 
 /usr/bin/sudo mkdir -pv /etc/cni/net.d
 

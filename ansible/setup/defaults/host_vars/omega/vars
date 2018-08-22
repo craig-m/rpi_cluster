@@ -33,7 +33,7 @@ rpi_haproxy_enabled: true
 haproxy_cfg_file: "omega"
 
 # Docker
-rpi_docker_enabled: false
+rpi_docker_enabled: true
 
 # glusterFS
 rpi_glustersrv_enabled: false

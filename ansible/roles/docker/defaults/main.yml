@@ -1,7 +1,12 @@
 
 docker_dir: [
-  { dir: '/opt/cluster/docker/compose/', mode: '0775', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
+  { dir: '/opt/cluster/docker/scripts/', mode: '0775', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
   { dir: '/opt/cluster/docker/volumes/', mode: '0775', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" }
+]
+
+docker_script: [
+  {file: 'getdocker.sh'},
+  {file: 'remove_docker.sh'}
 ]
 
 # stopped/disabled systemctl service by default
