@@ -1,17 +1,16 @@
 ---
 # Users public and private SSH keys
 - debug: msg="ssh (keys) "
-  tags: [ssh]
 
 
 # check for ~/.ssh/id_rsa
-- name: check ssh private key
+- name: check for users id_rsa
   stat: path="~/.ssh/id_rsa"
   register: sshprivkeyexists
 
 
 # generate ssh key for current user if missing
-- name: Generate a SSH key pair for this user
+- name: Generate id_rsa for this user if missing
   user:
     name: "{{ ansible_user_id }}"
     generate_ssh_key: yes
@@ -40,7 +39,6 @@
 
 
 # Saves to /opt/cluster/backup/<host>/home/<user>/.ssh/
-
 - name: fetch the ssh public key
   fetch:
     src: ~/.ssh/id_rsa.pub
@@ -51,6 +49,3 @@
   fetch:
     src: ~/.ssh/id_rsa
     dest: /opt/cluster/backup
-
-
-# sign the SSH key

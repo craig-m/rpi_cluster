@@ -3,7 +3,12 @@
 
 
 - name: rpi dns zone file
-  template: src=db_rpi.j2 dest=/etc/bind/zones/{{ rpi_dnsd_status }}/rpi-{{ rpi_dnsd_status }}.db owner=root group=bind mode=0664
+  template:
+    src: db_rpi.j2
+    dest: /etc/bind/zones/{{ rpi_dnsd_status }}/rpi-{{ rpi_dnsd_status }}.db
+    owner: root
+    group: bind
+    mode: 0664
   become: yes
   notify: bind-restart
   when: "'alpha' in inventory_hostname"

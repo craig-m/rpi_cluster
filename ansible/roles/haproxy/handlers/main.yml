@@ -3,5 +3,7 @@
 
 # Restart haproxy server
 - name: haproxy-restart
-  service: name=haproxy state=restarted
+  service:
+    name: haproxy 
+    state: restarted
   become: yes

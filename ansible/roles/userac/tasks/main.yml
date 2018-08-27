@@ -1,9 +1,8 @@
 ---
-# system users
-- debug: msg="user accounts "
+- debug: msg="userac role "
 
-# to update in ansible dir run:
-#
+
+# To update password hashs in ansible dir run:
 # source ./env/bin/activate
 # python -c "from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt(getpass.getpass())"
 
@@ -33,7 +32,7 @@
 - name: fix homedir perms
   file:
     path: "/home/{{ rpi_clust_user }}"
-    state: directory 
+    state: directory
     mode: 0700
   become: yes
   tags: userac

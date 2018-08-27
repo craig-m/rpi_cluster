@@ -9,7 +9,9 @@
 
 
 - name: install DNS server packages
-  apt: name={{ item }} state=present
+  apt:
+    name: {{ item }}
+    state: present
   with_items:
        - bind9
        - bind9utils
@@ -134,45 +136,23 @@
     - dns-server-zone
 
 
-#- name: bats test
-#  template:
-#    src: tests_bats.j2
-#    dest: /opt/cluster/bin/test_my_dns.sh
-#    owner: root
-#    group: root
-#    mode: 0755
-#    backup: yes
-#  become: yes
-#  tags: [bind,dns-server-zone]
-
-
-# enabled on boot (if flagged on)
+# enabled on boot and running (if flagged on)
 - name: bind9 enabled on boot
-  service: name=bind9 enabled=yes
+  service:
+    name: bind9
+    enabled: yes
+    state: started
   become: yes
   when: rpi_dnsd_enabled  == true
   tags: [bind]
 
 
-# started (if flagged on)
-- name: bind9 started
-  service: name=bind9 state=started
-  become: yes
-  when: rpi_dnsd_enabled == true
-  tags: [bind]
-
-
 # not on boot (if flagged off)
 - name: bind9 enabled on boot
-  service: name=bind9 enabled=no
-  become: yes
-  when: rpi_dnsd_enabled == false
-  tags: [bind]
-
-
-# stopped (if flagged off)
-- name: bind9 stopped
-  service: name=bind9 state=stopped
+  service:
+    name: bind9
+    enabled: no
+    state: stopped
   become: yes
   when: rpi_dnsd_enabled == false
   tags: [bind]

@@ -10,7 +10,9 @@
 
 # install packages (if missing)
 - name: install nginx programs
-  apt: name={{ item }} state=present
+  apt:
+    name: {{ item }}
+    state: present
   with_items:
        - nginx-full
   become: yes
@@ -109,15 +111,19 @@
 
 # reload config
 - name: nginx started
-  service: name=nginx state=reloaded
+  service:
+    name: nginx
+    state: reloaded
   become: yes
   changed_when: False
   tags: [nginx]
 
 
-# enable on boot
+# started + enable on boot
 - name: nginx enabled on boot
-  service: name=nginx enabled=yes
+  service:
+    name: nginx
+    enabled: yes
   become: yes
   tags: [nginx]
 

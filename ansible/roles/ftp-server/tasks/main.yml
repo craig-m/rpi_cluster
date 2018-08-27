@@ -4,7 +4,9 @@
 
 
 - name: install ftpd
-  apt: name={{ item }} state=present
+  apt:
+    name: {{ item }}
+    state: present
   with_items:
        - tftp-hpa
        - tftpd-hpa
@@ -50,13 +52,10 @@
 
 
 - name: tftpd hpa enabled on boot
-  service: name=tftpd-hpa enabled=yes
-  become: yes
-  tags: [ftpd]
-
-
-- name: tftpd hpa started
-  service: name=tftpd-hpa state=started
+  service:
+    name: tftpd-hpa 
+    enabled: yes
+    state: started
   become: yes
   tags: [ftpd]
 

@@ -2,6 +2,8 @@
 
 
 - name: distcc-restart
-  service: name=distcc state=restarted
+  service:
+    name: distcc 
+    state: restarted
   become: yes
   become_user: root

@@ -1,9 +1,11 @@
 ---
 
-  
+
 # Started
 - name: consul started
-  service: name=consul state=started
+  service:
+    name: consul
+    state: started
   become: yes
   register: consulstarted
   tags: [consul]
@@ -31,7 +33,9 @@
 
 # stop if flagged off
 - name: consul diabled
-  service: name=consul state=stopped
+  service:
+    name: consul 
+    state: stopped
   become: yes
   tags: [consul]
   when: rpi_conul_enabled == false

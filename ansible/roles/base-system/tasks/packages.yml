@@ -4,17 +4,19 @@
 
 
 - name: update apt cache
-  apt: update_cache=yes
+  apt:
+    update_cache: yes
   become: yes
   retries: 3
   check_mode: no
   changed_when: False
   tags: [common,commonpackage]
-  failed_when: False
 
 
 - name: clients and network
-  apt: name={{ item }} state=present
+  apt:
+    name: {{ item }}
+    state: present
   with_items:
        - arping
        - hping3
@@ -29,7 +31,9 @@
 
 
 - name: System misc util
-  apt: name={{ item }} state=present
+  apt:
+    name: {{ item }}
+    state: present
   with_items:
        - linuxlogo
        - vim
@@ -50,7 +54,9 @@
 
 
 - name: System base
-  apt: name={{ item }} state=present
+  apt:
+    name: {{ item }}
+    state: present
   with_items:
        - apt-transport-https
        - apt-show-versions
@@ -78,9 +84,10 @@
   tags: [common,commonpackage]
 
 
-# Python pip
 - name: python pip and dev packages
-  apt: name={{ item }} state=present
+  apt:
+    name: {{ item }}
+    state: present
   with_items:
        - python-pip
        - python-dev

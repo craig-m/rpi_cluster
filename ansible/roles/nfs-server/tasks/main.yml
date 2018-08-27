@@ -6,7 +6,9 @@
 
 # packages
 - name: install NFS programs
-  apt: name={{ item }} state=present
+  apt:
+    name: {{ item }}
+    state: present
   with_items:
        - nfs-server
        - nfs-kernel-server
@@ -42,40 +44,32 @@
   tags: [nfs]
 
 
-# nfs-idmapd
-- name: nfs-idmapd enabled on boot
-  service: name=nfs-idmapd enabled=yes
+# service: nfs-idmapd
+- name: nfs-idmapd enabled and started on boot
+  service:
+    name: nfs-idmapd
+    enabled: yes
+    state: started
   become: yes
   tags: [nfs]
 
 
-- name: nfs-idmapd started
-  service: name=nfs-idmapd state=started
+# service: rpcbind
+- name: rpcbind.service enabled and started on boot
+  service:
+    name: rpcbind.service
+    state: started
+    enabled: yes
   become: yes
   tags: [nfs]
 
 
-# rpcbind
-- name: rpcbind.service started
-  service: name=rpcbind.service state=started
-  become: yes
-  tags: [nfs]
-
-
-- name: rpcbind.service enabled on boot
-  service: name=rpcbind.service enabled=yes
-  become: yes
-  tags: [nfs]
-
-
-# nfs-kernel-server
-- name: nfs-kernel-server.service started
-  service: name=nfs-kernel-server.service state=started
-  become: yes
-  tags: [nfs]
-
-- name: nfs-kernel-server.service enabled on boot
-  service: name=nfs-kernel-server.service enabled=yes
+# service: nfs-kernel-server
+- name: nfs-kernel-server.service enabled and started on boot
+  service:
+    name: nfs-kernel-server.service
+    tate: started
+    enabled: yes
   become: yes
   tags: [nfs]
 

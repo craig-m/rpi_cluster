@@ -4,7 +4,9 @@
 
 
 - name: tools
-  apt: name={{ item }} state=present
+  apt:
+    name: {{ item }}
+    state: present
   with_items:
        - nmap
        - telnet
@@ -64,7 +66,10 @@
 
 # static arp entries for admin nodes
 - name: /etc/ethers
-  template: src=ethers.j2 dest=/etc/ethers  mode=0644
+  template:
+    src: ethers.j2 
+    dest: /etc/ethers 
+    mode: 0644
   become: yes
   notify: static-arp-ethers
   when:

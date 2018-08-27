@@ -11,5 +11,7 @@
 
 # Restart DNS server
 - name: bind-restart-actual
-  service: name=bind9 state=restarted
+  service:
+    name: bind9
+    state: restarted
   become: yes

@@ -16,7 +16,10 @@
 
 # Create consul user (for daemon to run as)
 - name: add consul user
-  user: name=consul createhome=yes home=/opt/consul
+  user:
+    name: consul 
+    createhome: yes 
+    home: /opt/consul
   become: yes
   tags: [consul]
 

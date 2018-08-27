@@ -82,7 +82,8 @@
 
 # so the fact above is available
 - name: reload ansible_local
-  setup: filter=ansible_local
+  setup:
+    filter: ansible_local
 
 
 # create info_roles.txt

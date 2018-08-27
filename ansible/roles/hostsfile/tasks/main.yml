@@ -4,7 +4,12 @@
 
 # hosts file
 - name: etc hosts file
-  template: "src=etc-hosts.j2 dest='/etc/hosts' owner=root group=root mode=0644"
+  template:
+    src: etc-hosts.j2
+    dest: /etc/hosts
+    wner: root
+    group: root
+    mode: 0644
   become: yes
   tags: [hostsfile]
 

@@ -19,7 +19,6 @@
   tags: [maintenance]
 
 
-# wait for host
 - name: wait for host to restart
   wait_for:
     host: '{{ ansible_default_ipv4.address }}'
@@ -40,7 +39,7 @@
   tags: [maintenance]
 
 
-# show upttime
+# show uptime
 - debug: msg="uptime {{ rpi_my_uptime }} "
   tags: [maintenance]
 

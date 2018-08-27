@@ -4,7 +4,9 @@
 
 # install
 - name: install gluster
-  apt: name={{ item }} state=present
+  apt:
+    name: {{ item }}
+    state: present
   with_items:
        - glusterfs-server
   become: yes
@@ -28,30 +30,22 @@
 
 # enabled on boot (if flagged on)
 - name: glusterfs enabled on boot
-  service: name=glusterfs-server.service enabled=yes
+  service:
+    name: glusterfs-server.service
+    enabled: yes
+    state: started
   become: yes
   tags: [glusterfs]
   when: rpi_glustersrv_enabled == true
 
-
-# started (if flagged on)
-- name: glusterfs started
-  service: name=glusterfs-server.service state=started
-  become: yes
-  tags: [glusterfs]
-  when: rpi_glustersrv_enabled == true
 
 
 # stop if flagged off
 - name: glusterfs stop
-  service: name=glusterfs-server.service enabled=no
-  become: yes
-  tags: [glusterfs]
-  when: rpi_glustersrv_enabled == false
-
-
-- name: glusterfs stopped
-  service: name=glusterfs-server.service state=stopped
+  service:
+    name: glusterfs-server.service
+    enabled: no
+    state: stopped
   become: yes
   tags: [glusterfs]
   when: rpi_glustersrv_enabled == false

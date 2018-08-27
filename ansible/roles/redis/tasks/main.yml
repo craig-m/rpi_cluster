@@ -5,7 +5,9 @@
 
 # install packages (if missing)
 - name: install redis
-  apt: name={{ item }} state=present
+  apt:
+    name: {{ item }}
+    state: present
   with_items:
        - redis-tools
        - redis-server
@@ -13,16 +15,11 @@
   tags: [redis]
 
 
-# reload config
-- name: redis-server started
-  service: name=redis-server state=started
-  become: yes
-  tags: [redis]
-
-
-# enable on boot
-- name: redis-server enabled on boot
-  service: name=redis-server enabled=yes
+- name: redis-server is started and enabled
+  service:
+    name: redis-server
+    state: started
+    enabled: yes
   become: yes
   tags: [redis]
 

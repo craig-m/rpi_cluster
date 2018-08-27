@@ -54,7 +54,9 @@
 
 # check package installed
 - name: docker packages installed
-  apt: name={{ item }} state=present
+  apt:
+    name: {{ item }}
+    state: present
   with_items:
        - docker-ce
   become: yes
@@ -65,33 +67,24 @@
 
 #-------------------------------------------------------------------------------
 
-# enabled: START on boot
 - name: docker enabled on boot
-  service: name=docker enabled=yes
+  service:
+    name: docker
+    enabled: yes
+    state: started
   become: yes
   tags: [docker]
   when: rpi_docker_enabled == true
 
 - name: docker.socket enabled on boot
-  service: name=docker.socket enabled=yes
+  service:
+    name: docker.socket
+    enabled: yes
+    state: started
   become: yes
   tags: [docker]
   when: rpi_docker_enabled == true
 
-# enabled: daemon START
-- name: docker started
-  service: name=docker state=started
-  become: yes
-  tags: [docker]
-  when: rpi_docker_enabled  == true
-  register: dockerdaemonstarted
-
-- name: docker socket started
-  service: name=docker.socket state=started
-  become: yes
-  tags: [docker]
-  when: rpi_docker_enabled  == true
-  register: dockerdaemonstarted
 
 - name: pause after starting docker service
   pause:
@@ -101,18 +94,23 @@
 
 # disabled: STOP on boot
 - name: docker stopped on boot
-  service: name=docker enabled=no
+  service:
+    name: docker
+    enabled: no
+    state: stopped
   become: yes
   tags: [docker]
   when: rpi_docker_enabled == false
 
-
-# disabled: daemon STOP
-- name: docker started
-  service: name=docker state=stopped
+- name: docker.socket stopped on boot
+  service:
+    name: docker.socket
+    enabled: no
+    state: stopped
   become: yes
   tags: [docker]
   when: rpi_docker_enabled == false
+
 
 #-------------------------------------------------------------------------------
 

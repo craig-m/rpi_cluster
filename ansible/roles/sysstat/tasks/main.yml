@@ -1,17 +1,20 @@
 ---
-
 - debug: msg="sysstat "
 
 
 - name: install sysstat
-  apt: state=present name=sysstat
+  apt:
+    state: present
+    name: sysstat
   become: yes
   register: aptinstsystat
   tags: [sysstat]
 
 
 - name: systat enabled on boot
-  service: name=sysstat enabled=yes
+  service:
+    name: sysstat
+    enabled: yes
   become: yes
   tags: [sysstat]
 
@@ -29,7 +32,9 @@
 
 
 - name: systat started
-  service: name=sysstat state=started
+  service:
+    name: sysstat 
+    state: started
   become: yes
   tags: [sysstat]
 

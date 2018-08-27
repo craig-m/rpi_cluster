@@ -39,7 +39,9 @@
 
 # Remove Apt packages (in defaults/main.yml)
 - name: Remove these packages
-  apt: name={{ item.rmapt }} state=absent
+  apt:
+    name: {{ item.rmapt }} 
+    state: absent
   with_items: "{{ package_remove }}"
   become: yes
   tags: [common,commonpackage]
@@ -48,7 +50,7 @@
 # pki
 - import_tasks: sslcert.yml
   tags: [common]
-  
+
 
 # log
 - name: output to rpicluster log

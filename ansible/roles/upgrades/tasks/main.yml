@@ -6,12 +6,14 @@
 # log
 - name: output to rpicluster log
   shell: logger -t rpicluster starting upgrade role
+  changed_when: False
   tags: [maintenance]
 
 
 # update Apt cache
 - name: update apt cache
-  apt: update_cache=yes
+  apt:
+    update_cache: yes
   become: yes
   retries: 2
   check_mode: no
@@ -32,6 +34,7 @@
     state: latest
   retries: 2
   become: yes
+  register: apt_upgraded
   tags: [maintenance]
 
 
@@ -39,6 +42,7 @@
   pause:
     seconds: 2
   tags: [maintenance]
+  when: apt_upgraded.changed
 
 
 # Update R-Pi firmware in /boot/
@@ -55,17 +59,21 @@
   command: systemctl daemon-reload
   become: yes
   tags: [maintenance]
+  when: apt_upgraded.changed
+  changed_when: False
 
 
 - name: pause
   pause:
     seconds: 2
   tags: [maintenance]
+  when: apt_upgraded.changed
 
 
 # log
 - name: output to rpicluster log
   shell: logger -t rpicluster finished upgrade role OK
+  changed_when: False
   tags: [maintenance]
 
 

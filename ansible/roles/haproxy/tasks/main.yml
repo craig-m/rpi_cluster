@@ -10,7 +10,9 @@
 
 # install
 - name: install haproxy server packages
-  apt: name={{ item }} state=present
+  apt:
+    name: {{ item }}
+    state: present
   with_items:
        - haproxy
        - haproxyctl
@@ -62,17 +64,11 @@
   tags: [haproxy]
 
 
-# enabled on boot (if flagged on)
-- name: haproxy enabled on boot
-  service: name=haproxy enabled=yes
-  become: yes
-  tags: [haproxy]
-  when: rpi_haproxy_enabled == true
-
-
-# started (if flagged on)
-- name: haproxy started
-  service: name=haproxy state=started
+- name: haproxy enabled on boot and started
+  service:
+    name: haproxy
+    enabled: yes
+    state: started
   become: yes
   tags: [haproxy]
   when: rpi_haproxy_enabled == true
@@ -80,15 +76,10 @@
 
 # disabled flag - boot
 - name: haproxy disable on boot
-  service: name=haproxy enabled=no
-  become: yes
-  tags: [haproxy]
-  when: rpi_haproxy_enabled == false
-
-
-# disabled flag - stopped
-- name: haproxy stopped
-  service: name=haproxy state=stopped
+  service:
+    name: haproxy
+    enabled: no
+    state: stopped
   become: yes
   tags: [haproxy]
   when: rpi_haproxy_enabled == false

@@ -3,9 +3,11 @@
 - debug: msg="common (kernelmod) "
 
 
-# stop bluetooth service
+# stop + disable bluetooth service
 - name: stop bluetooth
-  service: name=bluetooth.service state=stopped
+  service:
+    name: bluetooth.service
+    state: stopped
   become: yes
   tags: [kernelmod]
   ignore_errors: yes

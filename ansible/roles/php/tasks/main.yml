@@ -7,7 +7,9 @@
 
 # install packages (if missing)
 - name: install php
-  apt: name={{ item }} state=present
+  apt:
+    name: {{ item }}
+    state: present
   with_items:
        - php7.0-fpm
        - php7.0-gd
@@ -30,9 +32,9 @@
 
 # copy config
 - name: copy config
-  copy:
+  template:
     src: wwwrpi.conf
-    dest: /etc/php/7.0/fpm/pool.d/wwwrpi.conf
+    dest: /etc/php/7.0/fpm/pool.d/wwwrpi_conf.j2
     owner: "root"
     group: "root"
     mode: 0775
@@ -43,14 +45,10 @@
 
 # reload config
 - name: php7.0-fpm started
-  service: name=php7.0-fpm state=started
-  become: yes
-  tags: [php]
-
-
-# Enabled on boot
-- name: php7.0-fpm enabled on boot
-  service: name=php7.0-fpm enabled=yes
+  service:
+    name: php7.0-fpm
+    state: started
+    enabled: yes
   become: yes
   tags: [php]
 

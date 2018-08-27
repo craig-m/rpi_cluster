@@ -7,7 +7,9 @@
 
 
 - name: install dhcp server
-  apt: name={{ item }} state=present
+  apt:
+    name: {{ item }}
+    state: present
   with_items:
        - isc-dhcp-server
        - dhcpdump
@@ -45,23 +47,20 @@
 
 # enabled on boot (if flagged on)
 - name: isc-dhcp-server enabled on boot
-  service: name=isc-dhcp-server enabled=yes
+  service:
+    name: isc-dhcp-server
+    enabled: yes
   become: yes
   tags: [dhcpserver]
   when: rpi_dhcpd_enabled == true
 
 
-# service stopped (if flagged off)
+# service stopped + off (if flagged off)
 - name: isc-dhcp-server stopped
-  service: name=isc-dhcp-server state=stopped
-  become: yes
-  tags: [dhcpserver]
-  when: rpi_dhcpd_enabled == false
-
-
-# disabled on boot (if flagged off)
-- name: isc-dhcp-server enabled on boot
-  service: name=isc-dhcp-server enabled=no
+  service:
+    name: isc-dhcp-server
+    state: stopped
+    enabled: no
   become: yes
   tags: [dhcpserver]
   when: rpi_dhcpd_enabled == false

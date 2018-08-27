@@ -3,6 +3,8 @@
 
 # restart DHCP server
 - name: isc-dhcp-server-reload
-  service: name=isc-dhcp-server state=restarted
+  service:
+    name: isc-dhcp-server 
+    state: restarted
   become: yes
   when: rpi_dhcpd_enabled == true

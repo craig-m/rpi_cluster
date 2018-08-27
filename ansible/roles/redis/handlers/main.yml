@@ -1,7 +1,0 @@
----
-
-
-# restart redis
-- name: redis_restart_actual
-  service: name=redis-server state=reloaded
-  become: yes

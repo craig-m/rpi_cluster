@@ -5,7 +5,9 @@
 
 
 - name: install extra programs on omega
-  apt: name={{ item }} state=present
+  apt:
+    name: {{ item }} 
+    state: present
   with_items:
        - tcpdump
        - lynx

@@ -62,7 +62,9 @@
 
 # stop if diabled flag
 - name: bbhttpd diabled
-  service: name=bbhttpd state=stopped
+  service:
+    name: bbhttpd 
+    state: stopped
   become: yes
   when: rpi_bb_httpd_enabled == false
   tags: [bbhttpd]

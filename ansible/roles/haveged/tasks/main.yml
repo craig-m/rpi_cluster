@@ -7,20 +7,19 @@
 
 
 - name: install haveged
-  apt: state=present name=haveged
+  apt:
+    state: present
+    name: haveged
   become: yes
   register: aptinsthaveged
   tags: haveged
 
 
-- name: haveged enabled on boot
-  service: name=haveged enabled=yes
-  become: yes
-  tags: haveged
-
-
-- name: haveged started
-  service: name=haveged state=started
+- name: haveged enabled on boot and started
+  service:
+    name: haveged
+    enabled: yes
+    state: started
   become: yes
   tags: haveged
 

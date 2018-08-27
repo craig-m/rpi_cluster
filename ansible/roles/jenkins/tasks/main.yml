@@ -31,7 +31,8 @@
 
 
 - name: update apt cache
-  apt: update_cache=yes
+  apt:
+    update_cache: yes
   become: yes
   retries: 2
   check_mode: no
@@ -39,21 +40,20 @@
 
 
 - name: install jenkins packages
-  apt: name={{ item }} state=present
+  apt:
+    name: {{ item }}
+    state: present
   with_items:
        - jenkins
   become: yes
   tags: [jenkins]
 
 
-- name: jenkins.service enabled on boot
-  service: name=jenkins.service enabled=yes
-  become: yes
-  tags: [jenkins]
-
-
-- name: jenkins.service started
-  service: name=jenkins.service state=started
+- name: jenkins.service enabled on boot and started
+  service:
+    name: jenkins.service
+    enabled: yes
+    state: started
   become: yes
   tags: [jenkins]
 

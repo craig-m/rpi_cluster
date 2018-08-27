@@ -1,15 +1,17 @@
 ---
-# Keepalived
+# keepalived will ensure this shared IP address will be present in *at least* one place.
 # http://www.keepalived.org/
 # http://www.keepalived.org/doc/introduction.html
+
 - debug: msg="Keepalived install "
 - debug: msg="Floating IP is {{ rpi_loadbal_float_ip }} "
 
-# keepalived will ensure this shared IP address will be present in *at least* one place.
 
 # install packages (if missing)
 - name: install Keepalived programs
-  apt: name={{ item }} state=present
+  apt:
+    name: {{ item }}
+    state: present
   with_items:
        - keepalived
   become: yes
@@ -62,15 +64,10 @@
 
 # enabled on boot
 - name: keepalived enabled on boot
-  service: name=keepalived enabled=yes
-  become: yes
-  register: keepalived_changed
-  tags: [keepalived]
-
-
-# started (if flagged on)
-- name: keepalived started
-  service: name=keepalived state=started
+  service:
+    name: keepalived
+    enabled: yes
+    state: started
   become: yes
   register: keepalived_changed
   tags: [keepalived]

@@ -3,7 +3,9 @@
 
 
 - name: dhcpcd-restart
-  service: name=dhcpcd.service state=restarted
+  service:
+    name: dhcpcd.service
+    state: restarted
   become: yes
   become_user: root
   tags: [dhcpclient]
@@ -12,7 +14,9 @@
 
 # reload config
 - name: dhcpcd started
-  service: name=dhcpcd state=reloaded
+  service:
+    name: dhcpcd 
+    state: reloaded
   become: yes
   tags: [dhcpclient]
   changed_when: False

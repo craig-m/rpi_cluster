@@ -9,13 +9,17 @@
 
 
 - name: users ssh client config
-  template: src=ssh_client_conf.j2 dest=~/.ssh/config
+  template:
+    src: ssh_client_conf.j2
+    dest: ~/.ssh/config
   delegate_to: localhost
   changed_when: False
 
 
 - name: put inventory into etc hosts
-  template: src=etc_hosts.j2 dest=/etc/hosts
+  template:
+    src: etc_hosts.j2 
+    dest: /etc/hosts
   delegate_to: localhost
   become: yes
   changed_when: False
