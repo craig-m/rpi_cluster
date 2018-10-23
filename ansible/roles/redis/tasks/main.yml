@@ -3,10 +3,9 @@
 - debug: msg="Redis server role "
 
 
-# install packages (if missing)
 - name: install redis
   apt:
-    name: {{ item }}
+    name: "{{ item }}"
     state: present
   with_items:
        - redis-tools

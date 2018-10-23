@@ -22,7 +22,6 @@
     - haveged
     - sysstat
     - ntp-client
-    - nfs-client
     - distcc
     - mpich
     - golang

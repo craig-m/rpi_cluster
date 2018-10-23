@@ -55,8 +55,9 @@
 
 
 # systemctl daemon-reload
-- name: systemctl-daemon-reload
-  command: systemctl daemon-reload
+- name: force systemd to reread all configs
+  systemd:
+    daemon_reload: yes
   become: yes
   tags: [maintenance]
   when: apt_upgraded.changed

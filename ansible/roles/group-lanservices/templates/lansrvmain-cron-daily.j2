@@ -1,5 +1,6 @@
 #!/bin/bash
 # {{ ansible_managed }}
+# modified: {{ ansible_date_time.time}} {{ ansible_date_time.date }}
 
 /usr/bin/logger -t rpicluster "lansrv-cron-daily.sh started"
 
@@ -13,7 +14,8 @@ unset LD_PRELOAD
 # check disk
 /usr/lib/nagios/plugins/check_disk -x /dev/sda1;
 
-# 
+touch -f /mnt/ramstore/data/cron-daily.txt;
+/bin/date > /mnt/ramstore/data/cron-daily.txt;
 
 #-------------------------------------------------------------------------------
 

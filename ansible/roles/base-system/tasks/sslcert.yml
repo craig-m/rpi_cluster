@@ -4,11 +4,29 @@
 
 - name: Generate OpenSSL private key for host
   openssl_privatekey:
-    path: /opt/cluster/data/ssl-privkey.pem
+    path: /opt/cluster/data/ssl-ansible-private.pem
+
+
+- name: Generate an OpenSSL public key from ptivate key
+  openssl_publickey:
+    path: /opt/cluster/data/ssl-ansible-public.pem
+    privatekey_path: /opt/cluster/data/ssl-ansible-private.pem
+
+
+- name: get OpenSSL public key.
+  fetch:
+    src: /opt/cluster/data/ssl-ansible-public.pem
+    dest: /opt/cluster/backup
 
 
 - name: Generate an OpenSSL CSR.
   openssl_csr:
     path: /opt/cluster/data/{{ ansible_hostname }}.csr
-    privatekey_path: /opt/cluster/data/ssl-privkey.pem
+    privatekey_path: /opt/cluster/data/ssl-ansible-private.pem
     common_name: "{{ ansible_hostname }}"
+
+
+- name: get OpenSSL CSR.
+  fetch:
+    src: /opt/cluster/data/{{ ansible_hostname }}.csr
+    dest: /opt/cluster/backup

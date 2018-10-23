@@ -10,12 +10,24 @@
   tags: [deployer]
 
 
+- name: copy bash scripts for deployer
+  copy:
+    src: "{{ item.file }}"
+    dest: "/opt/cluster/bin/{{ item.file }}"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: 0750
+  with_items: "{{ group_deployer_script }}"
+
+
 # yarn
 - import_tasks: yarn.yml
   tags:
     - deployer
     - yarn
 
+
+# Firewall ---------------------------------------------------------------------
 
 - name: copy firewall script
   template:
@@ -36,6 +48,8 @@
     creates: /root/.ufw
   become: yes
   tags: [deployer]
+
+# ------------------------------------------------------------------------------
 
 
 # log

@@ -36,3 +36,11 @@ describe file('/') do
    # be_mounted_with_options RW
    it { should be_mounted.with( :options => { :rw => true } ) }
 end
+
+
+describe file('/etc/rc.local') do
+ it { should be_file }
+ it { should be_owned_by 'root' }
+ its(:content) { should match /Raspberry Pi Cluster rc.local/ }
+ it { should be_mode 750 }
+end

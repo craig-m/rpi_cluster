@@ -41,7 +41,7 @@
 
 - name: install jenkins packages
   apt:
-    name: {{ item }}
+    name: "{{ item }}"
     state: present
   with_items:
        - jenkins

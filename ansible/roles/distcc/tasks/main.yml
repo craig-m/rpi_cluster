@@ -6,7 +6,7 @@
 
 - name: install distcc
   apt:
-    name: {{ item }} 
+    name: "{{ item }}" 
     state: present
   with_items:
        - distcc

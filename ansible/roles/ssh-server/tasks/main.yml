@@ -59,7 +59,7 @@
 # restart ssh
 - name: sshd_restart
   service:
-    name: ssh 
+    name: ssh
     state: restarted
   become: yes
   changed_when: False

@@ -18,4 +18,6 @@ sleep(2)
 if not os.path.exists("/home/pi/.config/sensehatwelcomed"):
     os.mknod("/home/pi/.config/sensehatwelcomed")
 
+sleep(2)
+
 sense.clear()

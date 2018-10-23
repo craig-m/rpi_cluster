@@ -2,9 +2,7 @@
 #
 ignore_me/*
 nohup.out
-ansible/inventory/compute
-ansible/inventory/deploy
-ansible/inventory/lanservices
+ansible/inventory/*
 #
 # ---- code ----
 #

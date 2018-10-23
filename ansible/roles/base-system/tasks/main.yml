@@ -40,7 +40,7 @@
 # Remove Apt packages (in defaults/main.yml)
 - name: Remove these packages
   apt:
-    name: {{ item.rmapt }} 
+    name: "{{ item.rmapt }}"
     state: absent
   with_items: "{{ package_remove }}"
   become: yes

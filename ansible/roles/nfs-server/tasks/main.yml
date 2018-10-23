@@ -7,7 +7,7 @@
 # packages
 - name: install NFS programs
   apt:
-    name: {{ item }}
+    name: "{{ item }}"
     state: present
   with_items:
        - nfs-server
@@ -68,7 +68,7 @@
 - name: nfs-kernel-server.service enabled and started on boot
   service:
     name: nfs-kernel-server.service
-    tate: started
+    state: started
     enabled: yes
   become: yes
   tags: [nfs]

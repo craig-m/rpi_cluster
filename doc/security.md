@@ -72,7 +72,15 @@ The 'to do' list
 ----------------
 
 * remove the 'pi' user from all Raspbian installs
-* stop sudo without password for all users
+* stop sudo without password for all sudo users
+* don't add user to docker group:
+
+```
+# A user in the docker group can get root by:
+#
+docker run -it --rm --privileged -v /:/mnt ubuntu bash
+echo 'ALL=(ALL) NOPASSWD:ALL' >> /mnt/etc/sudoers
+```
 
 
 Raspbian issues:
@@ -84,6 +92,7 @@ sudo modprobe configs;
 gunzip -dc /proc/config.gz
 ```
 
-* No AppArmor support
-* No SELinux support
+Without rebuilding the kernel:
+
+* No AppArmor or SELinux support
 * No support for auditd

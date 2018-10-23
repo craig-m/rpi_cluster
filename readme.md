@@ -16,9 +16,7 @@ See doc/readme.md for the detailed cluster setup process.
 * Operate all critical services in high availability.
 * Ability to easily rebuild any failed R-Pi node, expect that nodes might randomly fail.
 * The R-Pi cluster should be self contained, minimise any external DHCP + DNS dependencies.
-
-
-There should be little reason why the same scripts and Ansible playbooks could be run on Debian powered Blade Servers, only light changes should be required. That is the next stage.
+* No requirements on admin laptop - just need SSH client + a text editor + git (most OS's provide these).
 
 
 ---
@@ -28,7 +26,7 @@ There should be little reason why the same scripts and Ansible playbooks could b
 
 ### R-Pi
 
-The x8 Raspberry's I ended up with are of various makes, they have been divided into these groups:
+The x8 R-Pi that I ended up with are of various makes, I divided them into these groups:
 
 <table>
 <tbody>
@@ -65,24 +63,11 @@ All run Raspbian GNU/Linux (stretch), a Debian-based OS.
 
 The other bits and pieces in this cluster:
 
-* PC Engines APU1 - Firewall with x3 ethernet ports for LAN, WAN, DMZ (https://www.pcengines.ch/apu.htm) running pfSense (https://www.pfsense.org/)
-* USB to RS232 serial adaptor (For console access to the APU1 from Deployer R-Pi)
-* D-Link 16 port switch (Gbit ethernet, unmanaged)
+* D-Link 16 port Gbit ethernet switch
 * x2 6 Port RAVPower USB Chargers (each 60W 12A) (https://www.ravpower.com/6-port-usb-wall-charger-black-.html)
 * Raspberry Pi SenseHat (https://www.raspberrypi.org/products/sense-hat/)
-* x12 ethernet cables
-* x9 micro usb cables (for power)
-* x1 multiboard for power
-
-
----
-
-
-# Network
-
-<p align="center">
-  <img width="515" height="538" src="https://github.com/craig-m/rpi_cluster/raw/master/doc/pictures/rpi_clust_network.png">
-</p>
+* x9 ethernet cables
+* x8 micro usb cables (for power)
 
 
 ---
@@ -98,9 +83,8 @@ The Deployer runs from x1 R-Pi. This configures all of the other hosts.
 * Ansible (https://www.ansible.com/)
 * Invoke (http://www.pyinvoke.org/)
 * ServerSpec (http://serverspec.org/)
-* Jenkins
 
-It also acts as a Certificate Authority, for TLS and SSH. The deployer is in a different subnet, everything else is in a DMZ.
+It also acts as a Certificate Authority, for TLS and SSH.
 
 
 ### LanServices - Main

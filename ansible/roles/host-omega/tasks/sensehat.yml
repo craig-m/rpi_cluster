@@ -14,4 +14,10 @@
 # run welcome script on the first time - LED welcome lights!
 - name: run sensehat welcome
   shell: /opt/cluster/bin/sensehat-welcome.py
-  creates: /home/pi/.config/sensehatwelcomed
+  args:
+    creates: /home/pi/.config/sensehatwelcomed
+
+
+- name: wait for script to finish
+  wait_for:
+    path: /home/pi/.config/sensehatwelcomed

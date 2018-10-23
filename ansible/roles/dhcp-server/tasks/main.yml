@@ -8,7 +8,7 @@
 
 - name: install dhcp server
   apt:
-    name: {{ item }}
+    name: "{{ item }}"
     state: present
   with_items:
        - isc-dhcp-server

@@ -1,0 +1,33 @@
+#!/bin/bash
+# {{ ansible_managed }}
+# this script is run on boot by systemd, rpi-compute.service
+# modified: {{ ansible_date_time.time}} {{ ansible_date_time.date }}
+
+logger -t rpicluster "compute-boot.sh started"
+
+# pre-run checks ---------------------------------------------------------------
+
+# no LD_PRELOAD
+unset LD_PRELOAD
+
+#-------------------------------------------------------------------------------
+
+# create a 1MB tmpfs
+if [ ! -f /mnt/ramstore/data/test.txt ]; then
+  mkdir -p /mnt/ramstore/;
+  mount -t tmpfs -o size=1m tmpfs /mnt/ramstore;
+  # these files exist in Volatile memory!
+  mkdir -p /mnt/ramstore/data;
+  touch -f /mnt/ramstore/data/test.txt;
+  chmod 700 /mnt/ramstore/data;
+fi
+
+
+# Remount /proc with hidepid option to hide processes from other users
+# todo: add to fstab
+mount -o remount,rw,hidepid=2 /proc
+
+
+logger -t rpicluster "compute-boot.sh finished"
+
+#-------------------------------------------------------------------------------

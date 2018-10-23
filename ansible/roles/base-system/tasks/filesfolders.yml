@@ -86,6 +86,16 @@
     filter: ansible_local
 
 
+- name: etc rc.local
+  template:
+    src: rc_local.j2
+    dest: "/etc/rc.local"
+    mode: 0750
+    owner: root
+    group: root
+  become: yes
+
+
 # create info_roles.txt
 - name: info_roles txt
   copy:

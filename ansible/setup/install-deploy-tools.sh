@@ -89,12 +89,14 @@ fi
 /usr/bin/sudo sed -i '/# The named pipe \/dev\/xconsole/,$d' /etc/rsyslog.conf;
 
 # get kernel config
-/usr/bin/sudo modprobe configs;
-gunzip -dc /proc/config.gz > ~/.rpibs/proc-config
+if [ ! -f ~/.rpibs/kern.config ]; then
+  /usr/bin/sudo modprobe configs;
+  gunzip -dc /proc/config.gz > ~/.rpibs/kern.config
+fi
 
 # working dir
 CDPATH=~/rpi_cluster
-cd ansible;
+cd ansible || exit 1;
 
 # wait
 sleep 2s;
@@ -125,7 +127,7 @@ if [ ! -f ~/.rpibs/rpibs_packages ]; then
   libssl-dev libyaml-dev libgmp-dev libgdbm-dev libffi-dev libpython-all-dev \
   monitoring-plugins-common monitoring-plugins-basic inotify-tools unzip pass \
   python-pip python-dev uuid-runtime uuid reptyr secure-delete mpich alpine \
-  telnet lynx socat dirmngr;
+  telnet lynx socat dirmngr mc;
   sleep 2s;
   # upgrade
   /usr/bin/sudo apt-get -q -y upgrade || rpilogit "ERROR with apt upgrade";

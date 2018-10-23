@@ -6,7 +6,7 @@
 
 - name: install extra programs on omega
   apt:
-    name: {{ item }} 
+    name: "{{ item }}"
     state: present
   with_items:
        - tcpdump
@@ -19,6 +19,8 @@
   become: yes
   tags: [host-omega]
 
+
+# Firewall ---------------------------------------------------------------------
 
 - name: copy firewall script
   template:
@@ -39,6 +41,8 @@
     creates: /root/.ufw
   become: yes
   tags: [host-omega]
+
+#-------------------------------------------------------------------------------
 
 
 # Raspberry Pi Astro SenseHAt

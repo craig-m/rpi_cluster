@@ -7,7 +7,7 @@
   template:
     src: etc-hosts.j2
     dest: /etc/hosts
-    wner: root
+    owner: root
     group: root
     mode: 0644
   become: yes

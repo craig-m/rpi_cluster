@@ -1,6 +1,7 @@
 # {{ ansible_managed }}
 # sshd server config
 # setup by role: {{role_path|basename}}
+# modified: {{ ansible_date_time.time}} {{ ansible_date_time.date }}
 
 Port 22
 Port {{ ssh_group_port }}

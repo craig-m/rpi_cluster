@@ -10,11 +10,11 @@ Directions for bootstrapping this Raspberry Pi cluster.
 Preparation
 -----------
 
-* Download Raspbian lite, flash the image on to each SD card with DD or Etcher etc. I am using the 2018-06-27 Raspbian stretch lite image.
+* Download Raspbian lite, flash the image on to each SD card with DD or Etcher etc. I am using the 2018-10-09 Raspbian stretch lite image.
 
 * Create the empty file /boot/ssh on each SDcard to enable SSH access. Read https://www.raspberrypi.org/blog/a-security-update-for-raspbian-pixel/ for info.
 
-* Join The R-Pi to a switch. Setup a DHCP server and make sure it is configured to only give out IP addresses to known hosts, I use my pfSense firewall. You need to set static IPs for the Alpha, Beta, Omega and Psi hosts.
+* Join The R-Pi to a switch. Setup a DHCP server and make sure it is configured to only give out IP addresses to known hosts. You need to set static IPs for the Alpha, Beta, Omega and Psi hosts.
 
   The R-Pi in the Compute group (zeta, epsilon, gamma, delta) will get IP addresses from the Alpha and Beta R-Pi, once they have been configured. After the setup process the Alpha and Beta nodes will have static IP addresses, DHCP is needed for initial setup/bootstrap only (the cluster is not reliant on the DHCP server anymore).
 
@@ -28,27 +28,24 @@ Setup the Deployer
 ------------------
 
 
-Copy the code (this repo) to the R-Pi that will be the deployer. I have port forwarding setup infront of my Pi so the port is different:
+Copy the code (this repo) to the R-Pi that will be the deployer, it expects to be stored in /home/pi/rpi_cluster/
 
 ```
-$ scp -P 2222 -r rpi_cluster/ pi@192.168.6.200:~/
+$ rsync -avr --exclude='.git' --exclude='ignore_me' rpi_cluster/ pi@20.20.20.20:~/rpi_cluster
 ```
-
-It expects to be stored in /home/pi/rpi_cluster/
-
 
 Connect to the deployer R-Pi:
 
 ```
-$ ssh -p 2222 pi@192.168.6.200
+$ ssh pi@20.20.20.20
 ```
 
 
 Install our tools (ansible, ARA, invoke etc) and requirements for the deployer:
 
 ```
-$ cd rpi_cluster/ansible/setup/
-pi@raspberrypi:~/rpi_cluster/ansible/setup $ ./install-deploy-tools.sh
+pi@raspberrypi:~ $ cd rpi_cluster/ansible/setup/
+pi@raspberrypi:~/rpi_cluster/ansible/setup $ nohup ./install-deploy-tools.sh >> ~/install.log &
 ```
 
 
@@ -75,6 +72,22 @@ List the tasks:
 ```
 (env) pi@raspberrypi:~/rpi_cluster/ansible $ invoke -l
 Available tasks:
+
+  ansible-gather-facts        Gather facts on all hosts.
+  ansible-maint               upgrade all R-Pi server hosts (includes rolling reboots).
+  ansible-ping                Ansible Ping a host. Eg: invoke ansible-ping omega
+  ansible-sshd                Change default SSH login on new R-Pi.
+  ansible-test-default        Test default SSH creds on all hosts.
+  cluster-serverspec          Run ServerSpec tests.
+  compute-ansible-base        Run ansible base role on compute group.
+  compute-ansible-container   Setup Docker k8 cluster.
+  compute-ansible-web         Setup Web frontend.
+  compute-container-destroy   shutdown and remove k8 cluster.
+  deployer-ansible            Run ansible deployer role on Psi (localhost).
+  deployer-ssh-config         Generate ~/.ssh/config file from Ansible inventory.
+  lanservices-main-ansible    Run ansible on Alpha and Beta.
+  lanservices-misc-ansible    Run ansible on Omega.
+
 ```
 
 Setup the deployer, this runs Ansible on the local deployer:
@@ -88,7 +101,7 @@ Running play-rpi-deployer.yml
 Create ~/.ssh/config on the deployer (from the hosts in the Ansible inventory):
 
 ```
-(env) pi@raspberrypi:~/rpi_cluster/ansible $ invoke deployer-ssh-config
+(env) pi@psi:~/rpi_cluster/ansible $ invoke deployer-ssh-config
 ```
 
 
@@ -99,9 +112,9 @@ The deployer is all setup now, you can reboot it (optional but recommended).
 
 
 ```
-(env) pi@raspberrypi:~/rpi_cluster/ansible $ eval `ssh-agent`
-(env) pi@raspberrypi:~/rpi_cluster/ansible $ pass ssh/id_rsa
-(env) pi@raspberrypi:~/rpi_cluster/ansible $ ssh-add
+(env) pi@psi:~/rpi_cluster/ansible $ eval `ssh-agent`
+(env) pi@psi:~/rpi_cluster/ansible $ pass ssh/id_rsa
+(env) pi@psi:~/rpi_cluster/ansible $ ssh-add
 ```
 
 
@@ -152,8 +165,8 @@ Change the default password on the new hosts:
 Compute base setup:
 
 ```
-(env) pi@psi:~/rpi_cluster/ansible $ invoke ansible_gather_facts
-(env) pi@psi:~/rpi_cluster/ansible $ invoke compute_ansible
+(env) pi@psi:~/rpi_cluster/ansible $ invoke ansible-gather-facts
+(env) pi@psi:~/rpi_cluster/ansible $ invoke compute-ansible-base
 ```
 
 Compute hosting setup:

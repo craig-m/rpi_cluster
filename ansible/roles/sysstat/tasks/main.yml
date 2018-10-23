@@ -33,7 +33,7 @@
 
 - name: systat started
   service:
-    name: sysstat 
+    name: sysstat
     state: started
   become: yes
   tags: [sysstat]

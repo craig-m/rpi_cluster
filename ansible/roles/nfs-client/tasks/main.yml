@@ -7,7 +7,7 @@
 # packages
 - name: install NFS programs
   apt:
-    name: {{ item }} 
+    name: "{{ item }}" 
     state: present
   with_items:
        - nfs-common

@@ -1,11 +1,11 @@
 ---
-# LanServices main - Alpha and Beta
+# Runs on LanServices main group - Alpha and Beta
 - debug: msg="Lan Services role running "
 
 
 - name: tools
   apt:
-    name: {{ item }}
+    name: "{{ item }}"
     state: present
   with_items:
        - nmap
@@ -15,6 +15,8 @@
   retries: 2
   tags: [lanservices]
 
+
+# firewall ---------------------------------------------------------------------
 
 - name: copy firewall script
   template:
@@ -34,6 +36,8 @@
     chdir: /root/
   become: yes
   tags: [lanservices]
+
+#-------------------------------------------------------------------------------
 
 
 # copy lanservices-boot.sh
@@ -67,8 +71,8 @@
 # static arp entries for admin nodes
 - name: /etc/ethers
   template:
-    src: ethers.j2 
-    dest: /etc/ethers 
+    src: ethers.j2
+    dest: /etc/ethers
     mode: 0644
   become: yes
   notify: static-arp-ethers

@@ -13,6 +13,13 @@ pi@psi:~ $ source ~/env/bin/activate
 (env) pi@psi:~/rpi_cluster/ansible $
 ```
 
+```
+(env) pi@psi:~ $ pass ssh/id_rsa
+(env) pi@psi:~ $ eval `ssh-agent`
+(env) pi@psi:~ $ ssh-add
+Enter passphrase for /home/pi/.ssh/id_rsa:
+```
+
 ---
 
 Cheat notes below:

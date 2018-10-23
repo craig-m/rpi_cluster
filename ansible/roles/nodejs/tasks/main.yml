@@ -48,18 +48,22 @@
 
 # run installer
 - name: run nodejs_setup_9.x installer
-  command: /opt/cluster/mysrc/nodejs_setup_9.x.sh creates=/etc/apt/sources.list.d/nodesource.list
+  command: /opt/cluster/mysrc/nodejs_setup_9.x.sh
+  args:
+    creates: /etc/apt/sources.list.d/nodesource.list
   become: yes
   tags: [nodejs]
 
 
 # install
 - name: install nodejs packages
-  apt: name={{ item }} state=present
+  apt:
+    name: "{{ item }}"
+    state: present
   with_items:
        - nodejs
   become: yes
-  retries: 1
+  retries: 2
   tags: [nodejs]
 
 

@@ -5,7 +5,7 @@
 # install
 - name: install gluster
   apt:
-    name: {{ item }}
+    name: "{{ item }}"
     state: present
   with_items:
        - glusterfs-server

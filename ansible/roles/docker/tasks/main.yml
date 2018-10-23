@@ -55,7 +55,7 @@
 # check package installed
 - name: docker packages installed
   apt:
-    name: {{ item }}
+    name: "{{ item }}"
     state: present
   with_items:
        - docker-ce
@@ -76,20 +76,11 @@
   tags: [docker]
   when: rpi_docker_enabled == true
 
-- name: docker.socket enabled on boot
-  service:
-    name: docker.socket
-    enabled: yes
-    state: started
-  become: yes
-  tags: [docker]
-  when: rpi_docker_enabled == true
-
 
 - name: pause after starting docker service
   pause:
     seconds: 20
-  when: dockerdaemonstarted.changed
+  when: rangetdocker.changed
 
 
 # disabled: STOP on boot
@@ -114,7 +105,11 @@
 
 #-------------------------------------------------------------------------------
 
-# add user to docker group
+# add user to docker group. Note: this gives them root, for example:
+#
+# docker run -it --rm --privileged -v /:/mnt ubuntu bash
+# echo 'ALL=(ALL) NOPASSWD:ALL' >> /mnt/etc/sudoers
+#
 - name: add user to docker group
   become: yes
   user:
@@ -122,7 +117,6 @@
     groups: docker
     append: yes
   tags: [docker]
-
 
 # tools for managing docker containers/images
 - import_tasks: manage_tools.yml
@@ -135,6 +129,7 @@
 - name: docker pull hello-world
   shell: docker pull hello-world
   changed_when: false
+  become: yes
 
 #- name: pull hello-world
 #  docker_image:
@@ -144,6 +139,7 @@
   shell: docker run hello-world | grep "installation appears to be working correctly"
   changed_when: false
   register: docker_hello_world
+  become: yes
   failed_when:
     - "'installation appears to be working correctly' not in docker_hello_world.stdout"
 

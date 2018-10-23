@@ -15,7 +15,7 @@
 
 - name: clients and network
   apt:
-    name: {{ item }}
+    name: "{{ item }}"
     state: present
   with_items:
        - arping
@@ -32,7 +32,7 @@
 
 - name: System misc util
   apt:
-    name: {{ item }}
+    name: "{{ item }}"
     state: present
   with_items:
        - linuxlogo
@@ -55,7 +55,7 @@
 
 - name: System base
   apt:
-    name: {{ item }}
+    name: "{{ item }}"
     state: present
   with_items:
        - apt-transport-https
@@ -86,7 +86,7 @@
 
 - name: python pip and dev packages
   apt:
-    name: {{ item }}
+    name: "{{ item }}"
     state: present
   with_items:
        - python-pip

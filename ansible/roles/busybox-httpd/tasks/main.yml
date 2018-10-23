@@ -43,8 +43,7 @@
   tags:
    - bbhttpd
    - skip_ansible_lint
-  tags: [bbhttpd]
-
+   
 
 # index.html
 - name: index.html template
@@ -61,9 +60,9 @@
 
 
 # stop if diabled flag
-- name: bbhttpd diabled
+- name: bbhttpd disabled
   service:
-    name: bbhttpd 
+    name: bbhttpd
     state: stopped
   become: yes
   when: rpi_bb_httpd_enabled == false

@@ -10,7 +10,7 @@
 # install packages (if missing)
 - name: install Keepalived programs
   apt:
-    name: {{ item }}
+    name: "{{ item }}"
     state: present
   with_items:
        - keepalived

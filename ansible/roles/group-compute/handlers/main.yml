@@ -1,0 +1,9 @@
+- name: systemctl-daemon-reload
+  command: systemctl daemon-reload
+  become: yes
+
+- name: restart-rpicompute
+  service:
+    name: rpi-compute.service
+    state: restarted
+  become: yes
