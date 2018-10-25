@@ -38,9 +38,21 @@ describe file('/') do
 end
 
 
-describe file('/etc/rc.local') do
- it { should be_file }
- it { should be_owned_by 'root' }
- its(:content) { should match /Raspberry Pi Cluster rc.local/ }
- it { should be_mode 750 }
+# kernel
+describe 'Linux kernel parameters' do
+  context linux_kernel_parameter('kernel.sysrq') do
+    its(:value) { should eq 1 }
+  end
+
+  context linux_kernel_parameter('net.ipv4.tcp_syncookies') do
+    its(:value) { should eq 1 }
+  end
+
+  context linux_kernel_parameter('net.ipv6.conf.all.disable_ipv6') do
+    its(:value) { should eq 1 }
+  end
+
+  context linux_kernel_parameter('net.ipv6.conf.eth0.disable_ipv6') do
+    its(:value) { should eq 1 }
+  end
 end

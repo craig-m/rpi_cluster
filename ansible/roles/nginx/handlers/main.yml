@@ -4,7 +4,7 @@
 
 - name: nginx_restart
   service:
-    name: nginx 
+    name: nginx
     state: reloaded
   become: yes
   tags: [nginx]

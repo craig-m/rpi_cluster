@@ -27,18 +27,19 @@ export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 unset LD_PRELOAD;
 
 # Run tests --------------------------------------------------------------------
+start_time=$(date)
 
-rpilogit "started serverspec tests";
+rpilogit "started serverspec tests at ${start_time}";
 
 source ~/.rvm/scripts/rvm
 rvm gemset use serverspec
 
 # remove old reports
-rm -rvf -- reports/*.html reports/*.json
+rm -rf -- reports/*.html reports/*.json
 
 # run
 #bundle exec rake spec
-rake spec
+rake -j 10 spec
 
 # make reports/index.html file
 rake gen_report
@@ -46,6 +47,7 @@ rake gen_report
 #rake pub_report:vbox
 #rsync -avr -- reports/* pi@omega.local:/srv/nginx/hugo-site/serverspec/reports
 
-rpilogit "finished serverspec tests";
+fin_time=$(date)
+rpilogit "finished serverspec tests at ${fin_time}";
 
 # EOF --------------------------------------------------------------------------

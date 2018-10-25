@@ -6,7 +6,12 @@ Requires:
 * Yarn - https://yarnpkg.com/en/
 * Node/NPM - https://www.npmjs.com/
 
-Site made with: bootstrap + jquery + font-awesome
+Site made with: bootstrap + jquery + font-awesome.
+
+
+```
+./install_hugo.sh
+```
 
 
 build + upload:

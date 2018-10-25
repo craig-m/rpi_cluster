@@ -33,7 +33,7 @@ zone "255.in-addr.arpa" {
 // Custom TLD
 zone "{{ rpi_cust_tld }}" {
         type master;
-        file "/etc/bind/zones/{{ rpi_dnsd_status }}/rpi-{{ rpi_dnsd_status }}.db.";
+        file "/etc/bind/zones/{{ rpi_dnsd_status }}/rpi-{{ rpi_dnsd_status }}.db";
         allow-transfer { any; };
         allow-query { any; };
 };

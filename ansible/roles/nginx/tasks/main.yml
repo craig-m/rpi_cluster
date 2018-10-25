@@ -22,6 +22,13 @@
   tags: [nginx]
 
 
+# to check nginx config https://github.com/yandex/gixy
+#- name: install gixy to audit nginx conf
+#    pip:
+#      name: gixy
+#  become: True
+
+
 # Add ansible-user to www-data group
 - name: add ansible_user to www-data group
   user:

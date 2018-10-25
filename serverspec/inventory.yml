@@ -1,37 +1,4 @@
-alpha.local:
-  :name: "alpha"
-  :roles:
-    - base
-    - lanservice
-  :rpi_ip_addr: "20.20.20.6"
-  :rpi_dnsd_status: "master"
-  :rpi_cust_domain: "b3rry"
-  :rpi_cust_tld: "clust0r"
-  :rpi_net_default_gw: "20.20.20.1"
-  :rpi_net_wifi_gw: "20.20.20.2"
-  :ssh_group_port: "2220"
-beta.local:
-  :name: "beta"
-  :roles:
-    - base
-    - lanservice
-  :rpi_ip_addr: "20.20.20.8"
-  :rpi_dnsd_status: "slave"
-  :rpi_cust_domain: "b3rry"
-  :rpi_cust_tld: "clust0r"
-  :rpi_net_default_gw: "20.20.20.1"
-  :rpi_net_wifi_gw: "20.20.20.2"
-  :ssh_group_port: "2220"
-omega.local:
-  :name: "omega"
-  :roles:
-    - base
-    - omega
-  :rpi_cust_domain: "b3rry"
-  :rpi_cust_tld: "clust0r"
-  :rpi_net_default_gw: "20.20.20.1"
-  :rpi_net_wifi_gw: "20.20.20.2"
-  :ssh_group_port: "2221"
+# deployer
 psi.local:
   :name: "psi"
   :roles:
@@ -39,6 +6,53 @@ psi.local:
     - deployer
   :rpi_cust_domain: "b3rry"
   :rpi_cust_tld: "clust0r"
-  :rpi_net_default_gw: "20.20.20.1"
-  :rpi_net_wifi_gw: "20.20.20.2"
   :ssh_group_port: "2222"
+# lan services main
+alpha.local:
+  :name: "alpha"
+  :roles:
+    - base
+    - lanservice
+  :rpi_dnsd_status: "master"
+  :rpi_cust_domain: "b3rry"
+  :rpi_cust_tld: "clust0r"
+  :ssh_group_port: "2220"
+beta.local:
+  :name: "beta"
+  :roles:
+    - base
+    - lanservice
+  :rpi_dnsd_status: "slave"
+  :rpi_cust_domain: "b3rry"
+  :rpi_cust_tld: "clust0r"
+  :ssh_group_port: "2220"
+# lan service misc
+omega.local:
+  :name: "omega"
+  :roles:
+    - base
+    - omega
+  :rpi_cust_domain: "b3rry"
+  :rpi_cust_tld: "clust0r"
+  :ssh_group_port: "2221"
+# compute nodes
+delta.local:
+  :name: "delta"
+  :roles:
+    - base
+    - compute
+zeta.local:
+  :name: "zeta"
+  :roles:
+    - base
+    - compute
+gamma.local:
+  :name: "gamma"
+  :roles:
+    - base
+    - compute
+epsilon.local:
+  :name: "epsilon"
+  :roles:
+    - base
+    - compute

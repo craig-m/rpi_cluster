@@ -40,6 +40,16 @@
   tags: [kube]
 
 
+# drop junk error message
+- name: drop these logs
+  notify: syslog-restart
+  become: yes
+  copy:
+    dest: "/etc/rsyslog.d/10-disable-kube.conf"
+    content: |
+      :msg, contains, "azure_dd.go" stop
+
+
 - name: pausing
   pause:
     seconds: 5

@@ -15,7 +15,7 @@ ufw default allow outgoing
 
 # incoming SSH from outside LAN
 ufw allow 22/tcp
-ufw allow {{ ssh_group_port }}/tcp
+ufw allow {{ ssh_group_port }}/tcp from {{ rpi_net_id }}/{{ rpi_net_maskbit }}
 
 # allow all incoming from local LAN
 ufw allow from {{ rpi_net_id }}/{{ rpi_net_maskbit }}

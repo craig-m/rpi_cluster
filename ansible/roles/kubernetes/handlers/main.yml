@@ -1,0 +1,8 @@
+---
+
+
+- name: syslog-restart
+  service:
+    name: rsyslog
+    state: restarted
+  become: yes
