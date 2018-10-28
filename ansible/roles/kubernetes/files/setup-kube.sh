@@ -1,5 +1,12 @@
 #!/bin/bash
 
+rpilogit () {
+	echo -e "rpicluster: $1 \n";
+	logger -t rpicluster "$1";
+}
+
+rpilogit "starting setup-kube.sh"
+
 mkdir -p -v /home/pi/.kube
 
 ln -s ~/.kube/ ~/kube
@@ -19,3 +26,5 @@ ln -s ~/.kube/ ~/kube
 echo "source <(kubectl completion bash)" >> ~/.bashrc
 
 touch -f /opt/cluster/data/.setup-kube
+
+rpilogit "finished setup-kube.sh"

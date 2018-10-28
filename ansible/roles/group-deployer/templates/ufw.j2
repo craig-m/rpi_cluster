@@ -21,7 +21,14 @@ ufw logging on
 # incoming SSH from outside LAN
 ufw allow 22/tcp
 
+# ssh group port from inside LAN
 ufw allow {{ ssh_group_port }}/tcp from {{ rpi_net_id }}/{{ rpi_net_maskbit }}
+
+
+# for play with catching reverse shells
+#
+ufw allow 1337/tcp from {{ rpi_net_id }}/{{ rpi_net_maskbit }}
+
 
 # enable FW
 ufw --force enable || exit 1

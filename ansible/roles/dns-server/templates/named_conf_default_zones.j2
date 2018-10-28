@@ -1,4 +1,6 @@
 // {{ ansible_managed }}
+// node: {{ rpi_dnsd_status }}
+// file: /etc/bind/named.conf.default-zones
 // modified: {{ ansible_date_time.time}} {{ ansible_date_time.date }}
 
 // prime the server with knowledge of the root servers
@@ -28,12 +30,4 @@ zone "0.in-addr.arpa" {
 zone "255.in-addr.arpa" {
         type master;
         file "/etc/bind/db.255";
-};
-
-// Custom TLD
-zone "{{ rpi_cust_tld }}" {
-        type master;
-        file "/etc/bind/zones/{{ rpi_dnsd_status }}/rpi-{{ rpi_dnsd_status }}.db";
-        allow-transfer { any; };
-        allow-query { any; };
 };

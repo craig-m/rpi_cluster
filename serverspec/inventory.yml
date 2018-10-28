@@ -1,4 +1,4 @@
-# deployer
+# deployer ---------------------------------------------------------------------
 psi.local:
   :name: "psi"
   :roles:
@@ -7,7 +7,7 @@ psi.local:
   :rpi_cust_domain: "b3rry"
   :rpi_cust_tld: "clust0r"
   :ssh_group_port: "2222"
-# lan services main
+# lan services main ------------------------------------------------------------
 alpha.local:
   :name: "alpha"
   :roles:
@@ -26,7 +26,7 @@ beta.local:
   :rpi_cust_domain: "b3rry"
   :rpi_cust_tld: "clust0r"
   :ssh_group_port: "2220"
-# lan service misc
+# lan service misc -------------------------------------------------------------
 omega.local:
   :name: "omega"
   :roles:
@@ -41,18 +41,27 @@ delta.local:
   :roles:
     - base
     - compute
+  :rpi_cust_domain: "b3rry"
+  :rpi_cust_tld: "clust0r"
 zeta.local:
   :name: "zeta"
   :roles:
     - base
     - compute
+  :rpi_cust_domain: "b3rry"
+  :rpi_cust_tld: "clust0r"
 gamma.local:
   :name: "gamma"
   :roles:
     - base
     - compute
+  :rpi_cust_domain: "b3rry"
+  :rpi_cust_tld: "clust0r"
 epsilon.local:
   :name: "epsilon"
   :roles:
     - base
     - compute
+  :rpi_cust_domain: "b3rry"
+  :rpi_cust_tld: "clust0r"
+# eof --------------------------------------------------------------------------

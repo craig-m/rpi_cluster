@@ -70,8 +70,10 @@ def compute_ansible_container(c):
 def compute_container_destroy(c):
     """ shutdown and remove k8 cluster. """
     print("Removing kubernetes cluster")
+    c.run('ssh epsilon.local kubectl delete node --all')
     c.run('ansible compute -a "/opt/cluster/docker/scripts/remove-kube.sh" -f 4')
     c.run('ansible compute -a "reboot" -f 4 --become')
+    c.run('rm -rfv -- /opt/cluster/backup/epsilon/opt/cluster/docker/kubecnf/kube_info.txt')
 
 # tasks fo all hosts  ----------------------------------------------------------
 

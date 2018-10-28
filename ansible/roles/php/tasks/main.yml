@@ -10,7 +10,7 @@
   apt:
     name: "{{ item }}"
     state: present
-  with_items:
+  loop:
        - php7.0-fpm
        - php7.0-gd
        - php7.0-mcrypt

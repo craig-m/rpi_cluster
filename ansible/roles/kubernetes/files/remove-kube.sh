@@ -1,12 +1,19 @@
 #!/bin/bash
-# shutdown cluster and remove all Kube setup
+# remove-kube.sh
+# shutdown cluster, and destroyy all Kube setup.
 
-echo "remove all trace of k8";
+rpilogit () {
+	echo -e "rpicluster: $1 \n";
+	logger -t rpicluster "$1";
+}
 
-/usr/bin/sudo kubectl delete node --all
-/usr/bin/sudo kubeadm reset -f
+rpilogit "starting remove-kube.sh"
+
+kubeadm reset -f
+sleep 5s;
 
 /usr/bin/sudo apt-get purge kubeadm kubectl kubernetes-cni kubelet -y
+sleep 5s;
 
 /usr/bin/sudo rm -rfv -- /etc/kubernetes/
 /usr/bin/sudo rm -rfv -- /var/lib/kubelet/
@@ -18,11 +25,13 @@ echo "remove all trace of k8";
 /usr/bin/sudo rm -rfv -- /etc/apt/sources.list.d/kubernetes.list
 
 # remove ansible role setup files
-rm -rfv -- /opt/cluster/docker/kubecnf/admin.conf
-rm -rfv -- /opt/cluster/docker/kubecnf/kube_info.txt
-rm -rvf -- /opt/cluster/docker/kubecnf/kube_joined_cli.txt
+/usr/bin/sudo rm -rfv -- /opt/cluster/docker/kubecnf/admin.conf
+/usr/bin/sudo rm -rfv -- /opt/cluster/docker/kubecnf/kube_info.txt
+/usr/bin/sudo rm -rvf -- /opt/cluster/docker/kubecnf/kube_joined_cli.txt
 
 # Purge all Images + Containers + Networks + Volumes
-/usr/bin/sudo docker system prune -a -f
+docker system prune -a -f >/dev/null
 
-echo "done";
+# done
+rpilogit "finished remove-kube.sh"
+sleep 2s;

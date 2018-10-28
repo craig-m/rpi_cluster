@@ -17,7 +17,7 @@
   apt:
     name: "{{ item }}"
     state: present
-  with_items:
+  loop:
        - arping
        - hping3
        - wget
@@ -34,7 +34,7 @@
   apt:
     name: "{{ item }}"
     state: present
-  with_items:
+  loop:
        - linuxlogo
        - vim
        - htop
@@ -57,7 +57,7 @@
   apt:
     name: "{{ item }}"
     state: present
-  with_items:
+  loop:
        - apt-transport-https
        - apt-show-versions
        - lsof
@@ -88,7 +88,7 @@
   apt:
     name: "{{ item }}"
     state: present
-  with_items:
+  loop:
        - python-pip
        - python-dev
        - libpython-all-dev

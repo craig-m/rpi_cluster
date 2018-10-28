@@ -7,6 +7,8 @@ end
 # resolve internal hosts
 describe host("omega.dc1.#{property[:rpi_cust_domain]}.#{property[:rpi_cust_tld]}") do
   it { should be_resolvable.by('dns') }
+  # ping
+  it { should be_reachable }
 end
 
 describe host("alpha.dc1.#{property[:rpi_cust_domain]}.#{property[:rpi_cust_tld]}") do

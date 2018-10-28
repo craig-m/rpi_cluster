@@ -6,9 +6,9 @@
 
 - name: install distcc
   apt:
-    name: "{{ item }}" 
+    name: "{{ item }}"
     state: present
-  with_items:
+  loop:
        - distcc
        - distcc-pump
   retries: 1

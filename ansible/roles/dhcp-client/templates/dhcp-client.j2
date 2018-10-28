@@ -6,7 +6,7 @@
 #controlgroup wheel
 
 # Inform the DHCP server of our hostname for DDNS.
-hostname
+hostname {{ inventory_hostname }}
 
 # Use the hardware address of the interface for the Client ID.
 clientid

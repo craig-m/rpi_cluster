@@ -12,7 +12,7 @@
   apt:
     name: "{{ item }}"
     state: present
-  with_items:
+  loop:
        - bind9
        - bind9utils
   become: yes
@@ -47,6 +47,10 @@
   tags: [bind]
 
 
+#-------------------------------------------------------------------------------
+# Local config
+
+
 - name: /etc/default/bind9
   template:
     src: bind_default.j2
@@ -59,7 +63,6 @@
   tags: [bind]
 
 
-# Local config
 - name: bind conf local
   template:
     src: named_conf_local.j2
@@ -121,6 +124,10 @@
   tags: [bind]
 
 
+- import_tasks: master-zone.yml
+  tags: [bind]
+
+
 - name: rpi reverse zone db
   template:
     src: db_reverse.j2
@@ -135,6 +142,15 @@
     - bind
     - dns-server-zone
 
+
+- name: check named conf
+  shell: /usr/sbin/named-checkconf /etc/bind/named.conf
+  become: yes
+  changed_when: False
+  tags: [bind]
+
+
+#-------------------------------------------------------------------------------
 
 # enabled on boot and running (if flagged on)
 - name: bind9 enabled on boot
@@ -157,6 +173,8 @@
   when: rpi_dnsd_enabled == false
   tags: [bind]
 
+#-------------------------------------------------------------------------------
+
 
 # /etc/resolv.conf
 - name: etc resolv conf
@@ -167,11 +185,6 @@
     group: bind
     mode: 0664
   become: yes
-  tags: [bind]
-
-
-# Join
-- import_tasks: master-zone.yml
   tags: [bind]
 
 

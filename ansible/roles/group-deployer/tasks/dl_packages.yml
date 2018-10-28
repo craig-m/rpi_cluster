@@ -5,9 +5,9 @@
 
 - name: tools
   apt:
-    name: "{{ item }}" 
+    name: "{{ item }}"
     state: present
-  with_items:
+  loop:
        - pass
        - dh-make
        - devscripts
@@ -28,7 +28,7 @@
 #- name: install R language tools
 #  apt: name={{ item }} state=present
 #  become: yes
-#  with_items:
+#  loop:
 #       - r-recommended
 #       - r-cran-gplots
 #       - r-cran-plotrix

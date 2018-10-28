@@ -1,7 +1,9 @@
 ---
 # DHCP server -  Run by admin alpha and beta
+#
 # https://www.isc.org/downloads/dhcp/
 # https://kb.isc.org/article/AA-01043/183/Recommendations-for-restarting-a-DHCP-failover-pair.html
+
 - debug: msg="dhcp SERVER role "
 - debug: msg="dhcpd status {{ rpi_dhcpd_status }} "
 

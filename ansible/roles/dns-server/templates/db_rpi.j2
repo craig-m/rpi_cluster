@@ -1,10 +1,12 @@
-; --- Internal R-Pi cluster DNS ---
+;
+; Zone file for rpi_cluster custom tld
 ; {{ ansible_managed }}
 ; modified {{ ansible_date_time.time}} {{ ansible_date_time.date }}
 ; db_rpi.j2
+;
 $TTL  604800
 @     IN  SOA   dns1.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. admin.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. (
-      2018043000    ; Serial
+      2018102810    ; Serial
           604800    ; Refresh
           86400     ; Retry
           2419200   ; Expire
@@ -22,10 +24,13 @@ dns1.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.  IN  A 
 dns2.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.  IN  A {{ rpi_failover_ip }}
 
 ; TXT records
-alpha.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "test: The beginning. "
-beta.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "test: A value of 2 "
-omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "test: The great O. "
-txttest.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "test: txttest. "
+alpha.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "alpha rpi_cluster_test "
+beta.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "beta rpi_cluster_test "
+omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "omega rpi_cluster_test "
+; do not change for testing:
+txttest.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "txttest rpi_cluster_test "
+; change to test
+testing.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "1234 "
 
 ; LanService - main - this host
 {{ inventory_hostname }}.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.  IN A {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}
@@ -33,29 +38,27 @@ txttest.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT 
 ; LanService - main - my failover
 {{ rpi_failover_hostname }}.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN A {{ rpi_failover_ip }}
 
-; LanService - misc - Omega
-omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A {{ hostvars['omega']['ansible_default_ipv4']['address'] }}
-
 ; Deployer - psi
 psi.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A {{ hostvars['psi']['ansible_default_ipv4']['address'] }}
 
-; Lan Default GW
+; Default Gateway
 dgw.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A {{ rpi_net_default_gw }}
+dgw.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "{{ rpi_net_default_gw }} "
+
+; LanService - misc - Omega
+omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A {{ hostvars['omega']['ansible_default_ipv4']['address'] }}
+mail.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A {{ hostvars['omega']['ansible_default_ipv4']['address'] }}
+status.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.  IN  CNAME omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
+git.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.   IN  CNAME omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
 
 
 ; Floating IP
 float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A {{ rpi_loadbal_float_ip }}
-float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "shared between delta and epsilon. "
-
-; Omega - Mail
-mail.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A {{ hostvars['omega']['ansible_default_ipv4']['address'] }}
-
-; Omega - other
-status.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.  IN  CNAME omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
-git.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.   IN  CNAME omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
+float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "delta and epsilon. "
 
 ; floating IP web services
 www.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.   IN  CNAME float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
 api.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.   IN  CNAME float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
+
 
 ; eof

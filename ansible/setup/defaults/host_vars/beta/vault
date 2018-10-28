@@ -4,9 +4,8 @@
 # DHCP server:
 rpi_dhcpd_enabled: true
 rpi_dhcpd_status: "secondary"
-# primary only config:
-# rpi_dhcpd_mclt: "mclt 1800"
-# rpi_dhcpd_split: "split 128"
+rpi_dhcpd_port: "648"
+rpi_dhcpd_port_peer: "647"
 
 # DNS config:
 rpi_dnsd_enabled: true
@@ -14,6 +13,7 @@ rpi_dnsd_status: "slave"
 rpi_dnsd_notify: "no"
 # set on secondary bind9 server only:
 rpi_dnsd_masters: "192.168.XX.XX"
+
 # /etc/resolv.conf:
 rpi_my_dns_server_1: "127.0.0.1"
 rpi_my_dns_server_2: "20.20.20.6"

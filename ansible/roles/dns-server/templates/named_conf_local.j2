@@ -1,25 +1,45 @@
 // {{ ansible_managed }}
-//
-// {{ rpi_dnsd_status }} DNS configuration
+// node: {{ rpi_dnsd_status }}
+// file: /etc/bind/named.conf.local
 // modified: {{ ansible_date_time.time}} {{ ansible_date_time.date }}
 
-zone "{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {
-    type {{ rpi_dnsd_status }};
-    {% if rpi_dnsd_masters is defined %}
-    masters { {{ rpi_dnsd_masters }}; };
-    {% endif %}
-    notify {{ rpi_dnsd_notify }};
-    file "/etc/bind/zones/{{ rpi_dnsd_status }}/rpi-{{ rpi_dnsd_status }}.db";
-    allow-transfer { {{ rpi_failover_ip }}; };
+// Custom TLD
+
+{% if 'master' in rpi_dnsd_status %}
+zone "{{ rpi_cust_tld }}" {
+        type master;
+        file "/etc/bind/zones/{{ rpi_dnsd_status }}/rpi-{{ rpi_dnsd_status }}.db";
+        masterfile-format text;
+        allow-update { key "rndckey"; };
+        allow-transfer { trusted; };
+        allow-query { rpinet; };
+        notify yes;
+        also-notify { {{ hostvars['alpha']['ansible_default_ipv4']['address'] }}; {{ hostvars['beta']['ansible_default_ipv4']['address'] }}; };
 };
+{% endif %}
+
+{% if 'slave' in rpi_dnsd_status %}
+zone "{{ rpi_cust_tld }}" {
+        type slave;
+        masters { {{ hostvars['alpha']['ansible_default_ipv4']['address'] }}; };
+        masterfile-format map;
+        file "/etc/bind/zones/{{ rpi_dnsd_status }}/{{ rpi_dnsd_status }}.db";
+        allow-transfer { trusted; };
+        allow-query { rpinet; };
+};
+{% endif %}
+
 
 // Reverse DNS
 zone "{{ rpi_domain_arpa }}.in-addr.arpa" {
     type {{ rpi_dnsd_status }};
+
   {% if rpi_dnsd_masters is defined %}
-    masters { {{ rpi_dnsd_masters }}; };
+    masters { {{ hostvars['alpha']['ansible_default_ipv4']['address'] }}; };
   {% endif %}
+
     notify {{ rpi_dnsd_notify }};
     file "/etc/bind/zones/{{ rpi_dnsd_status }}/reverse-{{ rpi_dnsd_status }}.db";
     allow-transfer { {{ rpi_failover_ip }}; };
+    allow-query { rpinet; };
 };

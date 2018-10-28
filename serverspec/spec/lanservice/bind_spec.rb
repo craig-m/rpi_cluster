@@ -46,3 +46,11 @@ describe file("/etc/bind/zones/#{property[:rpi_dnsd_status]}/") do
   it { should be_directory }
   it { should be_owned_by 'bind' }
 end
+
+describe command('/usr/sbin/named-checkconf /etc/bind/named.conf') do
+  its(:stdout) { should match // }
+end
+
+describe command("dig @localhost www.#{property[:rpi_cust_domain]}.#{property[:rpi_cust_tld]} | grep 'float.dc1' | wc -l") do
+  its(:stdout) { should match /2/ }
+end

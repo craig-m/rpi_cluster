@@ -1,35 +1,45 @@
 // {{ ansible_managed }}
+// node: {{ rpi_dnsd_status }}
+// file: /etc/bind/named.conf.options
 // modified: {{ ansible_date_time.time}} {{ ansible_date_time.date }}
 
 acl "trusted" {
 	localhost;
-	localnets;
-	{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }};
-	{{ rpi_failover_ip }};
+	{{ hostvars['alpha']['ansible_default_ipv4']['address'] }};
+	{{ hostvars['beta']['ansible_default_ipv4']['address'] }};
+};
+
+acl "rpinet" {
+	localhost;
+	{{ rpi_net_id }}/{{ rpi_net_maskbit }};
 };
 
 options {
 	directory "/var/cache/bind";
 
-  recursion yes;
-	allow-recursion { trusted; };
-	allow-query { trusted; };
-	allow-transfer { {{ rpi_failover_ip }}; };
+	allow-recursion { rpinet; };
+	allow-query { rpinet; };
+	allow-query-cache { rpinet; };
+	allow-transfer { trusted; };
 
-	// forwarders {
-	// 	0.0.0.0;
-	// };
+	// Don't forward - use the root zone DNS servers.
+	// forwarders { 9.9.9.9; };
 
-	dnssec-enable no;
-	dnssec-validation no;
+	// dnssec
+	dnssec-enable yes;
+	dnssec-validation yes;
+	dnssec-lookaside auto;
 
 	# conform to RFC1035
 	auth-nxdomain no;
 
-	listen-on-v6 { any; };
+	listen-on { 127.0.0.1; };
+	listen-on { {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}; };
+	listen-on-v6 { none; };
 
 	version "dns";
 };
+
 
 logging {
 	channel system_log {
@@ -44,10 +54,23 @@ logging {
 		severity info;
 		print-time no;
 	};
-	category default{
+	channel xfer_log {
+		file "/var/log/named/xfer.log";
+		print-category yes;
+		print-severity yes;
+		print-time yes;
+		severity info;
+	};
+	category xfer-in {
+		xfer_log;
+	};
+	category xfer-out {
+		xfer_log;
+	};
+	category default {
 		system_log;
 	};
-	category queries{
+	category queries {
 		queries_log;
 	};
 };

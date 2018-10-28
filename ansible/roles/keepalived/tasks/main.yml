@@ -12,7 +12,7 @@
   apt:
     name: "{{ item }}"
     state: present
-  with_items:
+  loop:
        - keepalived
   become: yes
   environment:

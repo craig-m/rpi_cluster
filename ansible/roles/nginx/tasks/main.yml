@@ -13,7 +13,7 @@
   apt:
     name: "{{ item }}"
     state: present
-  with_items:
+  loop:
        - nginx-full
   become: yes
   failed_when: false

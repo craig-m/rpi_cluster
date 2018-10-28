@@ -13,17 +13,9 @@ echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
 ufw default deny incoming || exit 1;
 ufw default allow outgoing
 
-# incoming SSH from outside LAN
-ufw allow 22/tcp
-ufw allow {{ ssh_group_port }}/tcp from {{ rpi_net_id }}/{{ rpi_net_maskbit }}
-
 # incoming web from outside LAN
 ufw allow 80/tcp
 ufw allow 443/tcp
-
-# syslog
-ufw allow 514/tcp from {{ rpi_net_id }}/{{ rpi_net_maskbit }}
-ufw allow 514/udp from {{ rpi_net_id }}/{{ rpi_net_maskbit }}
 
 # allow all incoming from local LAN
 ufw allow from {{ rpi_net_id }}/{{ rpi_net_maskbit }}

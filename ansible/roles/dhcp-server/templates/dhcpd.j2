@@ -5,15 +5,16 @@
 authoritative;
 ddns-update-style none;
 
-failover peer "dhcpbu" {
+failover peer "rpiclust-failover" {
+
   # declare server as {{ rpi_dhcpd_status }}
   {{ rpi_dhcpd_status }};
-  address {{ inventory_hostname }};
-  port 647;
+  address {{ rpi_ip }};
+  port {{ rpi_dhcpd_port }};
 
-  # backup server
+  # my failover host is:
   peer address {{ rpi_failover_ip }};
-  peer port 647;
+  peer port {{ rpi_dhcpd_port_peer }};
 
   max-response-delay 30;
   max-unacked-updates 10;
@@ -41,7 +42,7 @@ subnet {{ rpi_net_id }} netmask {{ rpi_net_snet }} {
   option domain-name "{{ rpi_cust_tld }}";
 
   pool {
-    failover peer "dhcpbu";
+    failover peer "rpiclust-failover";
 
     # 60 minute lease time
     max-lease-time 3600;
