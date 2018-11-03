@@ -211,7 +211,7 @@ keysandconf_ssh () {
   # generate our pub+priv ssh rsa keys
   ssh-keygen -P "${idrsapass}" -o -f ~/.ssh/id_rsa -t rsa
   # --- sign our SSH key with CA key ---
-  # note: keys are valid for 1 week
+  echo "* note: keys are valid for 1 week"
   ssh-keygen -s ~/.ssh/my-ssh-ca/ca -P ${thesshcapw} -I ${USER} -n pi -V +1w -z 1 ~/.ssh/id_rsa
   # cleanup
   thesshkeypw="x";

@@ -12,11 +12,12 @@
   apt:
     name: "{{ item }}"
     state: present
-  with_items:
+  loop:
        - isc-dhcp-server
        - dhcpdump
   become: yes
-  retries: 1
+  retries: 2
+  register: dhcpd_new
   tags: [dhcpserver]
 
 
@@ -47,6 +48,8 @@
   tags: [dhcpserver]
 
 
+#-------------------------------------------------------------------------------
+
 # enabled on boot (if flagged on)
 - name: isc-dhcp-server enabled on boot
   service:
@@ -67,18 +70,27 @@
   tags: [dhcpserver]
   when: rpi_dhcpd_enabled == false
 
+#-------------------------------------------------------------------------------
+# on first setup
 
 # pause
 - name: wait for hosts to get leases
   pause:
-    seconds: 50
+    seconds: 90
   tags: [dhcpserver]
+  when:
+    - dhcpd_new.changed
+    - rpi_dhcpd_enabled == true
 
 
 - name: Refresh inventory
   meta: refresh_inventory
   tags: [dhcpserver]
+  when:
+    - dhcpd_new.changed
+    - rpi_dhcpd_enabled == true
 
+#-------------------------------------------------------------------------------
 
 # log
 - name: output to rpicluster log

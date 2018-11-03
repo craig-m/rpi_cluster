@@ -21,7 +21,7 @@ describe host("www.#{property[:rpi_cust_domain]}.#{property[:rpi_cust_tld]}") do
   it { should be_resolvable.by('dns') }
 end
 
-describe host("float.#{property[:rpi_cust_domain]}.#{property[:rpi_cust_tld]}") do
+describe host("float.dc1.#{property[:rpi_cust_domain]}.#{property[:rpi_cust_tld]}") do
   it { should be_resolvable.by('dns') }
   # ping
   it { should be_reachable }

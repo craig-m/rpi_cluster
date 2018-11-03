@@ -5,6 +5,12 @@ rpilogit () {
 	logger -t rpicluster "$1";
 }
 
+# run as root
+if [[ root != "$(whoami)" ]]; then
+  echo "Error: requires root";
+  exit 1;
+fi
+
 rpilogit "starting install-kube.sh"
 
 sleep 1s;
@@ -17,6 +23,6 @@ echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/
 
 /usr/bin/sudo apt-get update -q
 
-sleep 3s;
+sleep 1s;
 
 rpilogit "finished install-kube.sh"

@@ -10,3 +10,13 @@ end
 describe command('grep "Under-voltage detected!" /var/log/kern.log') do
   its(:stdout) { should match // }
 end
+
+# less than 25 hits in firewall logs
+describe command('test $(grep "UFW BLOCK" /var/log/kern.log | wc -l) -lt 25') do
+  its(:exit_status) { should eq 0 }
+end
+
+# look for "Certificate invalid: expired" when our CA signed SSH key expires
+describe command('journalctl -u ssh -n 100 | grep -i invalid') do
+  its(:stdout) { should match // }
+end

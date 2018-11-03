@@ -11,15 +11,27 @@
   changed_when: False
 
 
+# config
+- name: kubeadm config
+  become: yes
+  copy:
+    dest: "/etc/systemd/system/kubelet.service.d/10-kubeadm.conf"
+    content: |
+      Environment="KUBELET_EXTRA_ARGS=--enable-controller-attach-detach=false"
+  tags: [kube]
+
+
 # initialize the cluster (if not yet)
-- name: kubeadm init master node
-  command: kubeadm init
+- name: init the master node
+  script: init-kube.sh
+  args:
+    creates: /opt/cluster/docker/kubecnf/kube_info.txt
+    chdir: /opt/cluster/docker/scripts/
+  become: yes
   when:
-    - "kube_info_txt.stat.exists == False"
     - "rpi_docker_enabled == True"
     - "'docker_master' in group_names"
   register: initialized_main_node
-  become: yes
 
 
 # pause after init
@@ -55,35 +67,27 @@
     seconds: 5
 
 - name: run setup-kube.sh
-  shell: /opt/cluster/docker/scripts/setup-kube.sh
+  script: setup-kube.sh
   args:
     creates: /opt/cluster/docker/kubecnf/admin.conf
+    chdir: /opt/cluster/docker/scripts/
+
 
 #-------------------------------------------------------------------------------
-# Setup networking with Weave
 
-- name: check for kube_net.txt
-  stat: path=/opt/cluster/docker/kubecnf/kube_net.txt
-  register: kube_net_txt
-  changed_when: False
-
-- name: weave networking
-  shell: kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')" > /opt/cluster/docker/kubecnf/kube_net.txt
-  when:
-    - "kube_net_txt.stat.exists == False"
-  register: kube_net_apply
-
-# will take much longer to complete
-- name: pausing
-  pause:
-    seconds: 45
-  when: kube_net_apply.changed
-
-#-------------------------------------------------------------------------------
 
 - name: get cluster info
   shell: kubectl cluster-info
+  register: kube_cluster_info
   changed_when: False
+
+
+# ara record: cluster info
+- name: record cluster info
+  ara_record:
+    key: "kube_cluster_info"
+    value: "{{ kube_cluster_info.stdout }}"
+  register: kubeclustinfo
 
 
 # log

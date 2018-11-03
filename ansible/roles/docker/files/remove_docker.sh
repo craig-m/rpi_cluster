@@ -1,5 +1,5 @@
 #!/bin/bash
-# ansible compute -a "/opt/cluster/bin/remove_docker.sh" --become -f 10
+# ansible compute -a "/opt/cluster/docker/scripts/emove_docker.sh" --become -f 10
 
 # run as root
 if [[ root != "$(whoami)" ]]; then
@@ -24,6 +24,7 @@ systemctl stop docker.socket
 # purge
 apt-get remove -y --purge docker-ce
 
+rm -rfv -- /etc/docker/key.json
 rm -rfv -- /var/lib/docker/
 rm -rfv -- /var/run/docker/
 rm -rfv -- /etc/docker/

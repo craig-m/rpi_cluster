@@ -10,35 +10,49 @@ Assumes working from:
 ```
 pi@psi:~ $ source ~/env/bin/activate
 (env) pi@psi:~ $ cd rpi_cluster/ansible/
-(env) pi@psi:~/rpi_cluster/ansible $
-```
-
-```
-(env) pi@psi:~ $ pass ssh/id_rsa
-(env) pi@psi:~ $ eval `ssh-agent`
-(env) pi@psi:~ $ ssh-add
+(env) pi@psi:~/rpi_cluster/ansible $ pass ssh/id_rsa
+(env) pi@psi:~/rpi_cluster/ansible $ eval `ssh-agent`
+(env) pi@psi:~/rpi_cluster/ansible $ ssh-add
 Enter passphrase for /home/pi/.ssh/id_rsa:
 ```
 
 ---
 
-Cheat notes below:
 
 # SSH
 
 Execute a command via a Jump Box
 
 ```
-$ ssh -J pi@psi.local pi@omega.local hostname
-omega
+(env) pi@psi:~ $ ssh -J alpha beta hostname
+beta
 ```
 
 or two:
 
 ```
-$ ssh -J pi@omega.local,pi@psi.local pi@alpha.local hostname
-alpha
+(env) pi@psi:~ $ ssh -J pi@alpha.local,pi@beta.local pi@omega.local hostname
+omega
 ```
+
+## key renew
+
+The SSHD will only accept keys signed by a CA key.
+As per: https://code.facebook.com/posts/365787980419535/scalable-and-secure-access-with-ssh/
+
+When SSH from Psi to the other hosts stops working...
+
+```
+(env) pi@psi:/opt/cluster/bin $ ./renew-ssh-priv-key.sh
+```
+
+This will generate a new set of keys:
+
+```
+Signed user key /home/pi/.ssh/id_rsa-cert.pub: id "pi" serial 5 for pi valid from 2018-10-28T22:09:00 to 2018-11-04T22:10:49
+done
+```
+
 
 ---
 
@@ -157,7 +171,8 @@ https://docs.pytest.org/en/latest/
 Test the local deployer:
 
 ```
-pytest test-rpideployer.py
+pytest files/test-rpideployer.py
 ```
+
 
 ---

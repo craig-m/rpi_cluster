@@ -67,13 +67,11 @@ def compute_ansible_container(c):
     c.run('ansible-playbook -v play-rpi-compute-containers.yml')
 
 @task
-def compute_container_destroy(c):
+def compute_ansible_container_rm(c):
     """ shutdown and remove k8 cluster. """
     print("Removing kubernetes cluster")
-    c.run('ssh epsilon.local kubectl delete node --all')
-    c.run('ansible compute -a "/opt/cluster/docker/scripts/remove-kube.sh" -f 4')
-    c.run('ansible compute -a "reboot" -f 4 --become')
-    c.run('rm -rfv -- /opt/cluster/backup/epsilon/opt/cluster/docker/kubecnf/kube_info.txt')
+    c.run('ansible-playbook -v play-rpi-compute-remove-k8.yml')
+
 
 # tasks fo all hosts  ----------------------------------------------------------
 

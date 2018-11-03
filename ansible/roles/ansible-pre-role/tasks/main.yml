@@ -10,10 +10,6 @@
   ping:
 
 
-- name: Refresh inventory
-  meta: refresh_inventory
-
-
 - name: "re-run setup "
   setup: ~
 

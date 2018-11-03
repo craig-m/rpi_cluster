@@ -26,43 +26,16 @@
     group: "{{ ansible_user_id }}"
     mode: 0755
   with_items: "{{ docker_script }}"
-
-
-# check for docker bin
-- name: check for docker bin
-  stat: path=/usr/bin/docker
-  register: usrbin_docker
   tags: [docker]
 
 
-# run docker-engine installer
-- name: run installer
-  shell: /opt/cluster/docker/scripts/getdocker.sh
-  args:
-    chdir: /opt/cluster/docker/scripts/
-  when: usrbin_docker.stat.exists == False
-  tags: [docker]
-  register: rangetdocker
-
-
-- name: pause
-  pause:
-    seconds: 10
-  when: rangetdocker.changed
-  tags: [docker]
-
-
-# check package installed
 - name: docker packages installed
-  apt:
-    name: "{{ item }}"
-    state: present
-  loop:
-       - docker-ce
+  script: install_docker.sh
+  args:
+    creates: /opt/cluster/docker/.dockerbin
+    chdir: /opt/cluster/docker/scripts/
   become: yes
-  retries: 2
   tags: [docker]
-  when: rangetdocker.changed
 
 
 #-------------------------------------------------------------------------------
@@ -77,39 +50,10 @@
   when: rpi_docker_enabled == true
 
 
-- name: pause after starting docker service
-  pause:
-    seconds: 20
-  when: rangetdocker.changed
-
-
-# disabled: STOP on boot
-- name: docker stopped on boot
-  service:
-    name: docker
-    enabled: no
-    state: stopped
-  become: yes
-  tags: [docker]
-  when: rpi_docker_enabled == false
-
-- name: docker.socket stopped on boot
-  service:
-    name: docker.socket
-    enabled: no
-    state: stopped
-  become: yes
-  tags: [docker]
-  when: rpi_docker_enabled == false
-
-
 #-------------------------------------------------------------------------------
 
-# add user to docker group. Note: this gives them root, for example:
-#
-# docker run -it --rm --privileged -v /:/mnt ubuntu bash
-# echo 'ALL=(ALL) NOPASSWD:ALL' >> /mnt/etc/sudoers
-#
+# add user to docker group.
+# Note: this gives them root on the host.
 - name: add user to docker group
   become: yes
   user:
@@ -130,6 +74,7 @@
   shell: docker pull hello-world
   changed_when: false
   become: yes
+  tags: [docker]
 
 #- name: pull hello-world
 #  docker_image:
@@ -142,6 +87,7 @@
   become: yes
   failed_when:
     - "'installation appears to be working correctly' not in docker_hello_world.stdout"
+  tags: [docker]
 
 #-------------------------------------------------------------------------------
 

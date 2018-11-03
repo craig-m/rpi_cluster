@@ -1,6 +1,14 @@
 ---
 
+kube_master_node: "delta"
+
+kubeadm_init_flags: ""
+
+kube_token: "69cpro.e6ux3nnev2dwuppx"
+
+
 k8_dir: [
+  { dir: '/etc/systemd/system/kubelet.service.d/', mode: '0755', owner: root, group: root },
   { dir: '/opt/cluster/docker/kubecnf/', mode: '0775', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
   { dir: '/opt/cluster/docker/yml/', mode: '0775', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
   { dir: '/opt/cluster/docker/data/', mode: '0775', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" }
@@ -8,6 +16,8 @@ k8_dir: [
 
 bashscriptk8: [
   {file: 'install-kube-apt.sh'},
+  {file: 'install-kube-bin.sh'},
+  {file: 'init-kube.sh'},
   {file: 'remove-kube.sh'},
   {file: 'setup-kube.sh'},
   {file: 'genbootcmd.sh'},

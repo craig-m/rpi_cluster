@@ -1,17 +1,14 @@
 
+
 docker_dir: [
   { dir: '/opt/cluster/docker/scripts/', mode: '0775', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
   { dir: '/opt/cluster/docker/volumes/', mode: '0775', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" }
 ]
 
 docker_script: [
-  {file: 'getdocker.sh'},
+  {file: 'install_docker.sh'},
   {file: 'remove_docker.sh'}
 ]
 
 # stopped/disabled systemctl service by default
 rpi_docker_enabled: "false"
-
-
-# The version of Docker tested with Kubernetes
-docker_max_ver: ""

@@ -123,7 +123,7 @@ To play with services, hosted on Kubernetes. Subdivided into a frontend and back
 * Nginx
 * DistCC (for distributed compiling)
 * C mpich (Message Passing Interface - mpich.org)
-* Docker + Kubernetes
+* Docker + Kubernetes + Weave network addon
 
 Redundancy: x1 front and x1 back node can fail.
 

@@ -4,7 +4,7 @@ describe command('/usr/lib/nagios/plugins/check_procs -w 300 -c 400;') do
   its(:exit_status) { should eq 0 }
 end
 
-describe command('/usr/lib/nagios/plugins/check_users -w 10 -c 15') do
+describe command('/usr/lib/nagios/plugins/check_users -w 30 -c 50') do
   its(:exit_status) { should eq 0 }
 end
 

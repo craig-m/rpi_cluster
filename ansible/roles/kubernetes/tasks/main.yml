@@ -13,9 +13,9 @@
     group: "{{ item.group }}"
   with_items: "{{ k8_dir }}"
   become: yes
+  tags: [kube]
 
 
-# copy bash scripts
 - name: copy bash scripts
   copy:
     src: "{{ item.file }}"
@@ -25,16 +25,18 @@
     mode: 0755
   with_items: "{{ bashscriptk8 }}"
   become: true
+  tags: [kube]
 
 
 # System prerequisites
 - include: systemopts.yml
+  tags: [kube]
 
 
 - name: setup kubernetes apt repo
-  shell: /opt/cluster/docker/scripts/install-kube-apt.sh
+  script: install-kube-apt.sh
   args:
-    chdir: /opt/cluster/mysrc/
+    chdir: /opt/cluster/docker/scripts/
     creates: /etc/apt/sources.list.d/kubernetes.list
   register: installkubesh
   tags: [kube]
@@ -48,28 +50,29 @@
     dest: "/etc/rsyslog.d/10-disable-kube.conf"
     content: |
       :msg, contains, "azure_dd.go" stop
+  tags: [kube]
 
 
 - name: pausing
   pause:
-    seconds: 5
+    seconds: 10
   when: installkubesh.changed
   tags: [kube]
 
 
-- name: kubeadm packages installed
+- name: install policykit
   apt:
-    name: "{{ item }}"
-    state: present
-  with_items:
-       - kubeadm
-       - kubelet
-       - kubectl
-       - kubelet
-       - kubernetes-cni
-       - policykit-1
+    name: policykit-1
   become: yes
-  retries: 2
+  tags: [kube]
+
+
+- name: install kube
+  script: install-kube-bin.sh
+  args:
+    creates: /usr/bin/kubeadm
+    chdir: /opt/cluster/docker/scripts/
+  become: yes
   tags: [kube]
   register: kube_aptinst
 
@@ -104,16 +107,20 @@
 #-------------------------------------------------------------------------------
 
 # docker_master group
-- import_tasks: master_boss_node.yml
-  tags: [kube,kubemaster]
+- import_tasks: node_master.yml
+  tags:
+    - kube
+    - kubemaster
   when:
     - "'docker_master' in group_names"
     - "rpi_docker_enabled == True"
 
 
 # docker_worker group
-- import_tasks: join_master.yml
-  tags: [kube,kubemaster]
+- import_tasks: node_worker.yml
+  tags:
+    - kube
+    - kubemaster
   when:
     - "'docker_worker' in group_names"
     - "rpi_docker_enabled == True"

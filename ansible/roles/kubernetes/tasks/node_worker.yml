@@ -3,7 +3,7 @@
 
 
 - name: get kube init api info
-  local_action: shell tail -n1 /opt/cluster/backup/epsilon/opt/cluster/docker/kubecnf/kube_info.txt | grep -e kubeadm -e token -e discovery -e hash
+  local_action: shell tail -n5 /opt/cluster/backup/{{ kube_master_node }}/opt/cluster/docker/kubecnf/kube_info.txt | grep -e kubeadm -e token -e discovery -e hash
   register: join_kube_mast
   changed_when: False
 
@@ -24,7 +24,7 @@
 
 - name: pausing
   pause:
-    seconds: 15
+    seconds: 30
   when: joined_master.changed
 
 
