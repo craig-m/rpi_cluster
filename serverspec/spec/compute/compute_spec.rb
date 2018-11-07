@@ -8,10 +8,28 @@ describe file('/opt/cluster/bin/compute-boot.sh') do
  it { should be_mode 770 }
 end
 
+describe package('openjdk-8-jdk') do
+  it { should be_installed }
+end
+
+
 describe user('computeadm') do
   it { should exist }
 end
 
-describe package('openjdk-8-jdk') do
-  it { should be_installed }
+# should not exist here
+describe user('omegapyapi') do
+  it { should_not exist }
+end
+describe user('bbweb') do
+  it { should_not exist }
+end
+describe user('bind') do
+  it { should_not exist }
+end
+describe user('redis') do
+  it { should_not exist }
+end
+describe user('tftp') do
+  it { should_not exist }
 end

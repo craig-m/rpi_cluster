@@ -12,47 +12,19 @@ describe host("omega") do
   it { should be_reachable }
 end
 
-describe file('/home/pi/.password-store') do
-  it { should be_mode 700 }
-  it { should be_directory }
-  it { should be_owned_by 'pi' }
-  it { should be_grouped_into 'pi' }
-end
-
-describe file('/home/pi/.gnupg') do
-  it { should be_mode 700 }
-  it { should be_directory }
-  it { should be_owned_by 'pi' }
-  it { should be_grouped_into 'pi' }
-end
-
-describe file('/home/pi/.bundle') do
-  it { should be_directory }
-  it { should be_owned_by 'pi' }
-  it { should be_grouped_into 'pi' }
-end
-
-describe file('/home/pi/.gem') do
-  it { should be_directory }
-  it { should be_owned_by 'pi' }
-  it { should be_grouped_into 'pi' }
-end
-
-describe file('/home/mpiuser/') do
+# should not exist here
+describe user('mpiuser') do
   it { should_not exist }
 end
-
-# /opt/cluster
-describe file('/opt/cluster/data') do
-  it { should be_mode 700 }
-  it { should be_directory }
-  it { should be_owned_by 'pi' }
-  it { should be_grouped_into 'pi' }
+describe user('bind') do
+  it { should_not exist }
 end
-
-describe file('/opt/cluster/backup') do
-  it { should be_mode 770 }
-  it { should be_directory }
-  it { should be_owned_by 'pi' }
-  it { should be_grouped_into 'pi' }
+describe user('omegapyapi') do
+  it { should_not exist }
+end
+describe user('tftp') do
+  it { should_not exist }
+end
+describe user('computeadm') do
+  it { should_not exist }
 end

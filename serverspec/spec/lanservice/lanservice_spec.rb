@@ -36,3 +36,17 @@ end
 describe cron do
   it { should have_entry('30 01 * * 7 /root/crontab/lansrvmain-cron-daily').with_user('root') }
 end
+
+# should not exist here
+describe user('mpiuser') do
+  it { should_not exist }
+end
+describe user('redis') do
+  it { should_not exist }
+end
+describe user('omegapyapi') do
+  it { should_not exist }
+end
+describe user('computeadm') do
+  it { should_not exist }
+end

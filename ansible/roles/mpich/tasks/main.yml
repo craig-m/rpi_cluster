@@ -1,8 +1,4 @@
 ---
-# https://packages.debian.org/sid/mpich
-# https://www.mpich.org/
-
-
 - debug: msg="mpich role"
   tags: [mpich]
 
@@ -113,22 +109,6 @@
   become: yes
   tags: [mpich]
 
-
-# on psi:
-
-# mpikeytemp=$(mktemp -d)
-# cd $mpikeytemp;
-# cp /opt/cluster/backup/omega/home/mpiuser/.ssh/* .
-# thesshcapw=$(pass ssh/CA)
-# ssh-keygen -s ~/.ssh/my-ssh-ca/ca -P ${thesshcapw} -I mpiuser -n mpiuser -V +2w -z 1 ${mpikeytemp}/id_rsa.pub
-# scp -v id_rsa-cert.pub pi@omega:~/
-# ssh pi@omega sudo mv id_rsa-cert.pub /home/mpiuser/.ssh/id_rsa-cert.pub -v
-# ssh pi@omega sudo chown mpiuser:mpiuser /home/mpiuser/.ssh/id_rsa-cert.pub
-
-# on omega:
-
-# sudo su -l mpiuser
-# mpirun -l -np 16 -hosts 20.20.20.31,20.20.20.32,20.20.20.33,20.20.20.34 ~/bin/mpi_sample
 
 
 - name: roles info txt

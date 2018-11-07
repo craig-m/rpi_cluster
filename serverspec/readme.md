@@ -11,9 +11,9 @@ This is run from the Deployer R-Pi, and tests all of the cluster nodes (includin
 
 ## tests
 
-* tests: 142 - group: compute (x4)
-* tests: 201 - group: lan service main (x2)
-* tests: 160 - group: lan service misc (x1)
-* tests: 174 - group: deployer node (x1)
+* tests: 147 - group: compute (x4)
+* tests: 211 - group: lan service main (x2)
+* tests: 187 - group: lan service misc (x1)
+* tests: 168 - group: deployer node (x1)
 
-total ServerSpec tests: 1304
+total ServerSpec tests: 1365

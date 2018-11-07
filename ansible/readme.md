@@ -43,7 +43,7 @@ As per: https://code.facebook.com/posts/365787980419535/scalable-and-secure-acce
 When SSH from Psi to the other hosts stops working...
 
 ```
-(env) pi@psi:/opt/cluster/bin $ ./renew-ssh-priv-key.sh
+(env) pi@psi:/opt/cluster/bin $ /opt/cluster/bin/renew-ssh-priv-key.sh
 ```
 
 This will generate a new set of keys:
