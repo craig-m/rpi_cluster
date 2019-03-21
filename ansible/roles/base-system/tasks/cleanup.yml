@@ -1,0 +1,41 @@
+---
+
+
+# Remove Apt packages (in defaults/main.yml)
+- name: Remove these packages
+  apt:
+    name: "{{ item.rmapt }}"
+    state: absent
+  with_items: "{{ package_remove }}"
+  become: yes
+  tags: [common,commonpackage]
+
+
+# stop these services
+- name: stop apt daily upgrade service
+  service:
+    name: apt-daily-upgrade.service
+    state: stopped
+    enabled: no
+  become: yes
+
+- name: stop apt daily service
+  service:
+    name: apt-daily.service
+    state: stopped
+    enabled: no
+  become: yes
+
+- name: stop apt daily upgrade
+  service:
+    name: apt-daily-upgrade.timer
+    state: stopped
+    enabled: no
+  become: yes
+
+- name: stop apt daily timer
+  service:
+    name: apt-daily.timer
+    state: stopped
+    enabled: no
+  become: yes

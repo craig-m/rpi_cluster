@@ -8,7 +8,7 @@
 {% if 'master' in rpi_dnsd_status %}
 zone "{{ rpi_cust_tld }}" {
         type master;
-        file "/etc/bind/zones/{{ rpi_dnsd_status }}/rpi-{{ rpi_dnsd_status }}.db";
+        file "/etc/bind/zones/{{ rpi_dnsd_status }}/{{ rpi_cust_tld }}.db";
         masterfile-format text;
         allow-update { key "rndckey"; };
         allow-transfer { trusted; };
@@ -18,12 +18,12 @@ zone "{{ rpi_cust_tld }}" {
 };
 {% endif %}
 
-{% if 'slave' in rpi_dnsd_status %}
+{% if 'secondary' in rpi_dnsd_status %}
 zone "{{ rpi_cust_tld }}" {
-        type slave;
+        type secondary;
         masters { {{ hostvars['alpha']['ansible_default_ipv4']['address'] }}; };
         masterfile-format map;
-        file "/etc/bind/zones/{{ rpi_dnsd_status }}/{{ rpi_dnsd_status }}.db";
+        file "/etc/bind/zones/{{ rpi_dnsd_status }}/{{ rpi_cust_tld }}.db";
         allow-transfer { trusted; };
         allow-query { rpinet; };
 };

@@ -1,0 +1,103 @@
+---
+# bind config files
+
+
+- name: /etc/default/bind9
+  template:
+    src: bind_default.j2
+    dest: /etc/default/bind9
+    owner: root
+    group: root
+    mode: 0644
+  become: yes
+  notify: bind-restart
+  tags: [bind]
+
+
+- name: bind conf local
+  template:
+    src: named_conf_local.j2
+    dest: /etc/bind/named.conf.local
+    owner: root
+    group: root
+    mode: 0644
+  become: yes
+  notify: bind-restart
+  tags: [bind]
+
+
+- name: named conf options
+  template:
+    src: named_conf_options.j2
+    dest: /etc/bind/named.conf.options
+    owner: root
+    group: root
+    mode: 0644
+  become: yes
+  notify: bind-restart
+  tags: [bind]
+
+
+- name: named conf default zones
+  template:
+    src: named_conf_default_zones.j2
+    dest: /etc/bind/named.conf.default-zones
+    owner: root
+    group: root
+    mode: 0644
+  become: yes
+  notify: bind-restart
+  tags: [bind]
+
+
+- name: bind conf consul
+  template:
+   src: consul_conf.j2
+   dest: /etc/bind/consul.conf
+   owner: root
+   group: root
+   mode: 0644
+  become: yes
+  notify: bind-restart
+  tags: [bind]
+
+
+- name: Bind keys
+  template:
+   src: bind_keys.j2
+   dest: /etc/bind/bind.keys
+   owner: root
+   group: root
+   mode: 0644
+   backup: yes
+  become: yes
+  notify: bind-restart
+  tags: [bind]
+
+
+- import_tasks: master-zone.yml
+  tags:
+    - bind
+    - alpha
+
+
+- name: rpi reverse zone db
+  template:
+    src: db_reverse.j2
+    dest: /etc/bind/zones/{{ rpi_dnsd_status }}/reverse-{{ rpi_dnsd_status }}.db
+    owner: root
+    group: bind
+    mode: 0664
+    backup: yes
+  become: yes
+  notify: bind-restart
+  tags:
+    - bind
+    - dns-server-zone
+
+
+- name: check named conf
+  shell: /usr/sbin/named-checkconf /etc/bind/named.conf
+  become: yes
+  changed_when: False
+  tags: [bind]

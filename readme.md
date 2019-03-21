@@ -39,7 +39,7 @@ The x8 R-Pi that I ended up with are of various makes, I divided them into these
   <td>Total</td>
 </tr>
 <tr>
-  <td>Model</td>
+  <td>Model version:</td>
   <td>1</td>
   <td>2</td>
   <td>2</td>
@@ -47,7 +47,7 @@ The x8 R-Pi that I ended up with are of various makes, I divided them into these
   <td>&nbsp;</td>
 </tr>
 <tr>
-  <td>Count</td>
+  <td>count:</td>
   <td>2</td>
   <td>1</td>
   <td>1</td>
@@ -78,13 +78,14 @@ The other bits and pieces in this cluster:
 
 ### Deployer
 
-The Deployer runs from x1 R-Pi. This configures all of the other hosts.
+The Deployer runs from x1 R-Pi. This configures all of the other hosts. It also acts as a Certificate Authority, for TLS and SSH.
 
 * Ansible (https://www.ansible.com/)
 * Invoke (http://www.pyinvoke.org/)
 * ServerSpec (http://serverspec.org/)
 
-It also acts as a Certificate Authority, for TLS and SSH.
+
+Redundancy: can fail and the cluster will continue to operate, but it cannot be altered. Small amounts of downtime for this host can be tolerated while it gets restored from backup.
 
 
 ### LanServices - Main
@@ -92,12 +93,12 @@ It also acts as a Certificate Authority, for TLS and SSH.
 To provide redundant essential services for the LAN.
 
 * DHCP Server (isc.org server in HA)
-* DNS Server (Bind with zone replication between master/slave)
+* DNS Server (Bind with zone replication between master/secondary)
 * NTP Server
 * FTP Daemon (for BOOTP clients)
 * BusyBox httpd (running in chroot)
 
-Redundancy: x1 node can fail.
+Redundancy: any 1 of the 2 nodes can fail.
 
 
 ### LanServices - Misc
@@ -125,6 +126,6 @@ To play with services, hosted on Kubernetes. Subdivided into a frontend and back
 * C mpich (Message Passing Interface - mpich.org)
 * Docker + Kubernetes + Weave network addon
 
-Redundancy: x1 front and x1 back node can fail.
+Redundancy: 1 of 2 'front', and 1 of 2 'back-end' nodes can fail.
 
 ---

@@ -10,7 +10,7 @@ Directions for bootstrapping this Raspberry Pi cluster.
 Preparation
 -----------
 
-* Download Raspbian lite, flash the image on to each SD card with DD or Etcher etc. I am using the 2018-10-09 Raspbian stretch lite image.
+* Download Raspbian lite, flash the image on to each SD card with DD or Etcher etc. I am using the 2018-11-13 Raspbian stretch lite image (SHA-256: 47ef1b2501d0e5002675a50b6868074e693f78829822eef64f3878487953234d).
 
 * Create the empty file /boot/ssh on each SDcard to enable SSH access. Read https://www.raspberrypi.org/blog/a-security-update-for-raspbian-pixel/ for info.
 
@@ -41,7 +41,7 @@ $ ssh pi@20.20.20.20
 ```
 
 
-Install our tools (ansible, ARA, invoke etc) and requirements for the deployer:
+Install our tools (ansible, ARA, invoke etc) and setup the deployer:
 
 ```
 pi@raspberrypi:~ $ cd rpi_cluster/ansible/setup/
@@ -49,15 +49,15 @@ pi@raspberrypi:~/rpi_cluster/ansible/setup $ nohup ./install-deploy-tools.sh >> 
 ```
 
 
-Edit ~/rpi_cluster/ansible/setup/defaults to suit your environment.
-
-
-Generate SSH CA and GPG keys, encrypt Ansible vault files:
+Setup keys and config
 
 ```
-pi@raspberrypi:~/rpi_cluster/ansible/setup $ ./keysandconf-new.sh
+pi@raspberrypi:~/rpi_cluster/ansible/setup $ ./setup-keys.sh
+pi@raspberrypi:~/rpi_cluster/ansible/setup $ ./setup-conf.sh
 ```
 
+
+## run tasks
 
 Activate the virtual python environment:
 

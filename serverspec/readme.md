@@ -17,3 +17,12 @@ This is run from the Deployer R-Pi, and tests all of the cluster nodes (includin
 * tests: 168 - group: deployer node (x1)
 
 total ServerSpec tests: 1365
+
+## use
+
+```
+source ~/.rvm/scripts/rvm
+rvm gemset use serverspec
+rake --list
+rake serverspec:omega
+```

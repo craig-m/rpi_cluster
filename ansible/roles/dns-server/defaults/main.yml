@@ -1,6 +1,9 @@
 
 rpi_dnsd_enabled: false
 
+rpi_dnsd_status: "secondary"
+rpi_dnsd_notify: "no"
+
 bind_dir: [
   { dir: '/etc/bind/zones/', mode: '0775', owner: 'bind', group: 'bind' },
   { dir: '/var/log/named/', mode: '0775', owner: 'bind', group: 'bind' },

@@ -5,7 +5,7 @@
 # pre-run tasks ----------------------------------------------------------------
 
 if [ ! -f ~/.serverspecinstall ]; then
-  echo "first run serverspec/install.sh";
+  echo "first run serverspec/install-serverspec.sh";
   exit 1;
 fi
 

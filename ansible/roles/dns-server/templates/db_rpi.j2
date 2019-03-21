@@ -6,7 +6,7 @@
 ;
 $TTL  604800
 @     IN  SOA   dns1.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. admin.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. (
-      2018102810    ; Serial
+      2019031200    ; Serial
           604800    ; Refresh
           86400     ; Retry
           2419200   ; Expire
@@ -24,13 +24,15 @@ dns1.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.  IN  A 
 dns2.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.  IN  A {{ rpi_failover_ip }}
 
 ; TXT records
-alpha.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "alpha rpi_cluster_test "
-beta.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "beta rpi_cluster_test "
-omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "omega rpi_cluster_test "
-; do not change for testing:
-txttest.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "txttest rpi_cluster_test "
+alpha.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "alpha rpi_cluster_test"
+beta.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "beta rpi_cluster_test"
+omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "omega rpi_cluster_test"
+;
+; do not change for testing
+txttest.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "txttest rpi_cluster_test"
+;
 ; change to test
-testing.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "1234 "
+testing.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "abcd"
 
 ; LanService - main - this host
 {{ inventory_hostname }}.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.  IN A {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}
@@ -43,7 +45,7 @@ psi.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A {{
 
 ; Default Gateway
 dgw.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A {{ rpi_net_default_gw }}
-dgw.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "{{ rpi_net_default_gw }} "
+dgw.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "{{ rpi_net_default_gw }}"
 
 ; LanService - misc - Omega
 omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A {{ hostvars['omega']['ansible_default_ipv4']['address'] }}
@@ -54,7 +56,7 @@ git.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.   IN  CNAME omega.{{ rpi_cust_doma
 
 ; Floating IP
 float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A {{ rpi_loadbal_float_ip }}
-float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "delta and epsilon. "
+float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "delta and epsilon."
 
 ; floating IP web services
 www.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.   IN  CNAME float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.

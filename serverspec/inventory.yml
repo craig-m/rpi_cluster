@@ -22,7 +22,7 @@ beta.local:
   :roles:
     - base
     - lanservice
-  :rpi_dnsd_status: "slave"
+  :rpi_dnsd_status: "secondary"
   :rpi_cust_domain: "b3rry"
   :rpi_cust_tld: "clust0r"
   :ssh_group_port: "2220"

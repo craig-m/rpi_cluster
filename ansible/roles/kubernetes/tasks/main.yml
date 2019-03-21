@@ -39,6 +39,7 @@
     chdir: /opt/cluster/docker/scripts/
     creates: /etc/apt/sources.list.d/kubernetes.list
   register: installkubesh
+  become: true
   tags: [kube]
 
 

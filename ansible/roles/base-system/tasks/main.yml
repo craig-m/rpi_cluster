@@ -37,14 +37,9 @@
   tags: [common,commonpackage]
 
 
-# Remove Apt packages (in defaults/main.yml)
-- name: Remove these packages
-  apt:
-    name: "{{ item.rmapt }}"
-    state: absent
-  with_items: "{{ package_remove }}"
-  become: yes
-  tags: [common,commonpackage]
+# remove things
+- import_tasks: cleanup.yml
+  tags: [common]
 
 
 # pki

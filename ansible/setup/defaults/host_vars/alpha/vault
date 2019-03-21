@@ -17,11 +17,11 @@ rpi_dnsd_notify: "yes"
 
 # /etc/resolv.conf:
 rpi_my_dns_server_1: "127.0.0.1"
-rpi_my_dns_server_2: "20.20.20.8"
+rpi_my_dns_server_2: "{{ hostvars['beta']['rpi_ip'] }}"
 
 # Failover host (beta):
 rpi_failover_hostname: "beta"
 rpi_failover_ip: "{{ hostvars['beta']['rpi_ip'] }}"
-rpi_failover_hwaddr: "b8:27:eb:XX:XX:XX"
+rpi_failover_hwaddr: "{{ hostvars['beta']['rpi_mac'] }}"
 
 #-------------------------------------------------------------------------------

@@ -17,6 +17,16 @@
   tags: [docker]
 
 
+- name: copy key
+  copy:
+    src: "docker.asc"
+    dest: "/opt/cluster/docker/"
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+    mode: 0644
+  tags: [docker]
+
+
 # copy docker scripts
 - name: copy bash scripts
   copy:
@@ -29,7 +39,7 @@
   tags: [docker]
 
 
-- name: docker packages installed
+- name: run docker install script
   script: install_docker.sh
   args:
     creates: /opt/cluster/docker/.dockerbin

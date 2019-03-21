@@ -3,6 +3,7 @@
 # name: install-deploy-tools.sh
 # desc: install tools in requirements.txt (ansible etc), and packages from apt.
 
+
 # pre-run sanity checks --------------------------------------------------------
 
 # do not run this script as root
@@ -16,6 +17,7 @@ fi
 
 # only allow one copy of this script to execute at a time
 pidof -o %PPID -x "$0" >/dev/null && echo "ERROR: $0 already running." && exit 1;
+
 
 # Collect info -----------------------------------------------------------------
 
@@ -62,6 +64,7 @@ fi
 
 # wait
 sleep 2s;
+
 
 # Environment ------------------------------------------------------------------
 
@@ -112,6 +115,11 @@ if [ ! -f /mnt/ramstore/data/test.txt ]; then
   /usr/bin/sudo chmod 700 /mnt/ramstore/data;
   rpilogit "created /mnt/ramstore/data";
 fi
+if [ ! -f /mnt/ramstore/data/test.txt ]; then
+  rpilogit "error: ramstore test.txt missing";
+  exit 1;
+fi
+
 
 # Install / Upgrade base packages ----------------------------------------------
 
@@ -119,7 +127,7 @@ if [ ! -f ~/.rpibs/rpibs_packages ]; then
   # update package list
   /usr/bin/sudo apt-get update;
   # install packages
-  rpilogit "rpicluster: Install apt packages";
+  rpilogit "install some apt packages";
   /usr/bin/sudo apt-get install -q -y \
   build-essential autoconf automake libtool bison flex dos2unix socat htop jq \
   sshpass scanssh wget curl git rsync vim nano lsof screen tmux pgpgpg bc gawk \
@@ -127,7 +135,7 @@ if [ ! -f ~/.rpibs/rpibs_packages ]; then
   libssl-dev libyaml-dev libgmp-dev libgdbm-dev libffi-dev libpython-all-dev \
   monitoring-plugins-common monitoring-plugins-basic inotify-tools unzip pass \
   python-pip python-dev uuid-runtime uuid reptyr secure-delete mpich alpine \
-  telnet lynx socat dirmngr mc;
+  telnet lynx socat dirmngr mc software-properties-common;
   sleep 2s;
   # upgrade
   /usr/bin/sudo apt-get -q -y upgrade || rpilogit "ERROR with apt upgrade";
@@ -142,27 +150,33 @@ if [ ! -f ~/.rpibs/rpibs_firm ]; then
     rpilogit "updating rpi firmware";
     export SKIP_WARNING=1;
     /usr/bin/sudo /usr/bin/rpi-update || rpilogit "ERROR rpi-update failed";
+    # ok
     touch ~/.rpibs/rpibs_firm;
   fi
   sleep 2s;
 fi
 
 # checks (processes are hidden from non-root users)
-rpilogit "rpicluster: check host"
+rpilogit "check host";
 /usr/bin/sudo /usr/lib/nagios/plugins/check_procs -w 200 -c 250 --metric=CPU || exit 1;
 /usr/bin/sudo /usr/lib/nagios/plugins/check_users -w 10 -c 15 || exit 1;
 
 # haveged - an unpredictable random number generator
-/usr/bin/sudo apt-get install -y haveged;
-/usr/bin/sudo systemctl start haveged.service;
-/usr/bin/sudo systemctl enable haveged.service;
-/usr/bin/sudo /usr/lib/nagios/plugins/check_procs -C haveged 1:3 || exit 1;
+if [ ! -f /usr/sbin/haveged ]; then
+  rpilogit "install haveged";
+  /usr/bin/sudo apt-get install -y haveged;
+  /usr/bin/sudo systemctl start haveged.service;
+  /usr/bin/sudo systemctl enable haveged.service;
+  /usr/bin/sudo /usr/lib/nagios/plugins/check_procs -C haveged 1:3 || exit 1;
+  rpilogit "haveged has been installed";
+fi
+
 
 # Install Redis ----------------------------------------------------------------
 
 # Redis server (for Ansible fact cache)
 if [ ! -f ~/.rpibs/rpibs_redis ]; then
-  rpilogit "rpicluster: installing redis \\n"
+  rpilogit "installing redis \\n"
   # apt-get install
   /usr/bin/sudo apt-get install -y redis-server;
   # start and enable
@@ -171,22 +185,25 @@ if [ ! -f ~/.rpibs/rpibs_redis ]; then
   /usr/bin/sudo sysctl vm.overcommit_memory=1;
   sleep 2s;
   # test
-  rpilogit "rpicluster: test redis \\n"
+  rpilogit "test redis \\n"
   redis-cli -h localhost -p 6379 ping || echo "ERROR redis down";
   redis-cli set /rpi/deployer/test test || echo "ERROR redis down";
+  # ok
   touch ~/.rpibs/rpibs_redis;
   sleep 1s;
 fi
 
 # check redis running
-rpilogit "rpicluster: check_procs redis"
+rpilogit "check_procs redis";
 /usr/bin/sudo /usr/lib/nagios/plugins/check_procs -C redis-server -w 1:2 -c 1:2 || exit 1;
+
 
 # Python tools installation ----------------------------------------------------
 # install requirements.txt
 
 # install pip + dependencies and virtualenv
 if [ ! -f /usr/local/bin/virtualenv ]; then
+  rpilogit "pip install virtualenv"
   # create isolated Python environments with virtualenv.
   # https://pypi.python.org/pypi/virtualenv/
   /usr/bin/sudo pip install virtualenv;
@@ -208,7 +225,7 @@ sleep 1s;
 
 # Check programs were installed and are now in our path
 # (ref: http://wiki.bash-hackers.org/scripting/style)
-my_needed_commands="ansible fab diceware http testinfra py.test nmap screen tmux scanssh vim sshpass"
+my_needed_commands="ansible invoke diceware http py.test nmap screen tmux scanssh vim sshpass"
 missing_counter=0
 for needed_command in $my_needed_commands; do
   if ! hash "$needed_command" >/dev/null 2>&1; then
@@ -221,6 +238,7 @@ if ((missing_counter > 0)); then
   exit 1
 fi
 
+
 # Ansible ----------------------------------------------------------------------
 
 # Ansible log dir
@@ -231,6 +249,7 @@ fi
 
 # Ansible etc dir
 if [ ! -d /etc/ansible/ ]; then
+  rpilogit "creating /etc/ansible dirs";
   /usr/bin/sudo mkdir -pv /etc/ansible/;
   /usr/bin/sudo chmod 750 /etc/ansible/;
   /usr/bin/sudo chown "$USER:$USER" /etc/ansible/;
@@ -250,7 +269,11 @@ source <(python -m ara.setup.env)
 
 # check ansible version
 ansible --version || exit 1;
+rpilogit "ansible installed";
 sleep 1s;
+
+
+# Finished ---------------------------------------------------------------------
 
 # -- file start --
 cat > /etc/ansible/facts.d/deploytool.fact << EOF
@@ -260,7 +283,6 @@ EOF
 # -- file stop --
 
 chmod 755 /etc/ansible/facts.d/deploytool.fact;
-
 
 # done
 touch ~/.rpibs/completed;
