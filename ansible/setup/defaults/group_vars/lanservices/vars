@@ -12,6 +12,8 @@ ssh_group_port: "2220"
 
 #-------------------------------------------------------------------------------
 
+rpi_dnsd_enabled: true
+
 # chrooted Busybox webserver
 rpi_bb_httpd_enabled: true
 

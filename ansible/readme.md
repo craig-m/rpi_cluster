@@ -1,11 +1,15 @@
 About
 ------
 
-On the Deployer R-Pi (psi) run ~/rpi_cluster/ansible/setup/install-deploye-tools.sh to install these tools (Ansible).
+On the Deployer R-Pi (psi) run `~/rpi_cluster/ansible/setup/install-deploy-tools.sh` to install these tools (Ansible).
 
-Then ~/rpi_cluster/ansible/setup/keysandconf-new.sh to create new host/group var, and inventory files.
+Then to create new host/group var, and inventory files.
 
-Assumes working from:
+* `~/rpi_cluster/ansible/setup/setup-keys.sh`
+* `~/rpi_cluster/ansible/setup/setup-conf.sh`
+
+
+Then the usual workflow is:
 
 ```
 pi@psi:~ $ source ~/env/bin/activate
@@ -14,6 +18,7 @@ pi@psi:~ $ source ~/env/bin/activate
 (env) pi@psi:~/rpi_cluster/ansible $ eval `ssh-agent`
 (env) pi@psi:~/rpi_cluster/ansible $ ssh-add
 Enter passphrase for /home/pi/.ssh/id_rsa:
+(env) pi@psi:~/rpi_cluster/ansible $ invoke -l
 ```
 
 ---
@@ -118,6 +123,10 @@ ping:
 
 ```
 $ ansible all -m ping
+```
+
+```
+$ invoke ansible-ping all
 ```
 
 

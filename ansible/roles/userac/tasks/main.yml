@@ -46,6 +46,7 @@
     password: "{{ item.hash }}"
   with_items: "{{ vault_user_pw }}"
   become: yes
+  no_log: True
   tags: userac
 
 

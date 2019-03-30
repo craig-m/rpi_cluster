@@ -31,7 +31,7 @@ The x8 R-Pi that I ended up with are of various makes, I divided them into these
 <table>
 <tbody>
 <tr>
-  <td>Group</td>
+  <td>Ansible Group</td>
   <td>LAN main</td>
   <td>LAN misc</td>
   <td>Deployer</td>
