@@ -1,3 +1,7 @@
+#
+# ServerSpec Inventory.
+# These hosts are defined in ~/.ssh/config
+#
 # deployer ---------------------------------------------------------------------
 psi.local:
   :name: "psi"

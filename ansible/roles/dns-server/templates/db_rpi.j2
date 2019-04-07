@@ -6,7 +6,7 @@
 ;
 $TTL  604800
 @     IN  SOA   dns1.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. admin.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. (
-      2019031200    ; Serial
+      2019040701    ; Serial
           604800    ; Refresh
           86400     ; Retry
           2419200   ; Expire
@@ -28,11 +28,11 @@ alpha.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "a
 beta.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "beta rpi_cluster_test"
 omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "omega rpi_cluster_test"
 ;
-; do not change for testing
+; do not change for spec testing
 txttest.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "txttest rpi_cluster_test"
 ;
-; change to test
-testing.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "abcd"
+; change to test db alterations
+testing.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "ab12cd34"
 
 ; LanService - main - this host
 {{ inventory_hostname }}.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.  IN A {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}

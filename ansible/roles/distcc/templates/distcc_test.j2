@@ -2,7 +2,7 @@
 
 cd /opt/cluster/mysrc/ || exit 1;
 
-wget ftp://ftp.gnu.org/pub/gnu/gzip/gzip-1.6.tar.xz
+wget -- ftp://ftp.gnu.org/pub/gnu/gzip/gzip-1.6.tar.xz;
 
 gziphash=$(sha512sum gzip-1.6.tar.xz | cut -d' ' -f1)
 

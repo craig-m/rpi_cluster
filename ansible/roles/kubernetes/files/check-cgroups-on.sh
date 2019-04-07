@@ -2,10 +2,15 @@
 
 CGRPSTATUS=$(cat /proc/cgroups | grep memory | awk {'print $4'})
 
+rpilogit () {
+	echo -e "rpicluster: $1 \n";
+	logger -t rpicluster "$1";
+}
+
 if [[ 1 = "$CGRPSTATUS" ]]; then
-  echo "cgroups enabled";
+  rpilogit "cgroups enabled";
   exit 0;
 else
-  echo "cgroups NOT enabled";
+  rpilogit "cgroups NOT enabled";
   exit 1;
 fi

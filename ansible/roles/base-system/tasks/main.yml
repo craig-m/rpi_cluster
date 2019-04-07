@@ -28,8 +28,8 @@
 
 
 # /etc/sysctl.conf tuning
-- import_tasks: systune.yml
-  tags: [common,systune]
+- import_tasks: sysctl.yml
+  tags: [common,sysctl]
 
 
 # Install Apt packages
@@ -45,6 +45,15 @@
 # pki
 - import_tasks: sslcert.yml
   tags: [common]
+
+
+# rpi config.txt gpu memory setting
+- name: reduce mem allocated to gpu
+  lineinfile:
+    path: /boot/config.txt
+    regexp: '^gpu_mem='
+    line: 'gpu_mem=16'
+  become: yes
 
 
 # log

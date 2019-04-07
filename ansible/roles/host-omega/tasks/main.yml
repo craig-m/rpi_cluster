@@ -8,7 +8,7 @@
   apt:
     name: "{{ item }}"
     state: present
-  with_items:
+  loop:
        - tcpdump
        - lynx
        - sense-hat
@@ -22,7 +22,7 @@
 
 # Firewall ---------------------------------------------------------------------
 
-- name: copy firewall script
+- name: copy omega firewall script
   template:
     src: ufw.j2
     dest: /root/ufw.sh

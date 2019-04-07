@@ -4,5 +4,4 @@
 - import_playbook: play-rpi-services-misc.yml
 - import_playbook: play-rpi-compute.yml
 - import_playbook: play-rpi-compute-webfront.yml
-- import_playbook: play-rpi-compute-containers.yml
 - import_playbook: play-rpi-all-maint.yml

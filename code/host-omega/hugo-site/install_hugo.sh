@@ -1,16 +1,26 @@
 #!/bin/bash
 echo "Installing Hugo";
 
-export PATH=$PATH:/usr/local/go/bin
-export PATH=$PATH:/home/pi/go/bin/
-/usr/local/go/bin/go version || exit 1;
+# create a temp dir
+hugo_inst_tmpdir=$(mktemp -d)
 
-# https://gohugo.io/getting-started/installing/
-go get github.com/magefile/mage
-go get -d github.com/gohugoio/hugo
-cd ${GOPATH:-$HOME/go}/src/github.com/gohugoio/hugo
+wget https://github.com/gohugoio/hugo/releases/download/v0.54.0/hugo_0.54.0_Linux-ARM.deb -O ${hugo_inst_tmpdir}/hugo.deb;
+if [ $? -eq 0 ]; then
+  echo "downloaded hugo deb";
+else
+  rpilogit "FAILED to download hugo deb"
+	exit 1;
+fi
 
-mage vendor
-mage install
+# get filesum
+checkpgpkey=$(sha256sum ${hugo_inst_tmpdir}/hugo.deb | awk {'print $1'})
 
-~/go/bin/hugo version
+# check sum of file before adding
+if [ $checkpgpkey = "1ad870d5047d8ace276b2a8a286c9a42bb20e75d048a4517e0422b549d515284" ]; then
+	echo "hugo sha OK"
+else
+	rpilogit "BAD FILESUM"
+	exit 1;
+fi
+
+sudo dpkg -i ${hugo_inst_tmpdir}/hugo.deb

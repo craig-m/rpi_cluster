@@ -29,7 +29,7 @@
 
 # Firewall ---------------------------------------------------------------------
 
-- name: copy firewall script
+- name: copy deployer firewall script
   template:
     src: ufw.j2
     dest: /root/ufw.sh

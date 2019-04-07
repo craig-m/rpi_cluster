@@ -11,6 +11,16 @@
   tags: [kube]
 
 
+- name: enable port forwarding
+  sysctl:
+    name: "net.ipv4.ip_forward"
+    value: 1
+    sysctl_set: yes
+    state: present
+    reload: yes
+  become: yes
+
+
 # Save /boot/cmdline.txt to /opt/cluster/backup/<host>/boot/cmdline.txt
 - name: fetch cmdline txt
   fetch:

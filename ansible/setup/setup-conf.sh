@@ -40,7 +40,7 @@ fi
 # ansible vault ----------------------------------------------------------------
 
 # generate a password for the new vault files, stored in pass
-pass generate --no-symbols ansible/vault/current 40
+pass generate --no-symbols ansible/vault/current 40 || exit 1;
 
 # copy example files from /doc/defaults/{host_vars,group_vars} to /etc/ansible/{host_vars,group_vars}
 rpilogit "* copy /doc/default var files";
@@ -97,6 +97,12 @@ find \
   -iname vault \
   -exec ansible-vault encrypt {} \;
 
+if [ $? -eq 0 ]; then
+  rpilogit "ansible-vault encrypt vars OK"
+else
+  rpilogit "ansible-vault encrypt vars FAILED"
+	exit 1;
+fi
 
 # Finished ---------------------------------------------------------------------
 

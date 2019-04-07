@@ -10,10 +10,14 @@ rpilogit () {
 rpilogit "starting remove-kube.sh"
 
 /usr/bin/sudo kubeadm reset -f
-sleep 5s;
+sleep 10s;
 
-/usr/bin/sudo apt-get purge kubeadm kubectl kubernetes-cni kubelet -y
-sleep 5s;
+/usr/bin/sudo apt-get -q purge -y \
+	kubeadm \
+	kubectl \
+	kubernetes-cni \
+	kubelet;
+sleep 10s;
 
 /usr/bin/sudo rm -rfv -- /etc/kubernetes/
 /usr/bin/sudo rm -rfv -- /var/lib/kubelet/
@@ -30,6 +34,9 @@ sleep 5s;
 /usr/bin/sudo rm -rvf -- /opt/cluster/docker/kubecnf/kube_joined_cli.txt
 /usr/bin/sudo rm -rvf -- /opt/cluster/docker/kubecnf/kube_net.txt
 
+/usr/bin/sudo rm -rvf -- /opt/cluster/docker/.kubeadm
+/usr/bin/sudo rm -rvf -- /opt/cluster/docker/.kubeinit
+
 # Purge all Images + Containers + Networks + Volumes
 docker system prune -a -f >/dev/null
 
@@ -40,7 +47,7 @@ docker system prune -a -f >/dev/null
 
 # remove weave
 /usr/bin/sudo rm -rfv -- /etc/cni/
-
+/usr/bin/sudo rm -rfv -- /opt/cni/
 
 # done
 rpilogit "finished remove-kube.sh"

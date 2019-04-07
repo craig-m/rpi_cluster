@@ -1,5 +1,12 @@
 require 'spec_helper'
 
+describe file('/opt/cluster/data/info_roles.txt') do
+ it { should be_file }
+ it { should be_owned_by 'root' }
+ it { should be_mode 444 }
+ its(:content) { should match /host-omega/ }
+end
+
 describe user('omegapyapi') do
   it { should exist }
   it { should have_login_shell '/bin/bash' }

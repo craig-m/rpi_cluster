@@ -21,13 +21,22 @@ Pin: version 1.10.*
 Pin-Priority: 1000
 EOF
 
+export DEBIAN_FRONTEND=noninteractive;
 
-apt-get install -y \
+apt-get -q install -y \
 	kubeadm \
 	kubelet \
 	kubectl \
 	kubernetes-cni;
+if [ $? -eq 0 ]; then
+  echo "installed kubeadm tools";
+else
+  rpilogit "apt install of kubeadm failed";
+	exit 1;
+fi
 
-sleep 30s;
+sleep 120s;
+
+touch -f /opt/cluster/docker/.kubeadm
 
 rpilogit "finished install-kube-bin.sh"

@@ -128,7 +128,7 @@ if [ ! -f ~/.rpibs/rpibs_packages ]; then
   /usr/bin/sudo apt-get update;
   # install packages
   rpilogit "install some apt packages";
-  /usr/bin/sudo apt-get install -q -y \
+  /usr/bin/sudo apt-get -q install -y \
   build-essential autoconf automake libtool bison flex dos2unix socat htop jq \
   sshpass scanssh wget curl git rsync vim nano lsof screen tmux pgpgpg bc gawk \
   sshfs tcpdump nmap netdiscover libncurses5-dev libsqlite3-dev sqlite3 pwgen \

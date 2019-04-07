@@ -1,5 +1,14 @@
 require 'spec_helper'
 
+describe file('/opt/cluster/data/info_roles.txt') do
+ it { should be_file }
+ it { should be_owned_by 'root' }
+ it { should be_mode 444 }
+ its(:content) { should match /group-deployer-ssh-client/ }
+ its(:content) { should match /group-deployer/ }
+ its(:content) { should match /redis/ }
+end
+
 describe host("alpha") do
   it { should be_reachable }
 end

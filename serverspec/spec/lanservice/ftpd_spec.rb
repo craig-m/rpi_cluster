@@ -21,3 +21,8 @@ describe file('/srv/tftp/') do
   it { should be_directory }
   it { should be_owned_by 'root' }
 end
+
+describe process("in.tftpd") do
+  its(:user) { should eq "root" }
+  its(:count) { should eq 1 }
+end

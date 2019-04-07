@@ -38,3 +38,7 @@ end
 describe host("localhost") do
   it { should be_reachable.with( :port => 1080, :proto => 'tcp' ) }
 end
+
+describe command('/usr/lib/nagios/plugins/check_http -p 1080 -I localhost -u /index.html -s "R-Pi BB httpd"') do
+  its(:exit_status) { should eq 0 }
+end

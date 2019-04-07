@@ -56,3 +56,20 @@ describe 'Linux kernel parameters' do
     its(:value) { should eq 1 }
   end
 end
+
+
+describe process("cron") do
+  its(:user) { should eq "root" }
+end
+
+describe process("rsyslogd") do
+  its(:user) { should eq "root" }
+end
+
+describe process("systemd-journald") do
+  its(:user) { should eq "root" }
+end
+
+describe process("systemd-logind") do
+  its(:user) { should eq "root" }
+end

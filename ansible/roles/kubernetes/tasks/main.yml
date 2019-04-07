@@ -71,7 +71,7 @@
 - name: install kube
   script: install-kube-bin.sh
   args:
-    creates: /usr/bin/kubeadm
+    creates: /opt/cluster/docker/.kubeadm
     chdir: /opt/cluster/docker/scripts/
   become: yes
   tags: [kube]
@@ -80,7 +80,7 @@
 
 - name: pause
   pause:
-    seconds: 5
+    seconds: 30
   when: kube_aptinst.changed
   tags: [kube]
 

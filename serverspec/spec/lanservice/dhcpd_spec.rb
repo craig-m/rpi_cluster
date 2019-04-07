@@ -17,6 +17,11 @@ describe file('/etc/dhcp/dhcpd.conf') do
  it { should contain "#{property[:server_status_dhcp]};" }
 end
 
+describe process("dhcpd") do
+  its(:user) { should eq "root" }
+  its(:count) { should eq 1 }
+end
+
 describe command('/usr/sbin/dhcpd -t -cf /etc/dhcp/dhcpd.conf') do
   its(:exit_status) { should eq 0 }
 end

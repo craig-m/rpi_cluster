@@ -19,9 +19,6 @@
   retries: 1
   notify: bind-restart
   tags: [bind]
-  when:
-    - rpi_dnsd_enabled == true
-    - "'lanservices' in group_names"
 
 
 # folder structure
@@ -36,8 +33,7 @@
   with_items: "{{ bind_dir }}"
   become: yes
   tags: [bind]
-  when:
-    - "'lanservices' in group_names"
+
 
 # in /etc/bind/zones/ create "master" OR "secondary"
 - name: zones folder for dns status
@@ -49,17 +45,12 @@
     mode: 0775
   become: yes
   tags: [bind]
-  when:
-    - "'lanservices' in group_names"
 
 #-------------------------------------------------------------------------------
 # Local config
 
 - import_tasks: local-config.yml
   tags: [bind]
-  when:
-    - "'lanservices' in group_names"
-
 
 #-------------------------------------------------------------------------------
 
@@ -72,7 +63,6 @@
   become: yes
   when:
     - rpi_dnsd_enabled == true
-    - "'lanservices' in group_names"
   tags: [bind]
 
 
@@ -84,8 +74,7 @@
     state: stopped
   become: yes
   when:
-    - rpi_dnsd_enabled == true
-    - "'lanservices' in group_names"
+    - rpi_dnsd_enabled == false
   tags: [bind]
 
 #-------------------------------------------------------------------------------
@@ -103,6 +92,16 @@
   tags: [bind]
   when:
     - rpi_dnsd_enabled == true
+
+
+- name: bats file for tests
+  template:
+    src: dns_tests_bats.j2
+    dest: /opt/cluster/bin/dns_tests_bats.sh
+    owner: root
+    group: root
+    mode: 0755
+  become: yes
 
 
 # log
@@ -125,4 +124,3 @@
   tags: [bind]
   when:
     - rpi_dnsd_enabled == true
-    - "'lanservices' in group_names"

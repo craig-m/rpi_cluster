@@ -1,6 +1,7 @@
 ---
 - debug: msg="kubernetes join a master node "
-
+  when:
+    - "'docker_worker' in group_names"
 
 - name: get kube init api info
   local_action: shell tail -n5 /opt/cluster/backup/{{ kube_master_node }}/opt/cluster/docker/kubecnf/kube_info.txt | grep -e kubeadm -e token -e discovery -e hash

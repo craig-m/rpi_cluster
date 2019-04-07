@@ -10,7 +10,7 @@
 
 
 # do one server at a time (serial 1)
-- name: LanServices Main (Alpha and Beta) part 1
+- name: LanServices Main (Alpha and Beta)
   hosts: lanservices
   gather_facts: false
   serial: 1
@@ -25,22 +25,7 @@
     - golang
     - ntp-server
     - ftp-server
-
-
-# need facts from all the other hosts for jina templates in dns playbook
-- name: LanServices DNS
-  hosts: all
-  gather_facts: true
-  serial: 1
-  roles:
     - dns-server
-
-
-- name: LanServices
-  hosts: lanservices
-  gather_facts: false
-  serial: 1
-  roles:
     - dhcp-server
     - dhcp-client
     - busybox-httpd

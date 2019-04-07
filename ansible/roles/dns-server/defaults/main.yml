@@ -1,6 +1,4 @@
 
-rpi_dnsd_enabled: false
-
 rpi_dnsd_status: "secondary"
 rpi_dnsd_notify: "no"
 

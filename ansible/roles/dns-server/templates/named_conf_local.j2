@@ -1,5 +1,5 @@
 // {{ ansible_managed }}
-// node: {{ rpi_dnsd_status }}
+// type: {{ rpi_dnsd_status }}
 // file: /etc/bind/named.conf.local
 // modified: {{ ansible_date_time.time}} {{ ansible_date_time.date }}
 
@@ -20,7 +20,7 @@ zone "{{ rpi_cust_tld }}" {
 
 {% if 'secondary' in rpi_dnsd_status %}
 zone "{{ rpi_cust_tld }}" {
-        type secondary;
+        type slave;
         masters { {{ hostvars['alpha']['ansible_default_ipv4']['address'] }}; };
         masterfile-format map;
         file "/etc/bind/zones/{{ rpi_dnsd_status }}/{{ rpi_cust_tld }}.db";
@@ -32,7 +32,12 @@ zone "{{ rpi_cust_tld }}" {
 
 // Reverse DNS
 zone "{{ rpi_domain_arpa }}.in-addr.arpa" {
-    type {{ rpi_dnsd_status }};
+  {% if 'master' in rpi_dnsd_status %}
+  type master;
+  {% endif %}
+  {% if 'secondary' in rpi_dnsd_status %}
+  type slave;
+  {% endif %}
 
   {% if rpi_dnsd_masters is defined %}
     masters { {{ hostvars['alpha']['ansible_default_ipv4']['address'] }}; };

@@ -1,5 +1,7 @@
 ---
 - debug: msg="Kubernetes master setup"
+  when:
+    - "'docker_master' in group_names"
 
 #-------------------------------------------------------------------------------
 # init
@@ -9,7 +11,8 @@
   stat: path=/opt/cluster/docker/kubecnf/kube_info.txt
   register: kube_info_txt
   changed_when: False
-
+  when:
+    - "'docker_master' in group_names"
 
 # config
 - name: kubeadm config
@@ -19,13 +22,14 @@
     content: |
       Environment="KUBELET_EXTRA_ARGS=--enable-controller-attach-detach=false"
   tags: [kube]
-
+  when:
+    - "'docker_master' in group_names"
 
 # initialize the cluster (if not yet)
 - name: init the master node
   script: init-kube.sh
   args:
-    creates: /opt/cluster/docker/kubecnf/kube_info.txt
+    creates: /opt/cluster/docker/.kubeinit
     chdir: /opt/cluster/docker/scripts/
   become: yes
   when:
@@ -34,7 +38,14 @@
   register: initialized_main_node
 
 
-# pause after init
+- name: wait for .kubeinit
+  wait_for:
+    path: /opt/cluster/docker/.kubeinit
+    delay: 30
+  when:
+    - "rpi_docker_enabled == True"
+    - "'docker_master' in group_names"
+
 - name: pausing
   pause:
     seconds: 30

@@ -32,6 +32,8 @@ rm -fv -- /usr/local/bin/docker-machine
 rm -fv -- /opt/cluster/mysrc/getdocker.sh
 rm -rfv -- /opt/cluster/mysrc/docker-gc
 
+rm -rfv -- /opt/cluster/docker/.dockerbin
+
 rpilogit "removed docker"
 
 #rm -rfv /opt/cluster/bin/remove_docker.sh

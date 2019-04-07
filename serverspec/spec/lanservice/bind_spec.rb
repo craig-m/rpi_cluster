@@ -10,6 +10,11 @@ describe service('bind9') do
   it { should be_running }
 end
 
+describe process("named") do
+  its(:user) { should eq "bind" }
+  its(:count) { should eq 1 }
+end
+
 describe host('localhost') do
   it { should be_reachable.with( :port => 953 ) }
 end
@@ -33,7 +38,7 @@ describe file('/etc/bind/named.conf.local') do
  it { should be_file }
  it { should be_owned_by 'root' }
  its(:content) { should match /R-Pi Cluster Ansible managed file/ }
- its(:content) { should contain "type #{property[:rpi_dnsd_status]};" }
+ its(:content) { should contain "type: #{property[:rpi_dnsd_status]}" }
 end
 
 describe file('/etc/bind/named.conf.default-zones') do
@@ -53,4 +58,16 @@ end
 
 describe command("dig @localhost www.#{property[:rpi_cust_domain]}.#{property[:rpi_cust_tld]} | grep 'float.dc1' | wc -l") do
   its(:stdout) { should match /2/ }
+end
+
+describe command("dig @127.0.0.1 -t TXT txttest.dc1.#{property[:rpi_cust_domain]}.#{property[:rpi_cust_tld]}  | grep -A1 ';; ANSWER SECTION:'") do
+  its(:stdout) { should contain('txttest rpi_cluster_test').after('ANSWER SECTION') }
+end
+
+describe command("dig @alpha -t TXT txttest.dc1.#{property[:rpi_cust_domain]}.#{property[:rpi_cust_tld]}  | grep -A1 ';; ANSWER SECTION:'") do
+  its(:stdout) { should contain('txttest rpi_cluster_test').after('ANSWER SECTION') }
+end
+
+describe command("dig @beta -t TXT txttest.dc1.#{property[:rpi_cust_domain]}.#{property[:rpi_cust_tld]}  | grep -A1 ';; ANSWER SECTION:'") do
+  its(:stdout) { should contain('txttest rpi_cluster_test').after('ANSWER SECTION') }
 end

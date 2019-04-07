@@ -28,6 +28,7 @@
     - dotnet
     - hadoop
     - group-compute
+    - docker
 
 
 - name: gather facts on nodes

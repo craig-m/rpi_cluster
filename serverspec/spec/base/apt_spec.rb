@@ -8,6 +8,14 @@ describe package('apt-transport-https') do
   it { should be_installed }
 end
 
+describe package('monitoring-plugins-common') do
+  it { should be_installed }
+end
+
+describe package('monitoring-plugins-basic') do
+  it { should be_installed }
+end
+
 describe package('python-pip') do
   it { should be_installed }
 end

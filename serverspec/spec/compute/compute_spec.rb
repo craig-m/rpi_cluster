@@ -8,6 +8,19 @@ describe file('/opt/cluster/bin/compute-boot.sh') do
  it { should be_mode 770 }
 end
 
+describe file('/opt/cluster/data/info_roles.txt') do
+  it { should be_file }
+  it { should be_owned_by 'root' }
+  it { should be_mode 444 }
+ its(:content) { should match /group-compute/ }
+end
+
+describe file('/opt/cluster/bin/compute-boot.sh') do
+ it { should be_file }
+ it { should be_owned_by 'root' }
+ it { should be_mode 770 }
+end
+
 describe package('openjdk-8-jdk') do
   it { should be_installed }
 end

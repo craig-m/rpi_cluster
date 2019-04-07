@@ -32,6 +32,11 @@ describe file('/etc/ssh/sshd_config') do
   it { should be_mode 600 }
 end
 
+describe file('/etc/motd') do
+  its(:content) { should match /Raspberry Pi Cluster/ }
+  it { should be_mode 644 }
+end
+
 describe host('127.0.0.1') do
   it { should be_reachable.with( :port => 22 ) }
 end

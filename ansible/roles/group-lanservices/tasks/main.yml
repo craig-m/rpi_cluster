@@ -7,7 +7,7 @@
   apt:
     name: "{{ item }}"
     state: present
-  with_items:
+  loop:
        - nmap
        - telnet
        - lynx
@@ -18,7 +18,7 @@
 
 # firewall ---------------------------------------------------------------------
 
-- name: copy firewall script
+- name: copy lanservices firewall script
   template:
     src: ufw.j2
     dest: /root/ufw.sh
@@ -76,8 +76,6 @@
     mode: 0644
   become: yes
   notify: static-arp-ethers
-  when:
-    -  "{{ ansible_local.rpihw.rpi_hw_mac }} == 'True'"
   tags: [lanservices]
 
 

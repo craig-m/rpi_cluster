@@ -13,8 +13,8 @@ See doc/readme.md for the detailed cluster setup process.
 # Design decisions
 
 * Start with vanilla Raspbian installations, with default SSH access.
-* Operate all critical services in high availability.
 * Ability to easily rebuild any failed R-Pi node, expect that nodes might randomly fail.
+* Operate all critical services in high availability.
 * The R-Pi cluster should be self contained, minimise any external DHCP + DNS dependencies.
 * No requirements on admin laptop - just need SSH client + a text editor + git (most OS's provide these).
 
@@ -26,7 +26,7 @@ See doc/readme.md for the detailed cluster setup process.
 
 ### R-Pi
 
-The x8 R-Pi that I ended up with are of various makes, I divided them into these groups:
+The x8 R-Pi that I ended up with are of various models, I divided them into these groups:
 
 <table>
 <tbody>
@@ -39,11 +39,11 @@ The x8 R-Pi that I ended up with are of various makes, I divided them into these
   <td>Total</td>
 </tr>
 <tr>
-  <td>Model version:</td>
-  <td>1</td>
-  <td>2</td>
-  <td>2</td>
-  <td>3</td>
+  <td>R-Pi Model:</td>
+  <td>B+</td>
+  <td>2 B</td>
+  <td>2 B</td>
+  <td>3 B</td>
   <td>&nbsp;</td>
 </tr>
 <tr>

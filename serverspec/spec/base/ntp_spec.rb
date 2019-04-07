@@ -2,8 +2,12 @@ require 'spec_helper'
 
 # time and date
 describe command('timedatectl status') do
-  its(:stdout) { should contain('Time zone: UTC') }
+  its(:stdout) { should contain('UTC') }
   its(:stdout) { should contain('NTP synchronized: yes') }
+end
+
+describe command('date') do
+  its(:stdout) { should contain('UTC') }
 end
 
 describe package('ntp') do
@@ -16,6 +20,7 @@ describe service('ntp') do
 end
 
 describe file('/etc/ntp.conf') do
+ its(:content) { should match /Ansible managed file/ }
  it { should be_file }
  it { should be_owned_by 'root' }
 end

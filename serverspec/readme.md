@@ -11,12 +11,12 @@ This is run from the Deployer R-Pi, and tests all of the cluster nodes (includin
 
 ## tests
 
-* tests: 147 - group: compute (x4)
+* tests: 171 - group: compute (x4)
 * tests: 211 - group: lan service main (x2)
-* tests: 187 - group: lan service misc (x1)
-* tests: 168 - group: deployer node (x1)
+* tests: 207 - group: lan service misc (x1)
+* tests: 200 - group: deployer node (x1)
 
-total ServerSpec tests: 1365
+total ServerSpec cases performed when `run.sh` is executed: 1513
 
 ## use
 

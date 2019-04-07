@@ -1,5 +1,35 @@
 require 'spec_helper'
 
+describe file('/home/pi/.rpibs') do
+  it { should be_mode 770 }
+  it { should be_directory }
+  it { should be_owned_by 'pi' }
+  it { should be_grouped_into 'pi' }
+end
+
+describe file('/etc/ansible/ansible.cfg') do
+ it { should be_file }
+end
+
+describe file('/etc/ansible/inventory/compute') do
+ it { should be_file }
+end
+describe file('/etc/ansible/inventory/deploy') do
+ it { should be_file }
+end
+describe file('/etc/ansible/inventory/lanservices') do
+ it { should be_file }
+end
+
+
+describe file('/home/pi/.rpibs/completed') do
+ it { should be_file }
+end
+
+describe file('/home/pi/.rpibs/setup-keys') do
+ it { should be_file }
+end
+
 describe file('/home/pi/.password-store') do
   it { should be_mode 700 }
   it { should be_directory }

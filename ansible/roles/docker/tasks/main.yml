@@ -48,6 +48,22 @@
   tags: [docker]
 
 
+- name: get docker version
+  command: /usr/bin/docker --version
+  register: docker_apt_version
+  become: yes
+  tags: [docker]
+
+
+# Log version to ara
+- name: docker version to ARA
+  ara_record:
+    key: "doker_version"
+    type: "text"
+    value: "{{ docker_apt_version }}"
+  tags: [docker]
+
+
 #-------------------------------------------------------------------------------
 
 - name: docker enabled on boot

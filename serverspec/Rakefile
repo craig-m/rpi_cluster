@@ -52,19 +52,10 @@ end
 #-------------------------------------------------------------------------------
 
 task :pub_report do
-  Rake::Task['pub_report:vbox'].invoke
   Rake::Task['pub_report:psi'].invoke
 end
 
 namespace :pub_report do
-  desc "upload reports (Vagrant)"
-  task :vbox do
-    puts "publish vbox report"
-    system "cp -av -- reports/ /var/www/html/pub/"
-    if $?.exitstatus > 0
-      puts "Failed to copy reports"
-    end
-  end
   desc "upload reports (psi)"
   task :psi do
     puts "NA"

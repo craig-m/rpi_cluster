@@ -50,6 +50,13 @@
   tags: userac
 
 
+- name: log username to ara
+  ara_record:
+    key: "rpi_clust_user"
+    type: "text"
+    value: "{{ rpi_clust_user }}"
+
+
 # ssh keys
 - import_tasks: keys.yml
   tags: userac

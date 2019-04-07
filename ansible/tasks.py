@@ -9,7 +9,7 @@ from invoke import task, run
 
 @task
 def deployer_ansible(c):
-    """ Run ansible deployer role on Psi (localhost). """
+    """ ansible deployer role on Psi (localhost). """
     print("Running play-rpi-deployer.yml")
     c.run('ansible-playbook --connection=local -i /etc/ansible/inventory/deploy -v play-rpi-deployer.yml')
 
@@ -36,13 +36,13 @@ def ansible_sshd(c, hostname):
 
 @task
 def lanservices_main_ansible(c):
-    """ Run ansible on Alpha and Beta. """
+    """ ansible services-main playbook on Alpha and Beta. """
     print("Running play-rpi-services-main.yml")
     c.run('ansible-playbook -v play-rpi-services-main.yml')
 
 @task
 def lanservices_misc_ansible(c):
-    """ Run ansible on Omega. """
+    """ ansible services-misc playbook on Omega. """
     print("Running play-rpi-services-misc.yml")
     c.run('ansible-playbook -v play-rpi-services-misc.yml')
 
@@ -50,7 +50,7 @@ def lanservices_misc_ansible(c):
 
 @task
 def compute_ansible_base(c):
-    """ Run ansible base role on compute group. """
+    """ ansible base playbook on compute group. """
     print("Running play-rpi-compute.yml")
     c.run('ansible-playbook -v play-rpi-compute.yml')
 
@@ -68,9 +68,9 @@ def compute_ansible_container(c):
 
 @task
 def compute_ansible_container_rm(c):
-    """ shutdown and remove k8 cluster. """
-    print("Removing kubernetes cluster")
-    c.run('ansible-playbook -v play-rpi-compute-remove-k8.yml')
+    """ shutdown and remove docker and k8 cluster. """
+    print("Removing docker and kubernetes cluster on compute nodes")
+    c.run('ansible docker -i /etc/ansible/inventory/compute -m shell -a "/bin/bash -c /opt/cluster/docker/scripts/remove-kube.sh"')
 
 
 # tasks fo all hosts  ----------------------------------------------------------
@@ -97,7 +97,7 @@ def ansible_maint(c):
 # test Deployer, lanservices main + misc
 @task
 def cluster_serverspec(c):
-    """ Run ServerSpec tests. """
+    """ ServerSpec tests. """
     print("Running ServerSpec")
     c.run('cd ../serverspec/ && bash run.sh')
 
