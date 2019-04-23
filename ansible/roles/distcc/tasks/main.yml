@@ -1,5 +1,12 @@
 ---
-# DistCC - https://github.com/distcc/distcc
+#
+# "distcc is a program to distribute compilation of C or C++ code across several
+# machines on a network. distcc should always generate the same results as a
+# local compile, is simple to install and use, and is often two or more times
+# faster than a local compile. "
+#
+# https://github.com/distcc/distcc
+
 - debug: msg="DistCC Role "
   tags: [distcc]
 
@@ -47,6 +54,13 @@
     mode: 0755
   notify: distcc-restart
   tags: [distcc]
+
+
+- name: rpi kernel build script
+  template:
+    src: distcc_kern.j2
+    dest: /opt/cluster/bin/distcc_kern.sh
+    mode: 0755
 
 
 - name: distcc enabled on boot

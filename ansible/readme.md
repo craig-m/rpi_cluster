@@ -1,12 +1,7 @@
 About
 ------
 
-On the Deployer R-Pi (psi) run `~/rpi_cluster/ansible/setup/install-deploy-tools.sh` to install these tools (Ansible).
-
-Then to create new host/group var, and inventory files.
-
-* `~/rpi_cluster/ansible/setup/setup-keys.sh`
-* `~/rpi_cluster/ansible/setup/setup-conf.sh`
+After the setup described in `doc/readme.md`.. .
 
 
 Then the usual workflow is:
@@ -36,7 +31,7 @@ beta
 or two:
 
 ```
-(env) pi@psi:~ $ ssh -J pi@alpha.local,pi@beta.local pi@omega.local hostname
+(env) pi@psi:~ $ ssh -J pi@alpha.local,pi@beta.local pi@omega.local
 omega
 ```
 
@@ -129,6 +124,12 @@ $ ansible all -m ping
 $ invoke ansible-ping all
 ```
 
+Run all roles
+
+```
+$ ansible-playbook site.yml
+```
+
 
 ARA
 ---
@@ -142,13 +143,15 @@ https://github.com/openstack/ara
 
 ansible-lint
 ------------
-https://github.com/willthames/ansible-lint
+https://github.com/ansible/ansible-lint
 
 ```
 pi@psi:~ $ source ~/env/bin/activate
 (env) pi@psi:~ $ cd rpi_cluster/ansible/
-(env) pi@psi:~/rpi_cluster/ansible $ ansible-lint play-rpi-all-maint.yml
+(env) pi@psi:~/rpi_cluster/ansible $ ansible-lint site.yml
 ```
+
+Of the [https://docs.ansible.com/ansible-lint/rules/default_rules.html](default rules) list there are a couple of little issues to fix up ;)
 
 
 testinfra

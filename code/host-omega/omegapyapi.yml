@@ -10,18 +10,22 @@
   changed_when: False
 
 
-- name: run omegapyapi installer
-  shell: /srv/python/omegapyapi/install.sh
+- name: run omegapyapi installer sh
+  script: install.sh
   args:
     chdir: /srv/python/omegapyapi
     creates: /opt/omegapyapi/omegapyapi.socket
 
 
 - name: omegapyapi service started
-  service: name=omegapyapi state=started
+  service:
+    name: omegapyapi
+    state: started
   become: yes
 
 
 - name: omegapyapi enabled on boot
-  service: name=omegapyapi enabled=yes
+  service:
+    name: omegapyapi
+    enabled: yes
   become: yes

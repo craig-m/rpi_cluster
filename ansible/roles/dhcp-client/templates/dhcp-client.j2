@@ -1,6 +1,10 @@
 # {{ ansible_managed }}
-# /etc/dhcpcd.conf (dhcp client) for {{ inventory_hostname }}
-# modified: {{ ansible_date_time.time}} {{ ansible_date_time.date }}
+#
+# Static networking config
+#
+# ansible file: /etc/dhcpcd.conf
+# ansible host: {{ inventory_hostname }}
+# ansible role: {{role_path|basename}}
 
 # Allow users of this group to interact with dhcpcd via the control socket.
 #controlgroup wheel
@@ -43,8 +47,10 @@ slaac private
 # server, but it should not be run by default.
 nohook lookup-hostname
 
+#
 # Eth0 Static IP
-interface eth0
-  static ip_address={{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}/24
-  static routers={{ rpi_net_default_gw }}
-  static domain_name_servers={{ rpi_my_dns_server_1 }} {{ rpi_my_dns_server_2 }}
+#
+Interface eth0
+static ip_address={{ hostvars[inventory_hostname]['rpi_ip'] }}/{{ rpi_net_maskbit }}
+static routers={{ rpi_net_default_gw }}
+static domain_name_servers={{ rpi_my_dns_server_1 }} {{ rpi_my_dns_server_2 }}

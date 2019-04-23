@@ -1,5 +1,5 @@
 #!/bin/bash
-# Disable Swap
+# Disable systems Swap
 
 # log
 rpilogit () {

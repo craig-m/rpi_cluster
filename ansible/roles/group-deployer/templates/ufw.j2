@@ -1,5 +1,6 @@
 #!/bin/bash
 # {{ ansible_managed }}
+# setup by role: {{role_path|basename}}
 # UFW setup script for psi
 
 logger -t rpicluster "ufw.sh started";
@@ -10,6 +11,9 @@ ufw status verbose || exit 1
 
 echo 1 > /proc/sys/net/ipv4/tcp_syncookies
 echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
+
+# reset ufw
+ufw reset
 
 # defaults
 ufw default deny incoming || exit 1

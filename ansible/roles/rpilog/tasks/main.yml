@@ -59,7 +59,7 @@
 
 
 - name: output to rpicluster log
-  shell: logger -t rpicluster rpilog test
+  command: logger -t rpicluster rpilog test
   changed_when: false
   tags: [rpilog]
 

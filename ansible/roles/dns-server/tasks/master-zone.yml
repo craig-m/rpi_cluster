@@ -9,14 +9,27 @@
     owner: bind
     group: bind
     mode: 0664
+    validate: '/usr/sbin/named-checkzone {{ rpi_dnsd_status }}.{{ rpi_cust_tld }} %s'
   become: yes
   notify: bind-restart
   when:
     - rpi_dnsd_status == "master"
 
-#- name: test rpi zone db
+
+#- name: test rpi zone db and dump as text
 - name: check and dump db_rpi.db
-  shell: /usr/sbin/named-compilezone -F text -o /opt/cluster/lanservice/zones.txt {{ rpi_cust_domain }}.{{ rpi_cust_tld }} /etc/bind/zones/{{ rpi_dnsd_status }}/{{ rpi_cust_tld }}.db
+  command: /usr/sbin/named-compilezone -F text -o /opt/cluster/lanservice/zones.txt {{ rpi_cust_domain }}.{{ rpi_cust_tld }} /etc/bind/zones/{{ rpi_dnsd_status }}/{{ rpi_cust_tld }}.db
   changed_when: False
+  when:
+    - rpi_dnsd_status == "master"
+
+
+- name: Set extended attribute 'trusted.rpi-cluster.file-validate'
+  xattr:
+    path: /etc/bind/zones/{{ rpi_dnsd_status }}/{{ rpi_cust_tld }}.db
+    key: rpi-cluster.file
+    value: validate
+    namespace: trusted
+  become: yes
   when:
     - rpi_dnsd_status == "master"

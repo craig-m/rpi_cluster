@@ -1,0 +1,48 @@
+---
+# Install Hugo, a static site generator.
+# https://gohugo.io/
+
+
+- name: download Hugo bin
+  get_url:
+    url: "{{ hugo_bin_url }}"
+    dest: /opt/cluster/mysrc/
+    checksum: "{{ hugo_bin_sha }}"
+  register: hugo_bin_dl
+  tags: [hugo]
+
+
+- name: Install a hugo deb package
+  apt:
+    deb: "/opt/cluster/mysrc/{{ hugo_bin }}"
+  become: yes
+  when: hugo_bin_dl.changed
+  tags: [hugo]
+
+
+- name: get hugo version
+  command: /usr/local/bin/hugo version
+  register: hugo_version
+  become: yes
+  changed_when: false
+  tags: [hugo]
+
+
+# Log version to ara
+- name: log hugo version to ARA
+  ara_record:
+    key: "hugo_version"
+    type: "text"
+    value: "{{ hugo_version.stdout }}"
+  tags: [hugo]
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{ role_path|basename }}"
+    owner: root
+    group: root
+    mode: 0444
+  become: yes
+  tags: [hugo]

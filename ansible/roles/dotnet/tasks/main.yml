@@ -3,48 +3,17 @@
 # https://github.com/dotnet/core/blob/master/samples/RaspberryPiInstructions.md
 
 
-# copy dotnet script
-- name: copy dotnetinst.sh
-  copy:
-    src: dotnetinst.sh
-    dest: /opt/cluster/mysrc/dotnetinst.sh
-    mode: 0775
-  register: dotnetinst_change
-  tags: [dotnet]
-
-
-# check dotnet installed
-- name: check dotnet installed
-  stat: path=/opt/dotnet/dotnet
-  register: dotnetinst_state
-  tags: [dotnet]
-
 
 # dotnet install
+# todo: remove this script and handle in ansible
 - name: run dotnet installer
-  shell: /opt/cluster/mysrc/dotnetinst.sh
+  script: msdotnetinst.sh
   args:
     chdir: /opt/cluster/mysrc/
+    creates: /opt/dotnet/v200
   retries: 2
   register: dotnetinstsh
-  when: dotnetinst_state.stat.exists == False
   tags: [dotnet]
-
-
-- name: pausing
-  pause:
-    seconds: 2
-  when: dotnetinstsh.changed
-
-
-# check dotnet install info
-- name: test dotnet bin
-  shell: /opt/dotnet/dotnet --info
-  register: dotnet_info
-  changed_when: False
-  tags: [dotnet]
-  failed_when:
-    - "'Microsoft .NET Core' not in dotnet_info.stdout"
 
 
 - name: roles info txt

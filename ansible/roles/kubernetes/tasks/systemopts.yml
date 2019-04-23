@@ -52,7 +52,7 @@
 
 # log
 - name: output to rpicluster log
-  shell: logger -t rpicluster kubeernetes role changed /boot/cmdline.txt
+  command: logger -t rpicluster kubeernetes role changed /boot/cmdline.txt
   when: kube_bootopts.changed
 
 

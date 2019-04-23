@@ -23,6 +23,21 @@
   tags: [redis]
 
 
+- name: install python redis module
+  pip:
+    name: redis
+  become: yes
+  tags: [redis]
+
+
+- name: Configure local redis to have 500 max clients
+  redis:
+    command: config
+    name: maxclients
+    value: 500
+  tags: [redis]
+
+
 - name: roles info txt
   lineinfile:
     path: /opt/cluster/data/info_roles.txt

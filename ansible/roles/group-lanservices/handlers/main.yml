@@ -1,14 +1,19 @@
 ---
+# handlers for group-lanservices
+
 
 - name: systemctl-daemon-reload
-  command: systemctl daemon-reload
+  systemd:
+    daemon_reload: yes
   become: yes
+
 
 - name: restart-rpilansrv
   service:
-    name: rpi-lanservices.service 
+    name: rpi-lanservices.service
     state: restarted
   become: yes
+
 
 # static arp
 - name: static-arp-ethers

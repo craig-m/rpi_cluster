@@ -1,15 +1,14 @@
 ---
 # files/folders on all nodes
-- debug: msg="common (filesandfolders) "
+- debug: msg="Base System filesfolders"
 
 
 # fix home dir defaults of drwxr-xr-x
 - name: fix homedir perms
   file:
-    path: "/home/pi/"
+    path: "/home/{{ ansible_user_id }}/"
     state: directory
     mode: 0700
-  become: yes
 
 
 # create /opt/cluster/
@@ -88,9 +87,20 @@
 
 - name: etc rc.local
   template:
-    src: rc_local.j2
+    src: etc/rc_local.j2
     dest: "/etc/rc.local"
     mode: 0750
+    owner: root
+    group: root
+  become: yes
+  changed_when: False
+
+
+- name: copy etc issue
+  copy:
+    src: etc/issue
+    dest: /etc/issue
+    mode: 0644
     owner: root
     group: root
   become: yes

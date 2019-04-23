@@ -97,7 +97,7 @@
 
 
 - name: check named conf
-  shell: /usr/sbin/named-checkconf /etc/bind/named.conf
+  command: /usr/sbin/named-checkconf /etc/bind/named.conf
   become: yes
   changed_when: False
   tags: [bind]

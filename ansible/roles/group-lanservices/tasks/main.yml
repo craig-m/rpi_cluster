@@ -26,7 +26,6 @@
     group: root
     mode: 0755
   become: yes
-  changed_when: False
   tags: [lanservices]
 
 
@@ -34,6 +33,7 @@
   shell: /root/ufw.sh
   args:
     chdir: /root/
+    creates: /root/.ufw
   become: yes
   tags: [lanservices]
 
@@ -61,7 +61,6 @@
     owner: root
     group: root
   become: yes
-  changed_when: false
   notify:
     - systemctl-daemon-reload
     - restart-rpilansrv
@@ -95,7 +94,7 @@
 
 
 - name: output to rpicluster log
-  shell: logger -t rpicluster ansible lanservices role ran
+  command: logger -t rpicluster ansible lanservices role ran
   changed_when: false
   tags: [lanservices]
 

@@ -1,4 +1,5 @@
 #!/bin/bash
+# try to fix a broken apt
 
 rpilogit () {
 	echo -e "rpicluster: $1 \n";

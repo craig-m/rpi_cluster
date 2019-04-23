@@ -94,7 +94,7 @@
 
 # log
 - name: output to rpicluster log
-  shell: logger -t rpicluster ansible dhcp-server role ran
+  command: logger -t rpicluster ansible dhcp-server role ran
   tags: [dhcpserver]
   changed_when: false
 

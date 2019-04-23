@@ -1,0 +1,7 @@
+---
+
+- name: install-hugo-deb
+  apt:
+    deb: "/opt/cluster/mysrc/{{ hugo_bin }}"
+  become: yes
+  tags: [hugo]

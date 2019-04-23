@@ -39,6 +39,17 @@
   tags: [ftpd]
 
 
+- name: make /srv/tftp/dl
+  file:
+    path: /srv/tftp/dl/
+    state: directory
+    mode: 0775
+    owner: root
+    group: root
+  become: yes
+  tags: [ftpd]
+
+
 - name: tftp welcome
   template:
     src: welcome.j2
@@ -62,7 +73,7 @@
 
 # log
 - name: notify rpicluster log
-  shell: logger -t rpicluster ansible installed tftpd
+  command: logger -t rpicluster ansible installed tftpd
   changed_when: false
   tags: [ftpd]
 

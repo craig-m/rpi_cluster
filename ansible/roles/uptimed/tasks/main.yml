@@ -9,25 +9,15 @@
     name: uptimed
   become: yes
   tags: uptimed
-  register: installed_uptimed
 
 
 - name: enable uptimed on boot
   service:
     name: uptimed
+    state: started
     enabled: yes
   become: yes
   tags: uptimed
-
-
-- name: restart uptimed service on installation
-  service:
-    name: uptimed
-    state: restarted
-  become: yes
-  changed_when: False
-  tags: uptimed
-  when: installed_uptimed.changed
 
 
 - name: roles info txt

@@ -4,4 +4,3 @@ rpi_haproxy_enabled: true
 
 # default config file
 haproxy_cfg_file: "default"
-

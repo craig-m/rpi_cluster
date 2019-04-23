@@ -83,7 +83,7 @@
 
 
 - name: output to rpicluster log
-  shell: logger -t rpicluster compute-node role ran
+  command: logger -t rpicluster compute-node role ran
   changed_when: False
   tags: [computenode]
 

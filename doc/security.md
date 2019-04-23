@@ -33,6 +33,20 @@ guidelines
   - http://mywiki.wooledge.org/BashPitfalls
 
 
+Raspbian issues
+---------------
+
+To get the kernel config:
+```
+sudo modprobe configs;
+gunzip -dc /proc/config.gz
+```
+
+Without rebuilding the kernel:
+
+* No AppArmor or SELinux support
+* No support for auditd
+
 ---
 
 
@@ -68,6 +82,12 @@ $ chmod 700 /home/pi/
 Most files on Raspbian by default are world readable.
 
 
+Tools
+-----
+
+Use tools to help audit server configs. For example Gixy can be used to help find security misconfigurations in Nginx https://github.com/yandex/gixy
+
+
 The 'to do' list
 ----------------
 
@@ -81,18 +101,3 @@ The 'to do' list
 docker run -it --rm --privileged -v /:/mnt ubuntu bash
 echo 'ALL=(ALL) NOPASSWD:ALL' >> /mnt/etc/sudoers
 ```
-
-
-Raspbian issues:
-----------------
-
-To get the kernel config:
-```
-sudo modprobe configs;
-gunzip -dc /proc/config.gz
-```
-
-Without rebuilding the kernel:
-
-* No AppArmor or SELinux support
-* No support for auditd

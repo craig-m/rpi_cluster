@@ -29,6 +29,7 @@ describe file('/etc/ssh/sshd_config') do
   its(:content) { should match /R-Pi Cluster Ansible managed file/ }
   its(:content) { should match /PermitRootLogin No/ }
   its(:content) { should match /PasswordAuthentication no/ }
+  its(:content) { should match /AllowGroups sshusers/ }
   it { should be_mode 600 }
 end
 

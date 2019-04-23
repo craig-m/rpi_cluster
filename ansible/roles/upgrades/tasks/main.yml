@@ -5,9 +5,14 @@
 
 # log
 - name: output to rpicluster log
-  shell: logger -t rpicluster starting upgrade role
+  command: logger -t rpicluster starting upgrade role
   changed_when: False
   tags: [maintenance]
+
+
+- name: Check we get a http status 200 from raspbian mirror
+  uri:
+    url: "{{ apt_mirror_rasp }}"
 
 
 # update Apt cache
@@ -66,14 +71,24 @@
 
 - name: pause
   pause:
-    seconds: 2
+    seconds: 3
   tags: [maintenance]
   when: apt_upgraded.changed
 
 
+# actually check all packages are current
+- name: check apt packages are current
+  command: /usr/lib/nagios/plugins/check_apt
+  register: checkapt_nag
+  become: yes
+  changed_when: False
+  failed_when:
+    - "'APT OK: 0 packages available for upgrade (0 critical updates)' not in checkapt_nag.stdout"
+
+
 # log
 - name: output to rpicluster log
-  shell: logger -t rpicluster finished upgrade role OK
+  command: logger -t rpicluster finished upgrade role OK
   changed_when: False
   tags: [maintenance]
 

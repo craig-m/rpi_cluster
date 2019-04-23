@@ -1,16 +1,5 @@
 ---
-# Packages needed on All R-Pi
-- debug: msg="common (packages) "
-
-
-- name: update apt cache
-  apt:
-    update_cache: yes
-  become: yes
-  retries: 3
-  check_mode: no
-  changed_when: False
-  tags: [common,commonpackage]
+- debug: msg="Base System apt-packages"
 
 
 - name: clients and network
@@ -27,7 +16,6 @@
        - libnss3-tools
   become: yes
   retries: 2
-  tags: [common,commonpackage]
 
 
 - name: System misc util
@@ -37,6 +25,7 @@
   loop:
        - linuxlogo
        - vim
+       - nano
        - htop
        - multitail
        - yara
@@ -48,9 +37,11 @@
        - reptyr
        - screen
        - tmux
+       - bats
+       - attr
+       - xattr
   become: yes
   retries: 2
-  tags: [common,commonpackage]
 
 
 - name: System base
@@ -81,7 +72,6 @@
        - uuid-runtime
   become: yes
   retries: 2
-  tags: [common,commonpackage]
 
 
 - name: python pip and dev packages
@@ -94,14 +84,12 @@
        - libpython-all-dev
   become: yes
   retries: 2
-  tags: [common,commonpackage]
 
 
 - name: install virtualenv with pip
   pip:
     name: virtualenv
   become: yes
-  tags: [common,commonpackage]
 
 
 - name: install pyOpenSSL
@@ -109,34 +97,3 @@
     name: pyOpenSSL
     state: present
   become: yes
-
-
-# Install Bash Automated Testing System
-# https://github.com/sstephenson/bats
-- name: copy BATS src
-  copy:
-    src: files/bats-master.zip
-    dest: /opt/cluster/mysrc/
-    mode: 0644
-  register: copybatszip
-  tags: [common,commonpackage]
-
-
-- name: unzip BATS src
-  unarchive:
-    src: /opt/cluster/mysrc/bats-master.zip
-    dest: /opt/cluster/mysrc/
-    remote_src: True
-  when: copybatszip.changed
-  register: unzipbatszip
-  tags: [common,commonpackage]
-
-
-- name: install BATS
-  when: unzipbatszip.changed
-  shell: /opt/cluster/mysrc/bats-master/install.sh /usr/local/
-  become: yes
-  tags:
-    - common
-    - commonpackage
-    - skip_ansible_lint

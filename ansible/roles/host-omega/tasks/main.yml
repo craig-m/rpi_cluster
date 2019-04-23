@@ -50,11 +50,6 @@
   tags: [sensehat]
 
 
-# omegapyapi
-- import_tasks: omegapyapi.yml
-  tags: [omegapyapi]
-
-
 # cron scripts
 - import_tasks: cron.yml
   tags: [host-omega]
@@ -83,7 +78,7 @@
 
 
 - name: output to rpicluster log
-  shell: logger -t rpicluster host-Omega role ran
+  command: logger -t rpicluster host-Omega role ran
   changed_when: False
   tags: [host-omega]
 

@@ -19,7 +19,6 @@
     src: "{{ item.src }}"
     dest: "{{ bbhttpd_src_tmp }}/"
     mode: 0644
-  changed_when: false
   with_items: "{{ files }}"
   tags: [bbhttpd]
 
@@ -31,6 +30,7 @@
     mode: 0755
   become: yes
   when: rpi_bb_httpd_enabled == true
+  register: pi_bb_httpd_script
   tags: [bbhttpd]
 
 
@@ -38,12 +38,13 @@
 - name: install busybox chroot
   command: "{{ bbhttpd_src_tmp }}/chroot_bb.sh"
   become: yes
-  changed_when: false
-  when: rpi_bb_httpd_enabled == true
+  when:
+    - "rpi_bb_httpd_enabled == true"
+    - pi_bb_httpd_script.changed
   tags:
    - bbhttpd
    - skip_ansible_lint
-   
+
 
 # index.html
 - name: index.html template

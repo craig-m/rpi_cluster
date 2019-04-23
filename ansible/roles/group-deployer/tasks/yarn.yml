@@ -27,24 +27,12 @@
   become: yes
 
 
-# check apt file
-- name: check yarn apt file
-  stat: path=/etc/apt/sources.list.d/yarn.list
-  register: yarn_aptconf
-
-
-# add repo file
-- name: yarn apt repo
-  shell: echo 'deb https://dl.yarnpkg.com/debian/ stable main' | tee /etc/apt/sources.list.d/yarn.list
+- name: add yarn apt repo
+  apt_repository:
+    repo: deb https://dl.yarnpkg.com/debian/ stable main
+    state: present
   become: yes
-  when: yarn_aptconf.stat.exists == False
   register: yarnaddapt
-
-
-# check installed
-- name: check yarn bin
-  stat: path=/usr/bin/yarn
-  register: yarnbin
 
 
 # update apt
@@ -62,7 +50,7 @@
   apt:
     name: "{{ item }}"
     state: present
-  with_items:
+  loop:
        - yarn
   become: yes
   retries: 1

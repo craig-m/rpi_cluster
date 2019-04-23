@@ -1,8 +1,8 @@
 #!/bin/bash
 # {{ ansible_managed }}
-# compute-boot.sh
+# setup by role: {{role_path|basename}}
+#
 # this script is run on boot by systemd, rpi-compute.service
-# modified: {{ ansible_date_time.time}} {{ ansible_date_time.date }}
 
 logger -t rpicluster "compute-boot.sh started"
 
@@ -20,6 +20,7 @@ if [ ! -f /mnt/ramstore/data/test.txt ]; then
   # these files exist in Volatile memory!
   mkdir -p /mnt/ramstore/data;
   touch -f /mnt/ramstore/data/test.txt;
+  echo "test" > /mnt/ramstore/data/test.txt;
   chmod 700 /mnt/ramstore/data;
 fi
 

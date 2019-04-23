@@ -2,7 +2,7 @@
 #
 # Raspberry Pi Cluster rc.local
 # {{ ansible_managed }}
-# modified: {{ ansible_date_time.time}} {{ ansible_date_time.date }}
+# created by role: {{role_path|basename}}
 #
 
 rpilogit () {
@@ -26,5 +26,6 @@ arp -s {{ rpi_net_default_gw }} {{ rpi_net_default_gw_mac }}
 touch -f ${rclocal_temp}/boot.txt
 echo "OK" > ${rclocal_temp}/boot.txt
 
-rpilogit "/etc/rc.local ran";
+rpilogit "/etc/rc.local tempdir: $rclocal_temp"
+rpilogit "/etc/rc.local finished";
 exit 0

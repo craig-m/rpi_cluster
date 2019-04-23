@@ -37,38 +37,4 @@
   changed_when: False
   run_once: True
   tags: [ansiblepre]
-
-
-# log remote
-- name: remote log
-  local_action: command /usr/bin/logger --server {{ rpi_rsyslog_ip }} --udp --port {{ rpi_rsyslog_port }} -t rpicluster "running ansible-pre-role on $HOSTNAME"
-  ignore_errors: False
-  check_mode: no
-  changed_when: False
-  when: rpi_rsyslog_enable == true
-  tags: [ansiblepost]
-  run_once: True
-
-
-- name: get rpi deployer ansible runcount
-  local_action: command /usr/bin/redis-cli get /rpi/deployer/ansible/runcount
-  run_once: True
-  changed_when: False
-  tags: [ansiblepre]
-  ignore_errors: True
-
-
-- name: store rpi IP in redis
-  local_action: command /usr/bin/redis-cli set /rpi/{{ inventory_hostname }}/ip {{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}
-  changed_when: False
-  run_once: True
-  tags: [ansiblepre]
-  ignore_errors: True
-
-
-- name: store rpi MAC in redis
-  local_action: command /usr/bin/redis-cli set /rpi/{{ inventory_hostname }}/mac {{ hostvars[inventory_hostname]['ansible_default_ipv4']['macaddress'] }}
-  changed_when: False
-  run_once: True
-  tags: [ansiblepre]
-  ignore_errors: True
+  delegate_to: localhost

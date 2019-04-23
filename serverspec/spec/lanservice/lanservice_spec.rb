@@ -11,6 +11,11 @@ describe service('rpi-lanservices.service') do
   it { should be_enabled }
 end
 
+describe file('/etc/ssh/sshd_config') do
+ its(:content) { should match /AuthorizedKeysFile \/dev\/null/ }
+ its(:content) { should match /TrustedUserCAKeys \/etc\/ssh\/ca.pub/ }
+end
+
 # no docker on these older slow r-pi
 describe file('/usr/bin/docker') do
   it { should_not exist }

@@ -3,6 +3,7 @@ Setup guide
 
 Directions for bootstrapping this Raspberry Pi cluster.
 
+Tested on `2019-04-08-raspbian-stretch-lite.img`
 
 ---
 
@@ -10,7 +11,7 @@ Directions for bootstrapping this Raspberry Pi cluster.
 Preparation
 -----------
 
-* Download Raspbian lite, flash the image on to each SD card with DD or Etcher etc. I am using the 2018-11-13 Raspbian stretch lite image (SHA-256: 47ef1b2501d0e5002675a50b6868074e693f78829822eef64f3878487953234d).
+* Download Raspbian lite, flash the image on to each SD card with DD or Etcher etc.
 
 * Create the empty file /boot/ssh on each SDcard to enable SSH access. Read https://www.raspberrypi.org/blog/a-security-update-for-raspbian-pixel/ for info.
 
@@ -28,7 +29,9 @@ Setup the Deployer
 ------------------
 
 
-Copy the code (this repo) to the R-Pi that will be the deployer, it expects to be stored in /home/pi/rpi_cluster/
+Copy the code (this repo) to the R-Pi that will become the deployer, it **needs** to be copied to /home/pi/rpi_cluster/
+
+note: no data/files/logs will be created in this dir - it does not need to be backed up.
 
 ```
 $ rsync -avr --exclude='.git' --exclude='ignore_me' rpi_cluster/ pi@20.20.20.20:~/rpi_cluster
@@ -70,23 +73,23 @@ pi@raspberrypi:~/rpi_cluster/ansible $ source ~/env/bin/activate
 List the tasks:
 
 ```
-(env) pi@raspberrypi:~/rpi_cluster/ansible $ invoke -l
+(env) pi@psi:~/rpi_cluster/ansible $ invoke -l
 Available tasks:
 
-  ansible-gather-facts        Gather facts on all hosts.
-  ansible-maint               upgrade all R-Pi server hosts (includes rolling reboots).
-  ansible-ping                Ansible Ping a host. Eg: invoke ansible-ping omega
-  ansible-sshd                Change default SSH login on new R-Pi.
-  ansible-test-default        Test default SSH creds on all hosts.
-  cluster-serverspec          Run ServerSpec tests.
-  compute-ansible-base        Run ansible base role on compute group.
-  compute-ansible-container   Setup Docker k8 cluster.
-  compute-ansible-web         Setup Web frontend.
-  compute-container-destroy   shutdown and remove k8 cluster.
-  deployer-ansible            Run ansible deployer role on Psi (localhost).
-  deployer-ssh-config         Generate ~/.ssh/config file from Ansible inventory.
-  lanservices-main-ansible    Run ansible on Alpha and Beta.
-  lanservices-misc-ansible    Run ansible on Omega.
+  ansible-gather-facts           Gather facts on all hosts.
+  ansible-maint                  upgrade all R-Pi server hosts (includes rolling reboots).
+  ansible-ping                   Ansible Ping a host. ex: invoke ansible-ping omega
+  ansible-sshd                   Change default SSH login on new R-Pi.
+  ansible-test-default           Test default SSH creds on all hosts.
+  cluster-serverspec             ServerSpec tests.
+  compute-ansible-base           ansible base playbook on compute group.
+  compute-ansible-container      Setup Docker k8 cluster.
+  compute-ansible-container-rm   shutdown and remove docker and k8 cluster.
+  compute-ansible-web            Setup Web frontend.
+  deployer-ansible               ansible deployer role on Psi (localhost).
+  deployer-ssh-config            Generate ~/.ssh/config file from Ansible inventory.
+  lanservices-main-ansible       ansible services-main playbook on Alpha and Beta.
+  lanservices-misc-ansible       ansible services-misc playbook on Omega.
 
 ```
 

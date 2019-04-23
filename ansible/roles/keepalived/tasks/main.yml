@@ -74,7 +74,8 @@
 
 
 # pause
-- pause:
+- name: wait a moment
+  pause:
     seconds: 6
   when: keepalived_changed.changed
   changed_when: false
@@ -98,17 +99,9 @@
   tags: [keepalived]
 
 
-# Save IP in Redis
-- name: store float IP in redis
-  local_action: command /usr/bin/redis-cli set /rpi/keepalived/ip {{ rpi_loadbal_float_ip }}
-  changed_when: False
-  run_once: True
-  tags: [keepalived]
-
-
 # log
 - name: notify rpicluster log
-  shell: logger -t rpicluster running Keepalived with floating IP {{ rpi_loadbal_float_ip }}
+  command: logger -t rpicluster running Keepalived with floating IP {{ rpi_loadbal_float_ip }}
   changed_when: false
   tags: [keepalived]
 

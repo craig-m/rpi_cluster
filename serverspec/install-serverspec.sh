@@ -15,6 +15,7 @@ rpilogit () {
 	logger -t rpicluster "$1";
 }
 
+
 # install ----------------------------------------------------------------------
 
 rpilogit "serverspec install started";

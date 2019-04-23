@@ -1,4 +1,5 @@
 # {{ ansible_managed }}
+# ansible role: {{role_path|basename}}
 
 # Omega host haproxy config
 
@@ -118,7 +119,7 @@ backend alpha
   reqrep ^([^\ :]*)\ /api/alpha/(.*)     \1\ /cgi-bin/\2
   #
   # backend servers
-  server host {{ hostvars['alpha']['ansible_default_ipv4']['address'] }}:1080 maxconn 1000
+  server host {{ hostvars['alpha']['rpi_ip'] }}:1080 maxconn 1000
 
 
 # /api/beta/ - busybox httpd on beta
@@ -140,7 +141,7 @@ backend beta
   reqrep ^([^\ :]*)\ /api/beta/(.*)     \1\ /cgi-bin/\2
   #
   # backend servers
-  server host {{ hostvars['beta']['ansible_default_ipv4']['address'] }}:1080 maxconn 1000
+  server host {{ hostvars['beta']['rpi_ip'] }}:1080 maxconn 1000
 
 
 # /php/omega/ - php on local nginx

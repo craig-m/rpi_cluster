@@ -73,27 +73,29 @@ The other bits and pieces in this cluster:
 ---
 
 
-# Overview of roles
+# Overview of node groups
 
 
 ### Deployer
 
-The Deployer runs from x1 R-Pi. This configures all of the other hosts. It also acts as a Certificate Authority, for TLS and SSH.
+The Deployer runs from x1 R-Pi. This configures all of the other hosts. It also acts as a Certificate Authority, for TLS and SSH. Infrastructure for system admins.
 
-* Ansible (https://www.ansible.com/)
-* Invoke (http://www.pyinvoke.org/)
-* ServerSpec (http://serverspec.org/)
+* [Ansible](https://www.ansible.com/) - the control node
+* [ARA](https://ara.readthedocs.io/en/stable/) - web interface to analyze Ansible results
+* [Redis](https://redis.io/) - for the Ansible fact cache
+* [ServerSpec](http://serverspec.org/) - RSpec tests for infrastructure
+* [Invoke](http://www.pyinvoke.org/) - a task execution tool
 
 
-Redundancy: can fail and the cluster will continue to operate, but it cannot be altered. Small amounts of downtime for this host can be tolerated while it gets restored from backup.
+Redundancy: can fail and the cluster will continue to operate, but it cannot be altered. Small amounts of downtime for this host can be tolerated while it gets restored from backup. This SD card can be cloned onto a spare one as a backup option.
 
 
 ### LanServices - Main
 
-To provide redundant essential services for the LAN.
+To provide redundant essential services for the LAN. Longer running infrastructure to handle services for the more ephemeral nodes.
 
-* DHCP Server (isc.org server in HA)
-* DNS Server (Bind with zone replication between master/secondary)
+* [DHCP Server](https://www.isc.org/downloads/dhcp/) (in high availability)
+* [DNS Server](https://www.isc.org/downloads/bind/) (Bind with zone replication between master/secondary)
 * NTP Server
 * FTP Daemon (for BOOTP clients)
 * BusyBox httpd (running in chroot)
@@ -103,27 +105,27 @@ Redundancy: any 1 of the 2 nodes can fail.
 
 ### LanServices - Misc
 
-For miscellaneous, non-essential, net services. Used for dev, reporting, testing , monitoring etc.
+For miscellaneous, non-essential, net services. Used for dev, reporting, building, monitoring etc. And LEDs since it's equipped with a [Sense Hat](https://www.raspberrypi.org/products/sense-hat/).
 
-* Redis
+* [Redis](https://redis.io/)
 * Nginx + PHP-FPM
-* HAproxy
-* Hugo (static website generator)
-* Yarn
+* [HAproxy](https://www.haproxy.org/)
+* [Hugo](https://github.com/gohugoio/hugo) - static website generator
+* [Yarn](https://github.com/yarnpkg/yarn/)
 * Docker (standalone)
 
-Redundancy: not redundant, does not provide services for the LAN.
+Redundancy: not redundant, does not provide services for the LAN. Immutable - no data to backup from this node.
 
 
 ### Compute / Worker
 
-To play with services, hosted on Kubernetes. Subdivided into a frontend and backend group.
+To play with services, and things like Kubernetes. Subdivided into a frontend and backend group. These nodes run services for public consumption, this is "production". Immutable infrastructure.
 
-* Keepalived (floating IP over x2 nodes)
-* HAproxy
+* [Keepalived](https://github.com/acassen/keepalived) - a floating IP address over x2 nodes
+* [DistCC](https://github.com/distcc/distcc) - for distributed compiling
+* [C mpich](https://www.mpich.org/) - distributed code with the C Message Passing Interface
+* [HAproxy](https://www.haproxy.org/)
 * Nginx
-* DistCC (for distributed compiling)
-* C mpich (Message Passing Interface - mpich.org)
 * Docker + Kubernetes + Weave network addon
 
 Redundancy: 1 of 2 'front', and 1 of 2 'back-end' nodes can fail.

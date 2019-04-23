@@ -13,8 +13,10 @@
 
 # run welcome script on the first time - LED welcome lights!
 - name: run sensehat welcome
-  shell: /opt/cluster/bin/sensehat-welcome.py
+  script: sensehat-welcome.py
   args:
+    executable: python3
+    chdir: /opt/cluster/bin/
     creates: /home/pi/.config/sensehatwelcomed
 
 

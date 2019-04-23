@@ -103,5 +103,5 @@
 
 # log
 - name: output to rpicluster log
-  shell: logger -t rpicluster ansible kubernetes master boss role ran
+  command: logger -t rpicluster ansible kubernetes master boss role ran
   changed_when: False

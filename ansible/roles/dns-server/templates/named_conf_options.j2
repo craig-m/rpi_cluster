@@ -1,12 +1,12 @@
 // {{ ansible_managed }}
 // node: {{ rpi_dnsd_status }}
+// role: {{role_path|basename}}
 // file: /etc/bind/named.conf.options
-// modified: {{ ansible_date_time.time}} {{ ansible_date_time.date }}
 
 acl "trusted" {
 	localhost;
-	{{ hostvars['alpha']['ansible_default_ipv4']['address'] }};
-	{{ hostvars['beta']['ansible_default_ipv4']['address'] }};
+	{{ hostvars['alpha']['rpi_ip'] }};
+	{{ hostvars['beta']['rpi_ip'] }};
 };
 
 acl "rpinet" {

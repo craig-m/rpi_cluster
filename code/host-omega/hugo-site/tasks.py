@@ -9,7 +9,7 @@ def hugo_build(c):
     """ build the web site """
     print("building")
     c.run('rm -rf -- public/*')
-    c.run('/home/pi/go/bin/hugo -v')
+    c.run('hugo -v')
 
 @task
 def hugo_upload(c):

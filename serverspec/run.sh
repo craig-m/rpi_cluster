@@ -23,8 +23,6 @@ rpilogit () {
 # reset path
 export PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
-# no ld_preload
-unset LD_PRELOAD;
 
 # Run tests --------------------------------------------------------------------
 start_time=$(date)
@@ -43,9 +41,6 @@ rake -j 10 spec
 
 # make reports/index.html file
 rake gen_report
-
-#rake pub_report:vbox
-#rsync -avr -- reports/* pi@omega.local:/srv/nginx/hugo-site/serverspec/reports
 
 fin_time=$(date)
 rpilogit "finished serverspec tests at ${fin_time}";

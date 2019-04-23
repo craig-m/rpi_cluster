@@ -19,18 +19,22 @@ def deployer_ssh_config(c):
     print("Creating new ssh config file")
     c.run('ansible-playbook --connection=local -e "runtherole=group-deployer-ssh-client" -v single-role.yml')
 
+
 # specific hosts ---------------------------------------------------------------
+# ex: invoke ansible-ping compute
+# ex: invoke ansible-ping all
 
 @task
 def ansible_ping(c, hostname):
-    """ Ansible Ping a host. Eg: invoke ansible-ping omega """
+    """ Ansible Ping a host. example: invoke ansible-ping compute """
     c.run("ansible %s -m ping;" % hostname)
 
 @task
 def ansible_sshd(c, hostname):
-    """ Change default SSH login on new R-Pi. """
+    """ Change default SSH login on new R-Pi. example: invoke ansible_sshd beta """
     print("Running ssh-server role")
     c.run('ansible-playbook --limit "%s" -e "ansible_user=pi ansible_ssh_pass=raspberry host_key_checking=False runtherole=ssh-server" -v single-role.yml' % hostname)
+
 
 # lanservices group ------------------------------------------------------------
 
@@ -45,6 +49,7 @@ def lanservices_misc_ansible(c):
     """ ansible services-misc playbook on Omega. """
     print("Running play-rpi-services-misc.yml")
     c.run('ansible-playbook -v play-rpi-services-misc.yml')
+
 
 # compute cluster (x4 rpi) -----------------------------------------------------
 
@@ -94,7 +99,7 @@ def ansible_maint(c):
     print("Running play-rpi-all-maint.yml")
     c.run('ansible-playbook -v play-rpi-all-maint.yml')
 
-# test Deployer, lanservices main + misc
+# test all nodes in the clsuter with ServerSpec
 @task
 def cluster_serverspec(c):
     """ ServerSpec tests. """

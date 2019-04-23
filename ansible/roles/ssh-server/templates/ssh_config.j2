@@ -1,7 +1,6 @@
 # {{ ansible_managed }}
-# ssh client config of {{ ansible_hostname }}
+# ssh client config of {{ inventory_hostname }}
 # setup by role: {{role_path|basename}}
-# modified: {{ ansible_date_time.time}} {{ ansible_date_time.date }}
 
 Host *
     ForwardAgent no

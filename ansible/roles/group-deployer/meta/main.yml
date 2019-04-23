@@ -1,5 +1,15 @@
 ---
-allow_duplicates: no
+galaxy_info:
+  role_name: group-deployer
+  author: crgm
+  description: sshd server config
+  company: crgm inc
+  license: license (no)
+  min_ansible_version: 2.7
+  platforms:
+  - name: Raspbian
+    versions:
+      - stretch
 dependencies:
   - { role: userac }
   - { role: base-system }

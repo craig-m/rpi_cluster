@@ -116,6 +116,15 @@
     - skip_ansible_lint
 
 
+- name: Set extended attribute 'trusted.rpi-cluster.file-validate'
+  xattr:
+    path: /etc/nginx/nginx.conf
+    key: rpi-cluster.file
+    value: validate
+    namespace: trusted
+  become: yes
+
+
 # reload config
 - name: nginx started
   service:

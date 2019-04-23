@@ -1,5 +1,6 @@
 ---
 # R-Pi cluster SSL
+- debug: msg="Base System sslcert"
 
 
 - name: Generate OpenSSL private key for host

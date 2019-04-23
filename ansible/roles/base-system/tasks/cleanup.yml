@@ -1,4 +1,5 @@
 ---
+- debug: msg="Base System cleanup"
 
 
 # Remove Apt packages (in defaults/main.yml)
@@ -8,7 +9,6 @@
     state: absent
   with_items: "{{ package_remove }}"
   become: yes
-  tags: [common,commonpackage]
 
 
 # stop these services
@@ -17,25 +17,50 @@
     name: apt-daily-upgrade.service
     state: stopped
     enabled: no
+  changed_when: false
   become: yes
+
 
 - name: stop apt daily service
   service:
     name: apt-daily.service
     state: stopped
     enabled: no
+  changed_when: false
   become: yes
+
 
 - name: stop apt daily upgrade
   service:
     name: apt-daily-upgrade.timer
     state: stopped
     enabled: no
+  changed_when: false
   become: yes
+
 
 - name: stop apt daily timer
   service:
     name: apt-daily.timer
     state: stopped
     enabled: no
+  changed_when: false
+  become: yes
+
+
+- name: stop avahi-daemon service
+  service:
+    name: avahi-daemon.service
+    state: stopped
+    enabled: no
+  changed_when: false
+  become: yes
+
+
+- name: stop avahi-daemon socket
+  service:
+    name: avahi-daemon.socket
+    state: stopped
+    enabled: no
+  changed_when: false
   become: yes

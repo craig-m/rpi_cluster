@@ -2,7 +2,7 @@
 
 - name: keepalived_reload
   service:
-    name: keepalived 
+    name: keepalived
     state: reloaded
   become: yes
   tags: [keepalived]

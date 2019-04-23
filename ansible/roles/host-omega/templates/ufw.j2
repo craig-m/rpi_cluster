@@ -1,5 +1,6 @@
 #!/bin/bash
 # {{ ansible_managed }}
+# setup by role: {{role_path|basename}}
 # UFW setup script for omega
 
 apt-get install ufw -y
@@ -9,6 +10,9 @@ ufw status verbose
 echo 1 > /proc/sys/net/ipv4/tcp_syncookies
 echo 1 > /proc/sys/net/ipv4/icmp_echo_ignore_broadcasts
 
+# reset ufw
+ufw --force reset
+
 # defaults
 ufw default deny incoming || exit 1;
 ufw default allow outgoing
@@ -17,8 +21,15 @@ ufw default allow outgoing
 ufw allow 80/tcp
 ufw allow 443/tcp
 
-# allow all incoming from local LAN
+# deny incoming
+ufw deny 3306/tcp
+ufw deny 6379/tcp
+
+# allow all other incoming from local LAN
 ufw allow from {{ rpi_net_id }}/{{ rpi_net_maskbit }}
+
+# deny this outbound traffic
+ufw deny out 25
 
 # log
 ufw logging on

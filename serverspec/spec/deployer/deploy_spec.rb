@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+
 describe file('/opt/cluster/data/info_roles.txt') do
  it { should be_file }
  it { should be_owned_by 'root' }
@@ -9,17 +10,30 @@ describe file('/opt/cluster/data/info_roles.txt') do
  its(:content) { should match /redis/ }
 end
 
-describe host("alpha") do
-  it { should be_reachable }
+
+describe process("gpg-agent") do
+  its(:count) { should eq 1 }
+  its(:user) { should eq "pi" }
 end
 
-describe host("beta") do
-  it { should be_reachable }
+describe process("ssh-agent") do
+  its(:user) { should eq "pi" }
 end
 
-describe host("omega") do
-  it { should be_reachable }
+
+describe file('/etc/ssh/sshd_config') do
+ its(:content) { should match /AuthorizedKeysFile \/home\/pi\/.ssh\/authorized_keys/ }
 end
+
+
+# should NOT be listening here
+describe port(443) do
+  it { should_not be_listening }
+end
+describe port(80) do
+  it { should_not be_listening }
+end
+
 
 # should not exist here
 describe user('mpiuser') do

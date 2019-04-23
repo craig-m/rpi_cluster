@@ -3,7 +3,10 @@
 
 
 - name: gather facts on other hosts
-  hosts: alpha, beta, omega
+  hosts:
+    - alpha
+    - beta
+    - omega
   gather_facts: True
   roles:
     - ansible-pre-role
@@ -29,10 +32,12 @@
     - dotnet
     - docker
     - nodejs
+    - hugo
     - php
     - nginx
     - haproxy
     - mpich
+    - sysstat
     - host-omega
 
 

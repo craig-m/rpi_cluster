@@ -151,7 +151,7 @@
 
 # log
 - name: output to rpicluster log
-  shell: logger -t rpicluster ansible kubernetes roll ran
+  command: logger -t rpicluster ansible kubernetes roll ran
   tags: [kube]
   changed_when: False
 

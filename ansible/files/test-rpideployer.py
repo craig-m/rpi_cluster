@@ -1,5 +1,8 @@
 # check deployer
 
+# use:
+# $ pytest test-rpideployer.py
+
 # pi cluster deployer ----------------------------------------------------------
 
 def test_hostinfor_file(host):

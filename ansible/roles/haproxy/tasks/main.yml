@@ -50,7 +50,7 @@
 
 # log if config changes
 - name: notify rpicluster log
-  shell: logger -t rpicluster haproxy config changed
+  command: logger -t rpicluster haproxy config changed
   changed_when: false
   when: haproxycfg_change.changed
   tags: [haproxy]
@@ -87,7 +87,7 @@
 
 # check haproxy config file
 - name: test haproxy config file
-  shell: haproxyctl configcheck
+  command: haproxyctl configcheck
   register: haproxycnf_result
   become: yes
   changed_when: False
@@ -98,7 +98,7 @@
 
 # log
 - name: notify rpicluster log
-  shell: logger -t rpicluster installed haproxy with {{ haproxy_cfg_file }} config
+  command: logger -t rpicluster installed haproxy with {{ haproxy_cfg_file }} config
   changed_when: false
   tags: [haproxy]
 

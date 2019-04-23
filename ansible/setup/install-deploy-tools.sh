@@ -156,6 +156,15 @@ if [ ! -f ~/.rpibs/rpibs_firm ]; then
   sleep 2s;
 fi
 
+# check all packages current
+/usr/lib/nagios/plugins/check_apt --timeout=30 --list
+if [ $? -eq 0 ]; then
+  rpilogit "packages are current"
+else
+  rpilogit "apt packages need upgrade ERROR"
+	exit 1;
+fi
+
 # checks (processes are hidden from non-root users)
 rpilogit "check host";
 /usr/bin/sudo /usr/lib/nagios/plugins/check_procs -w 200 -c 250 --metric=CPU || exit 1;

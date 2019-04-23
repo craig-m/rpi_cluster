@@ -25,7 +25,7 @@
 
 
 - name: notify rpicluster log
-  shell: logger -t rpicluster installed haveged
+  command: logger -t rpicluster installed haveged
   changed_when: false
   when: aptinsthaveged.changed
   tags: haveged

@@ -1,5 +1,9 @@
 ---
-# rpi_cluster master playbook (excludes deployer r-pi)
+# rpi_cluster master playbook. Usage:
+#
+# $ ansible-playbook site.yml
+#
+- import_playbook: play-rpi-deployer.yml
 - import_playbook: play-rpi-services-main.yml
 - import_playbook: play-rpi-services-misc.yml
 - import_playbook: play-rpi-compute.yml

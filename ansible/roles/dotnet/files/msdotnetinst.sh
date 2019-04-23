@@ -7,6 +7,8 @@ rpilogit () {
 	logger -t rpicluster "$1";
 }
 
+ansible_dotnet_v="v200"
+
 rpilogit "starting dotnetinst.sh"
 
 export DEBIAN_FRONTEND=noninteractive
@@ -41,5 +43,7 @@ dotnet --info || exit 1;
 /usr/bin/sudo chown $USER:$USER /opt/dotnet/srv/;
 
 sleep 2s;
+
+/usr/bin/sudo touch -f /opt/dotnet/${ansible_dotnet_v}
 
 rpilogit "finished dotnetinst.sh";

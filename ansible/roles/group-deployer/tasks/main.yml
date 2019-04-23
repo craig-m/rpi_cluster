@@ -5,6 +5,20 @@
 - debug: msg="deployer role "
 
 
+- name: create user deployops
+  user:
+    name: deployops
+    groups: sshusers,staff,backup
+    append: yes
+    shell: /bin/bash
+    generate_ssh_key: yes
+    ssh_key_bits: 2048
+    ssh_key_file: .ssh/deployops_id_rsa
+    createhome: yes
+    home: "/home/deployops"
+  become: yes
+
+
 # Download src/pacakges etc
 - import_tasks: dl_packages.yml
   tags: [deployer]
@@ -54,7 +68,7 @@
 
 # log
 - name: output to rpicluster log
-  shell: logger -t rpicluster ansible deployer role ran
+  command: logger -t rpicluster ansible deployer role ran
   tags: [deployer]
   changed_when: False
 

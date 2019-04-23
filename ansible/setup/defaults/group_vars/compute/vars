@@ -19,6 +19,10 @@ rpi_ntp_client_3: "{{ hostvars['omega']['rpi_ip'] }}"
 
 #-------------------------------------------------------------------------------
 
+# haproxy server:
+rpi_haproxy_enabled: true
+haproxy_cfg_file: "compute"
+
 # consul options
 rpi_conul_enabled: true
 rpi_conul_start_opt: "agent -disable-host-node-id -raft-protocol 3"

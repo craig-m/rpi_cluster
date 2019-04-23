@@ -1,0 +1,4 @@
+---
+dependencies:
+  - role: base-system
+  - role: docker

@@ -1,7 +1,7 @@
 // {{ ansible_managed }}
 // node: {{ rpi_dnsd_status }}
+// role: {{role_path|basename}}
 // file: /etc/bind/named.conf.default-zones
-// modified: {{ ansible_date_time.time}} {{ ansible_date_time.date }}
 
 // prime the server with knowledge of the root servers
 zone "." {

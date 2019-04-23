@@ -9,7 +9,6 @@ describe process("distccd") do
   its(:user) { should eq "distccd" }
 end
 
-
 describe file('/etc/distcc/hosts') do
  it { should be_file }
  it { should be_owned_by 'root' }

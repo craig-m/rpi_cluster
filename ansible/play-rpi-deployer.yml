@@ -18,6 +18,7 @@
     - nodejs
     - golang
     - docker
+    - hugo
     - group-deployer
     - jenkins
     - ansible-post-role

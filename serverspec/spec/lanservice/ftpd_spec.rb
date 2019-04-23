@@ -17,9 +17,16 @@ describe user('tftp') do
   it { should have_login_shell '/bin/false' }
 end
 
-describe file('/srv/tftp/') do
+describe file('/srv/tftp/pxelinux/') do
   it { should be_directory }
   it { should be_owned_by 'root' }
+  it { should be_mode 775 }
+end
+
+describe file('/srv/tftp/dl/') do
+  it { should be_directory }
+  it { should be_owned_by 'root' }
+  it { should be_mode 775 }
 end
 
 describe process("in.tftpd") do

@@ -19,7 +19,7 @@
   tags: [sysstat]
 
 
-- name: copy config
+- name: copy default config
   template:
     src: default.j2
     dest: /etc/default/sysstat
@@ -27,6 +27,20 @@
     group: root
     mode: 0664
     backup: yes
+  notify: sysstat_restart
+  become: yes
+  tags: [sysstat]
+
+
+- name: copy config
+  template:
+    src: sysstat.j2
+    dest: /etc/sysstat/sysstat
+    owner: root
+    group: root
+    mode: 0664
+    backup: yes
+  notify: sysstat_restart
   become: yes
   tags: [sysstat]
 

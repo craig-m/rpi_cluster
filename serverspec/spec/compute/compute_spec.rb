@@ -15,22 +15,26 @@ describe file('/opt/cluster/data/info_roles.txt') do
  its(:content) { should match /group-compute/ }
 end
 
-describe file('/opt/cluster/bin/compute-boot.sh') do
+describe file('/mnt/ramstore/data/test.txt') do
  it { should be_file }
  it { should be_owned_by 'root' }
- it { should be_mode 770 }
+end
+
+describe file('/etc/ssh/sshd_config') do
+ its(:content) { should match /AuthorizedKeysFile \/dev\/null/ }
+ its(:content) { should match /TrustedUserCAKeys \/etc\/ssh\/ca.pub/ }
 end
 
 describe package('openjdk-8-jdk') do
   it { should be_installed }
 end
 
-
+# these users should be added
 describe user('computeadm') do
   it { should exist }
 end
 
-# should not exist here
+# these users should NOT exist here
 describe user('omegapyapi') do
   it { should_not exist }
 end

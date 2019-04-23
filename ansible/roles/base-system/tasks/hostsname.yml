@@ -1,6 +1,6 @@
 ---
 # handle hostname
-- debug: msg="Common (hostsname) "
+- debug: msg="Base System hostsname"
 
 
 - name: get my current hostname
@@ -9,7 +9,7 @@
   changed_when: False
 
 
-- debug: msg="my_current_hostname {{ my_current_hostname}} "
+- debug: msg="my_current_hostname {{ my_current_hostname }} "
 
 
 - name: set-hostname with hostnamectl
@@ -55,12 +55,12 @@
 # wait for host
 - name: wait for host to restart
   wait_for:
-    host: '{{hostvars[item].ansible_host}}'
+    host: '{{ hostvars[item].ansible_host }}'
     port: 22
     state: started
     delay: 30
     timeout: 150
-  with_items: '{{play_hosts}}'
+  with_items: '{{ play_hosts }}'
   connection: local
   when:
     - my_current_hostname == "Raspberry"

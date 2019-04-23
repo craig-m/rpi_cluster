@@ -4,7 +4,8 @@
     - "'docker_worker' in group_names"
 
 - name: get kube init api info
-  local_action: shell tail -n5 /opt/cluster/backup/{{ kube_master_node }}/opt/cluster/docker/kubecnf/kube_info.txt | grep -e kubeadm -e token -e discovery -e hash
+  shell: tail -n5 /opt/cluster/backup/{{ kube_master_node }}/opt/cluster/docker/kubecnf/kube_info.txt | grep -e kubeadm -e token -e discovery -e hash
+  delegate_to: localhost
   register: join_kube_mast
   changed_when: False
 
@@ -36,5 +37,5 @@
 
 # log
 - name: output to rpicluster log
-  shell: logger -t rpicluster ansible kubernetes join master roll ran
+  command: logger -t rpicluster ansible kubernetes join master roll ran
   changed_when: False

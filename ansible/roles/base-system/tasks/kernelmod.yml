@@ -1,6 +1,6 @@
 ---
 # blacklist wifi and bluetooth kernel modules
-- debug: msg="common (kernelmod) "
+- debug: msg="Base System kernelmod"
 
 
 # stop + disable bluetooth service

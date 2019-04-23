@@ -52,15 +52,6 @@
     mode: '0600'
     validate: /usr/sbin/sshd -t -f %s
     backup: yes
+  notify: sshd_restart
   become: yes
-  tags: [ssh]
-
-
-# restart ssh
-- name: sshd_restart
-  service:
-    name: ssh
-    state: restarted
-  become: yes
-  changed_when: False
   tags: [ssh]

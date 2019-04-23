@@ -9,16 +9,28 @@ end
 
 describe file('/etc/ansible/ansible.cfg') do
  it { should be_file }
+ it { should be_owned_by 'pi' }
+ it { should be_grouped_into 'pi' }
+ it { should be_mode 644 }
 end
 
-describe file('/etc/ansible/inventory/compute') do
+describe file('/etc/ansible/inventory/compute/hosts') do
  it { should be_file }
+ it { should be_owned_by 'pi' }
+ it { should be_grouped_into 'pi' }
+ it { should be_mode 644 }
 end
-describe file('/etc/ansible/inventory/deploy') do
+describe file('/etc/ansible/inventory/deploy/hosts') do
  it { should be_file }
+ it { should be_owned_by 'pi' }
+ it { should be_grouped_into 'pi' }
+ it { should be_mode 644 }
 end
-describe file('/etc/ansible/inventory/lanservices') do
+describe file('/etc/ansible/inventory/lanservices/hosts') do
  it { should be_file }
+ it { should be_owned_by 'pi' }
+ it { should be_grouped_into 'pi' }
+ it { should be_mode 644 }
 end
 
 

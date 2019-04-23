@@ -28,7 +28,7 @@
 # started + enabled
 - name: ntp started
   service:
-    name: ntp 
+    name: ntp
     state: started
     enabled: yes
   become: yes

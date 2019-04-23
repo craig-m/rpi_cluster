@@ -8,6 +8,13 @@
   tags: [bind]
 
 
+- name: record tld to ara
+  ara_record:
+    key: "rpicluster_tld"
+    type: "url"
+    value: "http://www.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}"
+
+
 - name: install DNS server packages
   apt:
     name: "{{ item }}"
@@ -106,7 +113,7 @@
 
 # log
 - name: output to rpicluster log
-  shell: logger -t rpicluster ansible dns-server role ran as {{ rpi_dnsd_status }}
+  command: logger -t rpicluster ansible dns-server role ran as {{ rpi_dnsd_status }}
   tags: [bind]
   changed_when: False
   when:

@@ -1,7 +1,6 @@
 # {{ ansible_managed }}
 # sshd server config
 # setup by role: {{role_path|basename}}
-# modified: {{ ansible_date_time.time}} {{ ansible_date_time.date }}
 
 Port 22
 Port {{ ssh_group_port }}
@@ -72,4 +71,4 @@ Subsystem sftp /usr/lib/openssh/sftp-server
 UsePAM yes
 
 # Only allow users in these groups SSH access
-AllowGroups {{ ansible_user_id }} sshusers
+AllowGroups sshusers {{ ansible_user_id }}

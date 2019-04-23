@@ -1,6 +1,6 @@
 ---
 # Common base setup - run on all nodes
-- debug: msg="Base System "
+- debug: msg="Base System main"
   tags: [common]
 
 
@@ -22,19 +22,29 @@
   tags: [common]
 
 
-# blacklist kernel modules
+# blacklist kernel modules on R-Pi Hardware
 - import_tasks: kernelmod.yml
-  tags: [common,kernelmod]
+  tags:
+    - common
+    - kernelmod
 
 
 # /etc/sysctl.conf tuning
 - import_tasks: sysctl.yml
-  tags: [common,sysctl]
+  tags:
+    - common
+    - sysctl
+
+
+# Apt repo setup
+- import_tasks: apt-repo.yml
 
 
 # Install Apt packages
-- import_tasks: packages.yml
-  tags: [common,commonpackage]
+- import_tasks: apt-packages.yml
+  tags:
+    - common
+    - commonpackage
 
 
 # remove things
@@ -58,7 +68,7 @@
 
 # log
 - name: output to rpicluster log
-  shell: logger -t rpicluster ansible base-system roll ran
+  command: logger -t rpicluster ansible base-system roll ran
   tags: [common]
   changed_when: False
 

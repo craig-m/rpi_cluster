@@ -14,6 +14,7 @@ describe file('/etc/haproxy/haproxy.cfg') do
  it { should be_file }
  it { should be_owned_by 'root' }
  its(:content) { should match /R-Pi Cluster Ansible managed file/ }
+ its(:content) { should match /Omega host haproxy config/ }
 end
 
 describe command('haproxyctl configcheck') do

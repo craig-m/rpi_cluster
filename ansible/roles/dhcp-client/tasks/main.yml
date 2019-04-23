@@ -1,11 +1,13 @@
 ---
 # only used for nodes that have a static IP set,
 # as this is where you set static IP's on Raspbian now.
-- debug: msg="dhcp CLIENT role "
+
+- debug: msg="set static IP with dhcpcd "
+- debug: msg="IP will be {{ hostvars[inventory_hostname]['rpi_ip'] }}"
 
 
 # Network settings (static IP is set here)
-- name: dhcp client conf
+- name: static ip in dhcp client opts
   template:
     src: dhcp-client.j2
     dest: /etc/dhcpcd.conf
@@ -14,13 +16,12 @@
     group: root
     backup: yes
   become: yes
-  notify: dhcpcd-restart
   tags: [dhcpclient]
 
 
 # log
 - name: output to rpicluster log
-  shell: logger -t rpicluster ansible dhcp-client role ran
+  command: logger -t rpicluster ansible dhcp-client role ran
   tags: [dhcpclient]
   changed_when: False
 

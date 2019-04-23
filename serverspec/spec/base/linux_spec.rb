@@ -7,6 +7,26 @@ describe file('/etc/debian_version') do
  its(:content) { should contain('9') }
 end
 
+describe file('/') do
+   # be_mounted
+   it { should be_mounted }
+   # be_mounted_with_type
+   it { should be_mounted.with( :type => 'ext4' ) }
+   # be_mounted_with_options RW
+   it { should be_mounted.with( :options => { :rw => true } ) }
+end
+
+
+# no failed systemd units
+describe command('systemctl list-units --all --state=failed | head -n1') do
+  its(:stdout) { should match /0 loaded units listed./ }
+end
+
+describe command('systemctl list-unit-files --all --state=failed | tail -n1') do
+  its(:stdout) { should match /0 unit files listed./ }
+end
+
+
 describe command('whoami') do
   let(:disable_sudo) { true }
   its(:stdout) { should match 'pi' }
@@ -26,15 +46,6 @@ describe user('root') do
   it { should have_uid 0 }
   it { should have_login_shell '/bin/bash' }
   it { should have_home_directory '/root' }
-end
-
-describe file('/') do
-   # be_mounted
-   it { should be_mounted }
-   # be_mounted_with_type
-   it { should be_mounted.with( :type => 'ext4' ) }
-   # be_mounted_with_options RW
-   it { should be_mounted.with( :options => { :rw => true } ) }
 end
 
 

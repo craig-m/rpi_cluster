@@ -1,5 +1,13 @@
 require 'spec_helper'
 
+
+# check there are no apt packages installed with critical vulns
+# note: there might still be packages updates avail tho - just none marked with security issues
+describe command('/usr/lib/nagios/plugins/check_apt --only-critical --timeout=30 --list') do
+  its(:exit_status) { should eq 0 }
+end
+
+
 describe package('build-essential') do
   it { should be_installed }
 end
