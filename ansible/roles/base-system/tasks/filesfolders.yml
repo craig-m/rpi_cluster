@@ -109,7 +109,7 @@
 # create info_roles.txt
 - name: info_roles txt
   copy:
-    content: "--==[ Ansible Roles run against this host ]==--"
+    content: '--==[ Ansible Roles run against this host ]==--'
     dest: /opt/cluster/data/info_roles.txt
     force: no
     mode: 0444
@@ -122,7 +122,7 @@
 - name: info_host txt
   template:
     src: rpihost.j2
-    dest: "/opt/cluster/data/info_host.txt"
+    dest: /opt/cluster/data/info_host.txt
     mode: 0444
     owner: root
     group: root

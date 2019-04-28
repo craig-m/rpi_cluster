@@ -16,7 +16,7 @@
 
 
 - name: join the master
-  shell: "{{ join_kube_mast.stdout }}"
+  command: "{{ join_kube_mast.stdout }}"
   become: yes
   register: joined_master
   when:
@@ -31,7 +31,9 @@
 
 
 - name: joined a master
-  shell: touch /opt/cluster/docker/kubecnf/joined_cli.txt
+  copy:
+    dest: "/opt/cluster/docker/kubecnf/joined_cli.txt"
+    content: "joined"
   when: joined_master.changed
 
 

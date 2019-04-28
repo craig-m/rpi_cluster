@@ -1,7 +1,10 @@
 
+# folders for deployer
+
+
 # bash scripts for deployer:
 group_deployer_script: [
-  {file: 'renew-ssh-priv-key.sh'}
+  {src: 'renew-ssh-priv-key.sh', dest: '/opt/cluster/deploy-script/renew-ssh-priv-key.sh'}
 ]
 
 # Yarn pub key

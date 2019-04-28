@@ -1,60 +1,47 @@
 ---
-# Common base setup - run on all nodes
+# Common OS configuration for _all_ nodes
+# Files and folder structures, pacakges
+
+
 - debug: msg="Base System main"
   tags: [common]
 
 
-# Set timezone UTC
-- name: set timezone to UTC
-  timezone:
-    name: UTC
-  become: yes
-  tags: [common]
+- assert:
+    that:
+      - "ansible_os_family == 'Debian'"
 
+
+# sub-tasks --------------------------------------------------------------------
+
+# set timzone and language etc
+- import_tasks: localization.yml
 
 # /etc/hosts and system hostname
 - import_tasks: hostsname.yml
-  tags: [common]
-
 
 # file structure
 - import_tasks: filesfolders.yml
-  tags: [common]
-
 
 # blacklist kernel modules on R-Pi Hardware
 - import_tasks: kernelmod.yml
-  tags:
-    - common
-    - kernelmod
-
 
 # /etc/sysctl.conf tuning
 - import_tasks: sysctl.yml
-  tags:
-    - common
-    - sysctl
-
 
 # Apt repo setup
 - import_tasks: apt-repo.yml
 
-
 # Install Apt packages
 - import_tasks: apt-packages.yml
-  tags:
-    - common
-    - commonpackage
 
-
-# remove things
+# remove unwanted packages and services
 - import_tasks: cleanup.yml
-  tags: [common]
-
 
 # pki
 - import_tasks: sslcert.yml
-  tags: [common]
+
+#-------------------------------------------------------------------------------
 
 
 # rpi config.txt gpu memory setting

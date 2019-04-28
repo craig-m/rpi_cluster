@@ -130,7 +130,7 @@
 
 # show nodes in cluster
 - name: get nodes
-  shell: kubectl get nodes
+  command: kubectl get nodes
   tags: [kube]
   changed_when: False
   when:
@@ -139,7 +139,7 @@
 
 # show pod servic
 - name: kubectl get pods
-  shell: kubectl get pods --namespace=kube-system
+  command: kubectl get pods --namespace=kube-system
   tags: [kube]
   changed_when: False
   when:

@@ -39,7 +39,7 @@
   async: 30
   poll: 0
   ignore_errors: true
-  when: my_current_hostname == "raspberrypi"
+  when: my_current_hostname.stdout == "raspberrypi"
   register: rebooted_rpi
 
 
@@ -48,7 +48,6 @@
   pause:
     seconds: 60
   when:
-    - my_current_hostname == "Raspberry"
     - rebooted_rpi.changed
 
 
@@ -63,5 +62,4 @@
   with_items: '{{ play_hosts }}'
   connection: local
   when:
-    - my_current_hostname == "Raspberry"
     - rebooted_rpi.changed

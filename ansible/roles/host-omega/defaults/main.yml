@@ -1,6 +1,0 @@
----
-
-omegafile: [
-  {file: 'sensehat-temps.py'},
-  {file: 'sensehat-welcome.py'}
-]

@@ -1,5 +1,7 @@
 #!/bin/bash
+#
 # name: setup-conf.sh
+# desc: copy ansible default inventory + host/group vars
 
 
 # pre-run checks ---------------------------------------------------------------

@@ -1,5 +1,8 @@
 ---
-# keepalived will ensure this shared IP address will be present in *at least* one place.
+#
+# keepalived will ensure this shared IP address will be present
+# in *at least* one place at any given time. There is no fencing or 'stonith'.
+#
 # http://www.keepalived.org/
 # http://www.keepalived.org/doc/introduction.html
 

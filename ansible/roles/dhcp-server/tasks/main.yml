@@ -8,6 +8,14 @@
 - debug: msg="dhcpd status {{ rpi_dhcpd_status }} "
 
 
+- name: check these keys exist
+  assert:
+    that:
+    - rpi_dhcpd_status is defined
+    - rpi_dhcpd_port is defined
+    - rpi_dhcpd_port_peer is defined
+
+
 - name: install dhcp server
   apt:
     name: "{{ item }}"

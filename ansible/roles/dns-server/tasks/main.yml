@@ -4,6 +4,15 @@
   tags: [bind]
 
 
+- name: check these keys exist
+  assert:
+    that:
+    - rpi_dnsd_status is defined
+    - rpi_dnsd_notify is defined
+    - rpi_cust_domain is defined
+    - rpi_cust_tld is defined
+
+
 - debug: msg="Custom domain is {{ rpi_cust_domain }}.{{ rpi_cust_tld }} "
   tags: [bind]
 

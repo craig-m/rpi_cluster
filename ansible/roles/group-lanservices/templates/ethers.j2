@@ -6,5 +6,8 @@
 # default gw
 {{ rpi_net_default_gw }} {{ rpi_net_default_gw_mac }}
 #
+# deployer
+{{ hostvars['psi']['rpi_ip'] }} {{ hostvars['psi']['rpi_mac'] }}
+#
 # Other admin node
 {{ rpi_failover_ip }} {{ rpi_failover_hwaddr }}

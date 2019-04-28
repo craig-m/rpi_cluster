@@ -1,0 +1,12 @@
+---
+galaxy_info:
+  role_name: upgrades
+  author: crgm
+  description: update all apt packages
+  company: crgm inc
+  license: license (no)
+  min_ansible_version: 2.7
+  platforms:
+  - name: Raspbian
+    versions:
+      - stretch

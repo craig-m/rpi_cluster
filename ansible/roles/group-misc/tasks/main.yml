@@ -1,0 +1,62 @@
+---
+# tasks just for Omega
+- debug: msg="Lanservices Misc setup "
+
+
+- name: install extra programs on omega
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+       - tcpdump
+       - lynx
+       - sense-hat
+       - python-pycurl
+       - siege
+       - nmap
+  retries: 2
+  become: yes
+
+
+# Raspberry Pi Astro SenseHAt
+- import_tasks: sensehat.yml
+  tags: [sensehat]
+
+
+# cron scripts
+- import_tasks: cron.yml
+
+
+# php pub
+- name: create /srv/php/omegaapp/pub
+  file:
+    path: "/srv/php/omegaapp/pub"
+    state: "directory"
+    mode: 0755
+    owner: pi
+    group: pi
+  become: yes
+
+
+- name: upload omega php file
+  copy:
+    src: omega_info.php
+    dest: /srv/php/omegaapp/pub/omega_info.php
+    owner: pi
+    group: pi
+    mode: 0644
+
+
+- name: output to rpicluster log
+  command: logger -t rpicluster group-misc role ran
+  changed_when: False
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{ role_path|basename }}"
+    owner: root
+    group: root
+    mode: 0444
+  become: yes

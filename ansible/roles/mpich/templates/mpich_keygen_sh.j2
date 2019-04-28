@@ -1,0 +1,29 @@
+#!/bin/bash
+#
+# name: mpich_keygen.sh
+# desc: from deploy node this will sign the SSH keys for the mpiuser
+
+
+# Run on psi:
+hostname | grep psi || exit 1;
+whoami | grep pi || exit 1;
+
+echo "starting mpich_keygen.sh"
+
+mpikeytemp=$(mktemp -d)
+cd $mpikeytemp;
+
+if [ ! -f /opt/cluster/backup/omega/home/mpiuser/.ssh/id_rsa.pub ]; then
+  echo "missing expected public key!"
+  exit 1;
+fi
+
+cp /opt/cluster/backup/omega/home/mpiuser/.ssh/* .
+thesshcapw=$(pass ssh/CA)
+ssh-keygen -s ~/.ssh/my-ssh-ca/ca -P ${thesshcapw} -I mpiuser -n mpiuser -V +2w -z 1 ${mpikeytemp}/id_rsa.pub
+
+scp -v id_rsa-cert.pub pi@omega:~/
+ssh -v pi@omega sudo mv id_rsa-cert.pub /home/mpiuser/.ssh/id_rsa-cert.pub
+ssh -v pi@omega sudo chown mpiuser:mpiuser /home/mpiuser/.ssh/id_rsa-cert.pub
+
+echo "finished mpich_keygen.sh"

@@ -18,7 +18,10 @@
 
 #- name: test rpi zone db and dump as text
 - name: check and dump db_rpi.db
-  command: /usr/sbin/named-compilezone -F text -o /opt/cluster/lanservice/zones.txt {{ rpi_cust_domain }}.{{ rpi_cust_tld }} /etc/bind/zones/{{ rpi_dnsd_status }}/{{ rpi_cust_tld }}.db
+  command: |
+    /usr/sbin/named-compilezone -F text \
+    -o /opt/cluster/lanservice/zones.txt {{ rpi_cust_domain }}.{{ rpi_cust_tld }} \
+    /etc/bind/zones/{{ rpi_dnsd_status }}/{{ rpi_cust_tld }}.db
   changed_when: False
   when:
     - rpi_dnsd_status == "master"

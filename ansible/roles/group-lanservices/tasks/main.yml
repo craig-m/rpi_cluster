@@ -16,30 +16,6 @@
   tags: [lanservices]
 
 
-# firewall ---------------------------------------------------------------------
-
-- name: copy lanservices firewall script
-  template:
-    src: ufw.j2
-    dest: /root/ufw.sh
-    owner: root
-    group: root
-    mode: 0755
-  become: yes
-  tags: [lanservices]
-
-
-- name: run firewall script
-  shell: /root/ufw.sh
-  args:
-    chdir: /root/
-    creates: /root/.ufw
-  become: yes
-  tags: [lanservices]
-
-#-------------------------------------------------------------------------------
-
-
 # copy lanservices-boot.sh
 - name: lanservices-boot script
   template:

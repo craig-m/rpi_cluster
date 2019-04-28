@@ -2,7 +2,7 @@
 galaxy_info:
   role_name: dns-server
   author: crgm
-  description: sshd server config
+  description: DNS server for the cluster. With custom TLD.
   company: crgm inc
   license: license (no)
   min_ansible_version: 2.7

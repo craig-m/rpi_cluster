@@ -16,6 +16,14 @@
   tags: userac
 
 
+# check user is defined
+- name: check rpi_clust_user not empty
+  assert:
+    that:
+      - rpi_clust_user != ''
+
+
+
 # Create {{ rpi_clust_user }} user on all hosts
 - name: create rpi_clust_user
   user:
@@ -52,8 +60,8 @@
 
 - name: log username to ara
   ara_record:
-    key: "rpi_clust_user"
-    type: "text"
+    key: rpi_clust_user
+    type: text
     value: "{{ rpi_clust_user }}"
 
 

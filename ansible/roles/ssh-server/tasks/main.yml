@@ -3,6 +3,16 @@
 - debug: msg="ssh role "
   tags: [ssh]
 
+- debug: msg="ssh port is {{ ssh_group_port }} "
+
+
+- name: check ssh_group_port var is ok
+  assert:
+    that:
+      - "{{ ssh_group_port }} >= 2000"
+      - "{{ ssh_group_port }} <= 2999"
+    fail_msg: " ssh_group_port must be between 2000 and 2999"
+
 
 # message of the day (ssh login banner)
 - name: MOTD

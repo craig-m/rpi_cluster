@@ -28,6 +28,12 @@
   tags: [hugo]
 
 
+- name: check hugo ok
+  assert:
+    that:
+      - "'Hugo Static Site Generator' in hugo_version.output"
+
+
 # Log version to ara
 - name: log hugo version to ARA
   ara_record:

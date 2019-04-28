@@ -1,0 +1,87 @@
+---
+- debug: msg="setup and install uncomplicatd firewall "
+- debug: msg="Our local subnet for whitelist is {{ rpi_net_id }}/{{ rpi_net_maskbit }}"
+
+
+# Note: Remember we are also setting static ARP entries in /etc/ethers too!
+# this is done in each of the group-< group name> roles.
+
+
+- name: install uncomplicatd firewall
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+       - ufw
+  become: yes
+
+
+- name: enable logging
+  ufw:
+    logging: on
+  become: yes
+
+
+- name: set ufw defaults
+  ufw:
+    direction: "{{ item.direction }}"
+    policy: "{{ item.policy }}"
+  become: true
+  with_items:
+    - { direction: 'incoming', policy: 'reject' }
+    - { direction: 'outgoing', policy: 'allow' }
+  notify: ufw_restart
+
+
+- debug: msg="deployer IP {{ hostvars['psi']['ansible_eth0']['ipv4']['address'] }} "
+
+
+# Firewall Rule: SSH access from deployer
+- name: ssh access from deployer host psi IP
+  ufw:
+    rule: allow
+    from_ip: "{{ hostvars['psi']['ansible_eth0']['ipv4']['address'] }}"
+    port: 22
+    proto: tcp
+    comment: ssh from deployer node
+  notify: ufw_restart
+  become: yes
+  when:
+    - "'deploy' not in group_names"
+
+
+# Group specific FW rules ------------------------------------------------------
+
+# Deployer group
+- import_tasks: deployer.yml
+  when:
+    - "'deploy' in group_names"
+
+# Lan Services Main group
+- import_tasks: lanservice_main.yml
+  when:
+    - "'lanservices' in group_names"
+
+# Lan Services Misc group
+- import_tasks: lanservice_misc.yml
+  when:
+    - "'misc' in group_names"
+
+# Compute group
+- import_tasks: compute.yml
+  when:
+    - "'compute' in group_names"
+
+# ------------------------------------------------------------------------------
+
+
+# Enable Firewall
+- name: Enable UFW
+  ufw:
+    state: enabled
+  become: true
+
+
+- name: output to rpicluster log
+  command: logger -t rpicluster ufw role ran
+  changed_when: false

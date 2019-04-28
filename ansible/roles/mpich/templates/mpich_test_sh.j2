@@ -1,0 +1,35 @@
+#!/bin/bash
+#
+# name: mpich_test.sh
+# desc: run from omega to execute the mpi_sample.c program on the compute group
+
+# run on omega
+hostname | grep omega || exit 1;
+whoami | grep mpiuser || exit 1;
+
+echo "starting mpich_test.sh"
+
+mpihostsfile="/home/mpiuser/mpihosts.txt"
+
+rm -f ${mpihostsfile}
+touch -f ${mpihostsfile}
+
+# hosts in cluster
+hosts="gamma zeta delta epsilon"
+
+for i in $hosts;
+do
+  # get IP of host
+  thehostip=$(getent hosts $i | awk '{print $1}')
+  #
+  echo ${thehostip} >> ${mpihostsfile}
+  ssh-keygen -R "${thehostip}";
+  ssh-keyscan -H "${thehostip}" >> ~/.ssh/known_hosts;
+done
+
+# man page:
+# https://www.open-mpi.org/doc/v2.0/man1/mpirun.1.php
+
+mpirun -l -np 32 --hostfile ${mpihostsfile} /home/mpiuser/bin/mpi_sample
+
+echo "finished mpich_test.sh"

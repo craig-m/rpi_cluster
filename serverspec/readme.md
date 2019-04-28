@@ -26,8 +26,8 @@ Needs refining, and integrating with ansible.
 
 ## tests
 
-* tests: 176 - group: compute (x4)
-* tests: 252 - group: lan service main (x2)
+* tests: 178 - group: compute (x4)
+* tests: 254 - group: lan service main (x2)
 * tests: 217 - group: lan service misc (x1)
 * tests: 233 - group: deployer node (x1)
 

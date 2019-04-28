@@ -68,6 +68,9 @@ sleep 2s;
 
 # Environment ------------------------------------------------------------------
 
+# change bash prompt so we know we are on a deployer node
+export PS1="\[\033[01;32m\]\u\[\033[01;34m\]@\[\033[31m\]\\h\[\033[01;34m\] jobs:\j \t \w $ \[\033[00m\]"
+
 # Remount /proc with hidepid option to hide processes from other users
 /usr/bin/sudo mount -o remount,rw,hidepid=2 /proc
 
@@ -134,7 +137,8 @@ if [ ! -f ~/.rpibs/rpibs_packages ]; then
   sshfs tcpdump nmap netdiscover libncurses5-dev libsqlite3-dev sqlite3 pwgen \
   libssl-dev libyaml-dev libgmp-dev libgdbm-dev libffi-dev libpython-all-dev \
   monitoring-plugins-common monitoring-plugins-basic inotify-tools unzip pass \
-  python-pip python-dev uuid-runtime uuid reptyr secure-delete mpich alpine \
+  python-pip python-dev python3-pip python3-dev \
+  uuid-runtime uuid reptyr secure-delete mpich alpine \
   telnet lynx socat dirmngr mc software-properties-common;
   sleep 2s;
   # upgrade
@@ -178,6 +182,7 @@ if [ ! -f /usr/sbin/haveged ]; then
   /usr/bin/sudo systemctl enable haveged.service;
   /usr/bin/sudo /usr/lib/nagios/plugins/check_procs -C haveged 1:3 || exit 1;
   rpilogit "haveged has been installed";
+  sleep 2s;
 fi
 
 
@@ -216,12 +221,13 @@ if [ ! -f /usr/local/bin/virtualenv ]; then
   # create isolated Python environments with virtualenv.
   # https://pypi.python.org/pypi/virtualenv/
   /usr/bin/sudo pip install virtualenv;
+  /usr/bin/sudo pip install --upgrade setuptools
   sleep 1s;
 fi
 
 # create + activate virtual environment
 if [ ! -d ~/env/ ]; then
-  virtualenv --no-site-packages ~/env;
+  /usr/local/bin/virtualenv --no-site-packages ~/env;
   sleep 1s;
 fi
 

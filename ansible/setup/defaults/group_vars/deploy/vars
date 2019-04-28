@@ -1,0 +1,16 @@
+---
+# vars Deployer group
+
+# Common host configs ----------------------------------------------------------
+
+host_dir: [
+  { dir: '/home/pi/.ssh/my-ssh-ca', mode: '0700', owner: '{{ ansible_user_id }}', group: '{{ ansible_user_id }}' },
+  { dir: '/opt/cluster/backup', mode: '0770', owner: '{{ ansible_user_id }}', group: '{{ ansible_user_id }}' },
+  { dir: '/opt/cluster/deploy-script', mode: '0770', owner: '{{ ansible_user_id }}', group: '{{ ansible_user_id }}' },
+  { dir: '/srv/gitrepo/', mode: '0775', owner: '{{ ansible_user_id }}', group: 'staff' }
+]
+
+# SSH additional port
+ssh_group_port: "2222"
+
+#-------------------------------------------------------------------------------

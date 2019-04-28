@@ -1,8 +1,13 @@
 ---
-# Run on the Deployers (The R-Pi "psi" & AdminVM)
-
-
+# Playbook for the Deployer group.
 - debug: msg="deployer role "
+
+
+- name: Verify min ansible version requirements.
+  assert:
+    that: "ansible_version.full is version_compare('2.7', '>=')"
+    msg: >
+      "Upgrade ansible, this version is not supported"
 
 
 - name: create user deployops
@@ -15,7 +20,7 @@
     ssh_key_bits: 2048
     ssh_key_file: .ssh/deployops_id_rsa
     createhome: yes
-    home: "/home/deployops"
+    home: /home/deployops
   become: yes
 
 
@@ -24,14 +29,15 @@
   tags: [deployer]
 
 
-- name: copy bash scripts for deployer
+# scripts for deployer
+- name: copy deployer bash scripts
   copy:
     src: "{{ item.file }}"
-    dest: "/opt/cluster/bin/{{ item.file }}"
+    dest: "/opt/cluster/deploy-script/{{ item.file }}"
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_id }}"
-    mode: 0750
-  with_items: "{{ group_deployer_script }}"
+    mode: 0755
+  with_items: "{{ deployscript_binfile }}"
 
 
 # yarn
@@ -41,29 +47,11 @@
     - yarn
 
 
-# Firewall ---------------------------------------------------------------------
-
-- name: copy deployer firewall script
-  template:
-    src: ufw.j2
-    dest: /root/ufw.sh
-    owner: root
-    group: root
-    mode: 0755
-  become: yes
-  changed_when: False
-  tags: [deployer]
-
-
-- name: run firewall script
-  shell: /root/ufw.sh
+- name: git init an empty repo
+  command: git init --bare /srv/gitrepo/git-test
   args:
-    chdir: /root/
-    creates: /root/.ufw
-  become: yes
-  tags: [deployer]
+    creates: /srv/gitrepo/git-test/HEAD
 
-# ------------------------------------------------------------------------------
 
 
 # log

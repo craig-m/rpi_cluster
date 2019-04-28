@@ -1,13 +1,1 @@
 
-nginx_configs: [
-  {cfsource: 'nginx_conf.j2', cfdest: '/etc/nginx/nginx.conf'},
-  {cfsource: 'sites-enabled/default.j2', cfdest: '/etc/nginx/sites-enabled/rpiclustdefault.conf'}
-]
-
-nginx_port: "81"
-
-nginx_dir: [
-  { dir: '/var/www/', mode: '0775', owner: '{{ ansible_user_id }}', group: 'www-data' },
-  { dir: '/var/www/html', mode: '0775', owner: '{{ ansible_user_id }}', group: '{{ ansible_user_id }}' },
-  { dir: '/srv/nginx/default', mode: '0775', owner: '{{ ansible_user_id }}', group: 'root' }
-]

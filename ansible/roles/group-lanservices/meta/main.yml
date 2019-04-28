@@ -1,8 +1,8 @@
 ---
 galaxy_info:
-  role_name: grpup-lanservices
+  role_name: group-lanservices
   author: crgm
-  description: sshd server config
+  description: actions specific to lanservices main
   company: crgm inc
   license: license (no)
   min_ansible_version: 2.7

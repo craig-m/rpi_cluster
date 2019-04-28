@@ -2,7 +2,7 @@
 galaxy_info:
   role_name: rpilog
   author: crgm
-  description: sshd server config
+  description: custom /var/log/rpicluster.log logging
   company: crgm inc
   license: license (no)
   min_ansible_version: 2.7

@@ -1,5 +1,8 @@
 #!/bin/bash
-# Build a minimal chroot for Busybox - run as root
+#
+# name: chroot_bb.sh
+# desc: Build a minimal chroot for Busybox - run as root
+
 
 # vars:
 chroot_dir="opt/chroot_bb"

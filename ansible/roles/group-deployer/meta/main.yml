@@ -2,7 +2,7 @@
 galaxy_info:
   role_name: group-deployer
   author: crgm
-  description: sshd server config
+  description: actions specific to the deployer
   company: crgm inc
   license: license (no)
   min_ansible_version: 2.7

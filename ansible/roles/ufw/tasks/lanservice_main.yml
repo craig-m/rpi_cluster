@@ -1,0 +1,29 @@
+---
+- debug: msg="ufw rules for lanservice MAIN "
+
+
+# Alpha and Beta have full access between each other
+- name: Allow all access from my failover
+  ufw:
+    rule: allow
+    src: "{{ rpi_failover_ip }}/32"
+    comment: my lanservice_main failover
+  become: yes
+  notify: ufw_restart
+
+
+# The services we provide for our local subnet
+- name: Allow access these ports from local subnet
+  ufw:
+    rule: allow
+    port: '{{ item }}'
+    src: "{{ rpi_net_id }}/{{ rpi_net_maskbit }}"
+    comment: services for local lan
+  become: yes
+  notify: ufw_restart
+  with_items:
+    - 53
+    - 67
+    - 68
+    - 69
+    - 123

@@ -1,0 +1,10 @@
+---
+- debug: msg="ufw rules for Compute group "
+
+
+- name: Allow all access on local subnet
+  ufw:
+    rule: allow
+    src: "{{ rpi_net_id }}/{{ rpi_net_maskbit }}"
+  become: yes
+  notify: ufw_restart

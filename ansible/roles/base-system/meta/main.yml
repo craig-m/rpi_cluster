@@ -2,7 +2,7 @@
 galaxy_info:
   role_name: base-system
   author: crgm
-  description: sshd server config
+  description: base config to be applied on every rpi node
   company: crgm inc
   license: license (no)
   min_ansible_version: 2.7

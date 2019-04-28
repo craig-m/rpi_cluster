@@ -1,0 +1,17 @@
+---
+galaxy_info:
+  role_name: group-misc
+  author: crgm
+  description: For lanservivces misc group - at this stage only Omega
+  company: crgm inc
+  license: license (no)
+  min_ansible_version: 2.7
+  platforms:
+  - name: Raspbian
+    versions:
+      - stretch
+dependencies:
+  - { role: userac }
+  - { role: base-system }
+  - { role: redis }
+  - { role: ssh-server }

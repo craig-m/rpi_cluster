@@ -1,0 +1,16 @@
+---
+galaxy_info:
+  role_name: nginx
+  author: crgm
+  description: nginx webserver role
+  company: crgm inc
+  license: license (no)
+  min_ansible_version: 2.7
+  platforms:
+  - name: Raspbian
+    versions:
+      - stretch
+dependencies:
+  - role: base-system
+  - role: ufw
+  - role: haproxy

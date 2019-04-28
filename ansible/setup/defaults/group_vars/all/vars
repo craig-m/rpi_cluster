@@ -25,4 +25,7 @@ apt_mirror_rasp: "http://raspbian.raspberrypi.org/raspbian/"
 # NTP server group use this ntp.org pool
 use_ntp_pool: "au.pool.ntp.org"
 
+# puppet agent on compute nodes
+pup_master_uri: "puppet.example.com"
+
 #-------------------------------------------------------------------------------

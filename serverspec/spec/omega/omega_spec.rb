@@ -4,7 +4,7 @@ describe file('/opt/cluster/data/info_roles.txt') do
  it { should be_file }
  it { should be_owned_by 'root' }
  it { should be_mode 444 }
- its(:content) { should match /host-omega/ }
+ its(:content) { should match /group-misc/ }
 end
 
 describe file('/etc/ssh/sshd_config') do

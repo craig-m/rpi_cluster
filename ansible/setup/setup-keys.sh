@@ -1,4 +1,5 @@
 #!/bin/bash
+#
 # name: setup-keys.sh
 # desc: create new private SSH, PGP, SSL keys.
 

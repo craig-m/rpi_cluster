@@ -2,7 +2,7 @@
 galaxy_info:
   role_name: dhcp-server
   author: crgm
-  description: sshd server config
+  description: A DHCP server for the cluster
   company: crgm inc
   license: license (no)
   min_ansible_version: 2.7

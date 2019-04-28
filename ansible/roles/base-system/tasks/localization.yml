@@ -1,0 +1,10 @@
+---
+- debug: msg="Base System localization"
+
+
+# Set timezone UTC
+- name: set timezone to UTC
+  timezone:
+    name: UTC
+  become: yes
+  tags: [common]

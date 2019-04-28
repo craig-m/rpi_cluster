@@ -4,8 +4,10 @@
   tags: [haproxy]
 
 
-- debug: msg="config file {{ haproxy_cfg_file }} "
-  tags: [haproxy]
+- name: check these keys exist
+  assert:
+    that:
+    - haproxy_cfg_file is defined
 
 
 # install
@@ -36,7 +38,7 @@
 # config file (checked below)
 - name: haproxy config
   template:
-    src: cfg_{{ haproxy_cfg_file }}.j2
+    src: "{{ haproxy_cfg_file }}/haproxy.j2"
     dest: /etc/haproxy/haproxy.cfg
     owner: root
     group: haproxy
@@ -71,18 +73,6 @@
     state: started
   become: yes
   tags: [haproxy]
-  when: rpi_haproxy_enabled == true
-
-
-# disabled flag - boot
-- name: haproxy disable on boot
-  service:
-    name: haproxy
-    enabled: no
-    state: stopped
-  become: yes
-  tags: [haproxy]
-  when: rpi_haproxy_enabled == false
 
 
 # check haproxy config file
@@ -90,7 +80,7 @@
   command: haproxyctl configcheck
   register: haproxycnf_result
   become: yes
-  changed_when: False
+  changed_when: false
   failed_when:
     - "'Configuration file is valid' not in haproxycnf_result.stdout"
   tags: [haproxy]

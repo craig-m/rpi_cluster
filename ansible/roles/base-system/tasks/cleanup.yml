@@ -11,7 +11,28 @@
   become: yes
 
 
-# stop these services
+# stop + disable these services ------------------------------------------------
+
+
+- name: stop bluetooth
+  service:
+    name: bluetooth.service
+    state: stopped
+  become: yes
+  tags: [kernelmod]
+  ignore_errors: yes
+
+
+- name: disable bluetooth
+  systemd:
+    name: bluetooth
+    enabled: no
+    masked: no
+  become: yes
+  tags: [kernelmod]
+  ignore_errors: yes
+
+
 - name: stop apt daily upgrade service
   service:
     name: apt-daily-upgrade.service

@@ -1,10 +1,7 @@
 # {{ ansible_managed }}
-# /nginx/templates/nginx_conf.j2
-# {{ inventory_hostname }}
-# ansible role: {{role_path|basename}}
 
 ##
-# Main settings
+# Main base settings for all nodes
 ##
 
 user www-data;
@@ -43,7 +40,7 @@ http {
 	# SSL Settings
 	##
 
-	ssl_protocols TLSv1 TLSv1.1 TLSv1.2; # Dropping SSLv3, ref: POODLE
+	ssl_protocols TLSv1.1 TLSv1.2;
 	ssl_prefer_server_ciphers on;
 
 	##

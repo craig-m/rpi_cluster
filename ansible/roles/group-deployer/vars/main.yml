@@ -1,0 +1,6 @@
+---
+
+
+deployscript_binfile: [
+  {file: 'renew_ssh_priv_key.sh'}
+]

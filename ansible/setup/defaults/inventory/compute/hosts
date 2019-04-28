@@ -1,27 +1,10 @@
-# Hosts ------------------------------------------------------------------------
+# Hosts ini --------------------------------------------------------------------
 
 [compute]
 zeta ansible_host=zeta.local rpi_ip=20.20.20.XX rpi_mac=b8:27:eb:99:XX:XX rpi_racked="L3"
 epsilon ansible_host=epsilon.local rpi_ip=20.20.20.XX rpi_mac=b8:27:eb:bf:XX:XX rpi_racked="L4"
 gamma ansible_host=gamma.local rpi_ip=20.20.20.XX rpi_mac=b8:27:eb:ad:XX:XX rpi_racked="R3"
 delta ansible_host=delta.local rpi_ip=20.20.20.XX rpi_mac=b8:27:eb:31:XX:XX rpi_racked="R4"
-
-# Consul -----------------------------------------------------------------------
-
-[consul:children]
-consul_server
-consul_client
-
-[consul_server]
-delta
-epsilon
-gamma
-
-[consul_boot]
-gamma
-
-[consul_client]
-zeta
 
 # Keepalived -------------------------------------------------------------------
 
@@ -46,19 +29,6 @@ api_backend
 [api_backend]
 zeta
 gamma
-
-# Hadoop -----------------------------------------------------------------------
-
-[hadoop:children]
-hadoop_manager
-hadoop_worker
-
-[hadoop_manager]
-gamma
-
-[hadoop_worker]
-gamma
-zeta
 
 # Docker -----------------------------------------------------------------------
 

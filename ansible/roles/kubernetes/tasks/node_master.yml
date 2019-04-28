@@ -16,11 +16,11 @@
 
 # config
 - name: kubeadm config
-  become: yes
   copy:
     dest: "/etc/systemd/system/kubelet.service.d/10-kubeadm.conf"
     content: |
       Environment="KUBELET_EXTRA_ARGS=--enable-controller-attach-detach=false"
+  become: yes
   tags: [kube]
   when:
     - "'docker_master' in group_names"
@@ -88,7 +88,7 @@
 
 
 - name: get cluster info
-  shell: kubectl cluster-info
+  command: kubectl cluster-info
   register: kube_cluster_info
   changed_when: False
 

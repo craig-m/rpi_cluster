@@ -1,0 +1,123 @@
+---
+
+
+- name: install puppet requirements
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+       - ruby-full
+  become: yes
+
+
+- name: install puppet gem
+  gem:
+    name: puppet
+    state: present
+  become: yes
+
+
+- name: puppetlabs dir
+  file:
+    path: "/etc/puppetlabs/puppet/"
+    state: "directory"
+    mode: 0755
+    owner: root
+    group: root
+  become: yes
+
+
+- name: puppetlabs modules dir
+  file:
+    path: "/etc/puppetlabs/code/environments/production/modules/"
+    state: "directory"
+    mode: 0755
+    owner: root
+    group: root
+  become: yes
+
+
+- name: puppetlabs manifests dir
+  file:
+    path: "/etc/puppetlabs/code/environments/production/manifests/"
+    state: "directory"
+    mode: 0755
+    owner: root
+    group: root
+  become: yes
+
+
+- name: create user for puppet
+  user:
+    name: puppet
+    shell: /bin/false
+  become: yes
+
+
+- name: puppet etc default conf
+  copy:
+    dest: /etc/default/puppet
+    owner: root
+    group: root
+    mode: 0644
+    content: |
+      # extra options
+      #PUPPET_EXTRA_OPTS=--waitforcert=800
+  become: yes
+
+
+- name: check puppet.conf exists
+  stat:
+    path: "/etc/puppetlabs/puppet/puppet.conf"
+  register: puppet_set_master
+  changed_when: False
+
+
+- name: join the master
+  command: "puppet config set server '{{ pup_master_uri }}' --section main"
+  become: yes
+  register: joined_master
+  when:
+    - puppet_set_master.stat.exists == False
+
+
+- name: puppet etc default conf
+  copy:
+    src: puppet.service
+    dest: /etc/systemd/system/multi-user.target.wants/puppet.service
+    owner: root
+    group: root
+    mode: 0644
+  become: yes
+  register: reload_puppet_service
+
+
+- name: force systemd to reread configs via puppet
+  command: puppet resource service puppet ensure=running enable=true
+  become: yes
+  when: reload_puppet_service.changed
+
+
+- name: Run puppet and timeout in 5 minutes
+  puppet:
+    timeout: 5m
+  become: yes
+  failed_when: false
+
+
+- name: puppetlabs manifests dir
+  file:
+    source: remove_puppet.sh
+    dest: /opt/cluster/bin/remove_puppet.sh
+    state: file
+    mode: 0755
+    owner: root
+    group: root
+  become: yes
+
+
+- name: roles info txt
+  lineinfile:
+    path: /opt/cluster/data/info_roles.txt
+    line: "{{ role_path|basename }}"
+  become: yes

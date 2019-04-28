@@ -1,5 +1,8 @@
 ---
 
+# i don't recall where I found this PoC script
+
+
 # mpi_sample.c
 - name: copy mpi_sample.c
   copy:

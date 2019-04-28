@@ -4,8 +4,22 @@
   tags: [nginx]
 
 
+- name: check nginx_configs not empty
+  assert:
+    that:
+      - nginx_configs != ''
+
+
 - debug: msg="Default port {{ nginx_port }} "
   tags: [nginx]
+
+
+- name: check ssh_group_port var is ok
+  assert:
+    that:
+      - "{{ nginx_port }} >= 80"
+      - "{{ nginx_port }} <= 90"
+    fail_msg: " ssh_group_port must be between 80 and 90"
 
 
 # install packages (if missing)
@@ -52,28 +66,17 @@
   tags: [nginx]
 
 
-# Check index
-- name: check index
-  stat:
-    path: "/var/www/html/index.html"
-  register: rpi_nginx_default_index
-  changed_when: False
-  tags: [nginx]
-
-
-- name: copy defualt index.html file
+- name: copy defualt index_default.html file
   copy:
-    src: index.html
-    dest: /var/www/html/index.html
-  when: "rpi_nginx_default_index.stat.exists == false"
+    src: srv/nginx/default/index_default.html
+    dest: /srv/nginx/default/index_default.html
   become: yes
   tags: [nginx]
 
-
 - name: copy rasp logo
   copy:
-    src: rasp-logo.png
-    dest: /var/www/html/
+    src: srv/nginx/default/rasp-logo.png
+    dest: /srv/nginx/default
   become: yes
   tags: [nginx]
 
@@ -104,7 +107,7 @@
 
 # check nginx config file
 - name: test config file
-  shell: /usr/sbin/nginx -t -c /etc/nginx/nginx.conf
+  command: /usr/sbin/nginx -t -c /etc/nginx/nginx.conf
   register: nginxcnf_result
   become: yes
   changed_when: False

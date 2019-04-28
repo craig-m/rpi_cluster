@@ -20,7 +20,9 @@
     - userac
     - base-system
     - hostsfile
+    - env-modules
     - rpilog
+    - ufw
     - ssh-server
     - haveged
     - uptimed
@@ -29,7 +31,6 @@
     - nfs-server
     - dhcp-client
     - redis
-    - dotnet
     - docker
     - nodejs
     - hugo
@@ -38,7 +39,7 @@
     - haproxy
     - mpich
     - sysstat
-    - host-omega
+    - group-misc
 
 
 - name: gather facts on other hosts

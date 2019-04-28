@@ -1,5 +1,5 @@
 ---
-# compute nodes: gamma, epsilon, delta, zeta
+# Nodes in the deploy group
 - debug: msg="compute node tasks "
   tags: [computenode]
 

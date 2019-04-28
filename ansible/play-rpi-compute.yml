@@ -17,6 +17,7 @@
     - userac
     - base-system
     - hostsfile
+    - env-modules
     - rpilog
     - ssh-server
     - haveged
@@ -25,10 +26,7 @@
     - distcc
     - mpich
     - golang
-    - dotnet
-    - hadoop
     - group-compute
-    - docker
 
 
 - name: gather facts on nodes
