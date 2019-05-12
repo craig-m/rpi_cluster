@@ -2,9 +2,7 @@
 
 # create $imgname.tar from Dockerfile
 
-imgname="rpiwwwpyapp"
-
-ID_IMAGE="$(/usr/bin/sudo -u $USER docker images | grep $imgname | head -n 1 | wc -l)"
+imgname="rpipyapi"
 
 # dockerfile build
 echo "[*] Building image"

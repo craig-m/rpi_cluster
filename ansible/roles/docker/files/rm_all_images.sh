@@ -8,12 +8,12 @@ rpilogit () {
 rpilogit "started rm_all_images.sh";
 
 # stop all containers
-docker stop $(/usr/bin/sudo docker ps -a -q)
+docker stop $(docker ps -a -q)
 
 # Delete all containers
-docker rm $(/usr/bin/sudo docker ps -a -q)
+docker rm $(docker ps -a -q)
 
 # Delete all images (forced)
-docker rmi -f $(/usr/bin/sudo docker images -q)
+docker rmi -f $(docker images -q)
 
 rpilogit "finished rm_all_images.sh - all docker containers deleted";

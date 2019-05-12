@@ -4,6 +4,7 @@ import flask
 import logging
 import os
 import socket
+from flask import Flask, request
 from flask import Flask, render_template
 from redis import Redis, RedisError
 from logging.handlers import RotatingFileHandler
@@ -49,8 +50,8 @@ def root_dir():
 
 @app.route("/")
 def index():
-    html = "<h1>Hello!</h1>"
-    return html.format()
+    html = "<p><b>My hostname: </b> {hostname} </p>"
+    return html.format(hostname=socket.gethostname())
 
 @app.route("/pages/about/")
 def about():
@@ -64,6 +65,10 @@ def hitcount():
         visits = "<i>error connecting to redis</i>"
     html = "<span><b>requests:</b> {visits} </span>"
     return html.format(visits=visits)
+
+@app.route('/ip', methods=['GET'])
+def name():
+    return request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
 
 @app.route('/hello/')
 @app.route('/hello/<name>')

@@ -4,7 +4,7 @@ services:
     build: .
     ports:
      - "8382:8382"
-#    volumes:
-#     - /etc/hostname:/etc/host_hostname:ro
+    depends_on:
+      - redis
   redis:
     image: "redis:alpine"
