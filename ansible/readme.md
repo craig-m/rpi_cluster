@@ -108,10 +108,10 @@ ansible psi -m copy -a "src=~/foo dest=/tmp/bar"
 ```
 
 
-Gather facts - freshly:
+Gather facts:
 
 ```
-$ ansible all -m setup --flush-cache
+$ ansible all -m setup
 ```
 
 ping:

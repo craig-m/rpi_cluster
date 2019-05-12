@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# test /usr/bin/sudo <cmd> works OK
+/usr/bin/sudo id | grep "uid=0(root)" > /dev/null 2>&1 || exit 1;
+
 # Generate an RSA key for the CA:
 openssl genrsa -out b3rry.clust0r.key 2048
 
@@ -32,7 +35,7 @@ openssl x509 -req -in bc.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out bc.cr
 cat bc.crt ca.crt > bc.bundle.crt
 cat bc.key >> bc.bundle.crt
 
-sudo cp ca.crt /usr/local/share/ca-certificates/
-sudo update-ca-certificates
+/usr/bin/sudo cp ca.crt /usr/local/share/ca-certificates/
+/usr/bin/sudo update-ca-certificates
 
 # EOF

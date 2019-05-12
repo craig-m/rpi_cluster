@@ -12,15 +12,15 @@ describe file('/etc/ssh/sshd_config') do
  its(:content) { should match /TrustedUserCAKeys \/etc\/ssh\/ca.pub/ }
 end
 
-describe command('/usr/bin/curl -X GET --unix-socket /opt/omegapyapi/omegapyapi.socket http/hello/curltest') do
-  let(:disable_sudo) { true }
-  its(:stdout) { should match 'Hello curltest' }
-end
+#describe command('/usr/bin/curl -X GET --unix-socket /opt/omegapyapi/omegapyapi.socket http/hello/curltest') do
+#  let(:disable_sudo) { true }
+#  its(:stdout) { should match 'Hello curltest' }
+#end
 
-describe user('omegapyapi') do
-  it { should exist }
-  it { should have_login_shell '/bin/bash' }
-end
+#describe user('omegapyapi') do
+#  it { should exist }
+#  it { should have_login_shell '/bin/bash' }
+#end
 
 # services shoult NOT be listening here
 describe port(53) do

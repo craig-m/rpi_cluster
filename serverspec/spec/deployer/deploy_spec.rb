@@ -26,7 +26,10 @@ describe file('/etc/ssh/sshd_config') do
 end
 
 
-# should NOT be listening here
+# services shoult NOT be listening here
+describe port(5353) do
+  it { should_not be_listening }
+end
 describe port(443) do
   it { should_not be_listening }
 end
@@ -49,5 +52,8 @@ describe user('tftp') do
   it { should_not exist }
 end
 describe user('computeadm') do
+  it { should_not exist }
+end
+describe user('puppet') do
   it { should_not exist }
 end

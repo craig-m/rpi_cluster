@@ -1,5 +1,6 @@
 ansible
 redis
+tox
 passlib
 invoke
 httpie

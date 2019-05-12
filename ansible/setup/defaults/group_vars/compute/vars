@@ -4,7 +4,8 @@
 # Common host configs ----------------------------------------------------------
 
 host_dir: [
-  { dir: '/opt/cluster/compute', mode: '0750', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
+  { dir: '/opt/hpc', mode: '0750', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
+  { dir: '/opt/cluster/compute', mode: '0750', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" }
 ]
 
 # SSH additional port
@@ -12,20 +13,12 @@ ssh_group_port: "2020"
 
 #-------------------------------------------------------------------------------
 
-# Compute servers use these NTP servers
+# Compute nodes to use these NTP servers
 rpi_ntp_client_1: "{{ hostvars['alpha']['rpi_ip'] }}"
 rpi_ntp_client_2: "{{ hostvars['beta']['rpi_ip'] }}"
 rpi_ntp_client_3: "{{ hostvars['omega']['rpi_ip'] }}"
 
 #-------------------------------------------------------------------------------
-
-# haproxy server:
-rpi_haproxy_enabled: true
-haproxy_cfg_file: "compute"
-
-# consul options
-rpi_conul_enabled: true
-rpi_conul_start_opt: "agent -disable-host-node-id -raft-protocol 3"
 
 # Docker
 rpi_docker_enabled: true

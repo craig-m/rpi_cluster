@@ -132,16 +132,18 @@ if [ ! -f ~/.rpibs/rpibs_packages ]; then
   # install packages
   rpilogit "install some apt packages";
   /usr/bin/sudo apt-get -q install -y \
-  build-essential autoconf automake libtool bison flex dos2unix socat htop jq \
+  build-essential autoconf automake libtool bison flex dos2unix htop jq \
   sshpass scanssh wget curl git rsync vim nano lsof screen tmux pgpgpg bc gawk \
-  sshfs tcpdump nmap netdiscover libncurses5-dev libsqlite3-dev sqlite3 pwgen \
+  sshfs tcpdump nmap socat netdiscover sqlite3 pwgen \
   libssl-dev libyaml-dev libgmp-dev libgdbm-dev libffi-dev libpython-all-dev \
+  libxml2-dev libxslt1-dev libncurses5-dev libsqlite3-dev \
   monitoring-plugins-common monitoring-plugins-basic inotify-tools unzip pass \
   python-pip python-dev python3-pip python3-dev \
-  uuid-runtime uuid reptyr secure-delete mpich alpine \
+  uuid-runtime uuid reptyr secure-delete mpich alpine shellcheck \
   telnet lynx socat dirmngr mc software-properties-common;
   sleep 2s;
   # upgrade
+  rpilogit "upgrade apt packages";
   /usr/bin/sudo apt-get -q -y upgrade || rpilogit "ERROR with apt upgrade";
   # ok
   touch ~/.rpibs/rpibs_packages;
@@ -161,7 +163,7 @@ if [ ! -f ~/.rpibs/rpibs_firm ]; then
 fi
 
 # check all packages current
-/usr/lib/nagios/plugins/check_apt --timeout=30 --list
+/usr/lib/nagios/plugins/check_apt --timeout=45 --list
 if [ $? -eq 0 ]; then
   rpilogit "packages are current"
 else
@@ -214,6 +216,7 @@ rpilogit "check_procs redis";
 
 # Python tools installation ----------------------------------------------------
 # install requirements.txt
+PS1=""
 
 # install pip + dependencies and virtualenv
 if [ ! -f /usr/local/bin/virtualenv ]; then
@@ -231,9 +234,10 @@ if [ ! -d ~/env/ ]; then
   sleep 1s;
 fi
 
-# install python packages in venv
-PS1=""
+# activate venv
 source ~/env/bin/activate;
+
+# install python packages
 stat -t requirements.txt || exit 1;
 pip install -r requirements.txt
 sleep 1s;

@@ -3,7 +3,10 @@
 # name: ssh_agent_load.sh
 # desc: add password to ssh keyfile automatically and then connect to the host.
 #
-# use: ./ssh_agent_load.sh omega
+# use:
+#     ./ssh_agent_load.sh omega
+#     echo uptime | ./ssh_to_host.sh alpha
+
 
 if [ $# -eq 0 ]; then
     echo "error no host specified."

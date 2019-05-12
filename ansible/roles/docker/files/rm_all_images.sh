@@ -7,7 +7,7 @@ rpilogit () {
 
 rpilogit "started rm_all_images.sh";
 
-# stop all
+# stop all containers
 docker stop $(/usr/bin/sudo docker ps -a -q)
 
 # Delete all containers

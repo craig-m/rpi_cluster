@@ -14,7 +14,7 @@ LISTENPORT = 8382
 DEBUG = False
 
 # Connect to Redis DB
-redis = Redis(host= "127.0.0.1", port=6379, socket_connect_timeout=2, socket_timeout=2)
+redis = Redis(host= "redis", port=6379, socket_connect_timeout=2, socket_timeout=2)
 
 class ReverseProxied(object):
     '''

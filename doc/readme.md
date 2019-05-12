@@ -172,13 +172,6 @@ Compute base setup:
 (env) pi@psi:~/rpi_cluster/ansible $ invoke compute-ansible-base
 ```
 
-Compute hosting setup:
-
-```
-(env) pi@psi:~/rpi_cluster/ansible $ invoke compute-web-ansible
-(env) pi@psi:~/rpi_cluster/ansible $ invoke compute-cont-ansible
-```
-
 
 ## Cluster admin
 

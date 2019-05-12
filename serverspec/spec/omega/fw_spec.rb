@@ -1,5 +1,9 @@
 require 'spec_helper'
 
+describe package('ufw') do
+  it { should be_installed }
+end
+
 describe iptables do
   it { should have_rule('-A INPUT -j ufw-reject-input') }
 end
@@ -16,7 +20,3 @@ end
 #describe iptables do
 #  it { should have_rule("-A ufw-user-input -p tcp -m tcp --dport #{property[:ssh_group_port]} -j ACCEPT") }
 #end
-
-describe file('/root/ufw.sh') do
- it { should be_file }
-end

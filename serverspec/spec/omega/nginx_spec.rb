@@ -20,7 +20,6 @@ end
 describe file('/srv/nginx/default') do
   it { should be_directory }
   it { should be_owned_by 'pi' }
-  it { should be_grouped_into 'root' }
 end
 
 describe file('/srv/nginx/hugo-site') do

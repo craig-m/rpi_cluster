@@ -1,6 +1,7 @@
 ---
-# nodejs - https://github.com/tj/n
 - debug: msg="NodeJS install "
+
+# https://github.com/nodesource/distributions/blob/master/README.md
 
 
 - name: create npm-global folder
@@ -25,30 +26,18 @@
   tags: [nodejs]
 
 
-# /srv folder for node apps
-- name: create /srv/nodejs/
-  file:
-    path: /srv/nodejs/
-    state: directory
-    mode: 0755
-    owner: "{{ ansible_user_id }}"
-    group: "{{ ansible_user_id }}"
-  become: yes
-  tags: [nodejs]
-
-
 # copy setup .sh
 - name: copy nodejs installer
   copy:
-    src: nodejs_setup_9.x.sh
-    dest: /opt/cluster/mysrc/nodejs_setup_9.x.sh
+    src: "{{ nodejs_setup_ver }}"
+    dest: "/opt/cluster/mysrc/{{ nodejs_setup_ver }}"
     mode: 0755
   tags: [nodejs]
 
 
 # run installer
-- name: run nodejs_setup_9.x installer
-  command: /opt/cluster/mysrc/nodejs_setup_9.x.sh
+- name: run nodejs_setup_x installer
+  command: "/opt/cluster/mysrc/{{ nodejs_setup_ver }}"
   args:
     creates: /etc/apt/sources.list.d/nodesource.list
   become: yes
@@ -64,6 +53,23 @@
        - nodejs
   become: yes
   retries: 2
+  tags: [nodejs]
+
+
+
+- name: get nodejs version
+  command: /usr/bin/nodejs --version
+  register: nodejs_inst_ver
+  changed_when: false
+  tags: [nodejs]
+
+
+# Log version to ara
+- name: log nodejs version to ARA
+  ara_record:
+    key: "{{ inventory_hostname }}_nodejs_ver"
+    type: "text"
+    value: "{{ nodejs_inst_ver.stdout }}"
   tags: [nodejs]
 
 

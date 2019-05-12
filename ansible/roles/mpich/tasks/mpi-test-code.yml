@@ -7,9 +7,9 @@
 - name: copy mpi_sample.c
   copy:
     src: mpi_sample.c
-    dest: "/home/{{ mpichuser }}/mpi_sample.c"
-    owner: "{{ mpichuser }}"
-    group: "{{ mpichuser }}"
+    dest: /home/mpiuser/mpi_sample.c"
+    owner:
+    group:
     mode: 0644
   become: yes
   tags: [mpich]
@@ -18,7 +18,7 @@
 # Check mpi_sample.c
 - name: check mpi_sample
   stat:
-    path: "/home/{{ mpichuser }}/bin/mpi_sample.c"
+    path: /home/mpiuser/bin/mpi_sample.c
   register: mpi_sample_c
   changed_when: False
   become: yes
@@ -29,8 +29,8 @@
 - name: compile mpi_sample
   command: mpic++ -o ~/bin/mpi_sample mpi_sample.c
   args:
-    chdir: "/home/{{ mpichuser }}/"
+    chdir: /home/mpiuser/
   when: mpi_sample_c.stat.exists == False
   become: yes
-  become_user: "{{ mpichuser }}"
+  become_user: mpiuser
   tags: [mpich]

@@ -2,14 +2,9 @@
 
 # OS user password -------------------------------------------------------------
 
-# user: root
-# pass: dfaultPW.example_root
-
-# user: piclust
-# pass: dfaultPW.example_123
-
-# user: pi
-# pass: dfaultPW.example_pi
+# user: root    pass: dfaultPW.example_root
+# user: piclust pass: dfaultPW.example_123
+# user: pi      pass: dfaultPW.example_pi
 
 vault_user_pw: [
   {user: 'root', hash: '$6$rounds=656000$kvg9muhj2hcrVI83$C.ytqCBHtYoTTskR1tj/NDqci1fzeaym/KfCeFilsQJqAXgFOTCaQh/IEE/dlepvNy/v4qGaTnrG6oj320BCh0'},

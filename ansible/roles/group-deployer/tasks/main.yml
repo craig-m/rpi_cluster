@@ -41,17 +41,16 @@
 
 
 # yarn
-- import_tasks: yarn.yml
-  tags:
-    - deployer
-    - yarn
+#- import_tasks: yarn.yml
+#  tags:
+#    - deployer
+#    - yarn
 
 
 - name: git init an empty repo
   command: git init --bare /srv/gitrepo/git-test
   args:
     creates: /srv/gitrepo/git-test/HEAD
-
 
 
 # log

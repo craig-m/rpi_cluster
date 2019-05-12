@@ -60,12 +60,6 @@ def compute_ansible_base(c):
     c.run('ansible-playbook -v play-rpi-compute.yml')
 
 @task
-def compute_ansible_web(c):
-    """ Setup Web frontend. """
-    print("Running play-rpi-compute-webfront.yml")
-    c.run('ansible-playbook -v play-rpi-compute-webfront.yml')
-
-@task
 def compute_ansible_container(c):
     """ Setup Docker k8 cluster. """
     print("Running play-rpi-compute-containers.yml")

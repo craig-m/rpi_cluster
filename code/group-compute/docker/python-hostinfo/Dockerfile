@@ -1,13 +1,11 @@
 # Dockerfile for R-pi hostinfo.
 
-FROM resin/rpi-raspbian
+FROM python
 
 # packages for app
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update
-RUN apt-get install -y python-pip python-dev libpython-all-dev
 
-# user for app to run under
+# create the user "pyapp" for the app to run under
 RUN groupadd -r pyapp && \
     useradd -r -g pyapp -d /app -s /sbin/nologin -c "pyapp" pyapp
 

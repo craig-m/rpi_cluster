@@ -24,7 +24,7 @@ rpi_dhcp_dns2: "{{ hostvars['beta']['rpi_ip'] }}"
 rpi_net_default_gw: "20.20.20.1"
 rpi_net_default_gw_mac: "00:0d:b9:XX:XX:XX"
 
-# This IP will float between two of the Compute nodes. Managed by keepalived
+# This IP will float between alpha and beta. Managed by keepalived
 rpi_loadbal_float_ip: "20.20.20.111"
 
 #-------------------------------------------------------------------------------

@@ -13,6 +13,6 @@ if [[ root = "$(whoami)" ]]; then
   exit 1;
 fi
 
-/usr/bin/wget -O /dev/null -- http://cachefly.cachefly.net/100mb.test;
+/usr/bin/wget -q -O /dev/null -- http://cachefly.cachefly.net/100mb.test;
 
 rpilogit "finished speedtest_100mbit.sh";

@@ -27,9 +27,9 @@ Needs refining, and integrating with ansible.
 ## tests
 
 * tests: 178 - group: compute (x4)
-* tests: 254 - group: lan service main (x2)
-* tests: 217 - group: lan service misc (x1)
-* tests: 233 - group: deployer node (x1)
+* tests: 262 - group: lan service main (x2)
+* tests: 223 - group: lan service misc (x1)
+* tests: 240 - group: deployer node (x1)
 
 The total ServerSpec cases performed after `run.sh` is getting up there :)
 

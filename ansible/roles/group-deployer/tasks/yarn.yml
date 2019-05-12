@@ -35,22 +35,13 @@
   register: yarnaddapt
 
 
-# update apt
-- name: update apt cache
-  apt:
-    update_cache: yes
-  become: yes
-  retries: 1
-  check_mode: no
-  when: yarnaddapt.changed
-
-
 # check package installed
 - name: yarn packages installed
   apt:
     name: "{{ item }}"
     state: present
+    update_cache: yes
   loop:
        - yarn
   become: yes
-  retries: 1
+  retries: 2

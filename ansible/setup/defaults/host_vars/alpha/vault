@@ -24,4 +24,8 @@ rpi_failover_hostname: "beta"
 rpi_failover_ip: "{{ hostvars['beta']['rpi_ip'] }}"
 rpi_failover_hwaddr: "{{ hostvars['beta']['rpi_mac'] }}"
 
+# keepalived
+keepalived_priority: 100
+keepalived_state: "MASTER"
+
 #-------------------------------------------------------------------------------

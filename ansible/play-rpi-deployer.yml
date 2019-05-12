@@ -15,7 +15,6 @@
     - uptimed
     - ntp-server
     - redis
-    - nodejs
     - golang
     - docker
     - hugo

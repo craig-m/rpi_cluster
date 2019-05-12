@@ -3,11 +3,19 @@
 # https://gohugo.io/
 
 
+- name: check we have hugo deb
+  stat:
+    path: "/opt/cluster/mysrc/{{ hugo_bin }}"
+  register: hugo_apt_mysrc
+  changed_when: False
+
+
 - name: download Hugo bin
   get_url:
     url: "{{ hugo_bin_url }}"
     dest: /opt/cluster/mysrc/
     checksum: "{{ hugo_bin_sha }}"
+  when: hugo_apt_mysrc.stat.exists == False
   register: hugo_bin_dl
   tags: [hugo]
 
@@ -31,7 +39,7 @@
 - name: check hugo ok
   assert:
     that:
-      - "'Hugo Static Site Generator' in hugo_version.output"
+      - "'Hugo Static Site Generator' in hugo_version.stdout"
 
 
 # Log version to ara

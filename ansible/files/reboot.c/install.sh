@@ -7,6 +7,9 @@ rpilogit () {
 	logger -t rpicluster "$1";
 }
 
+# test /usr/bin/sudo <cmd> works OK
+/usr/bin/sudo id | grep "uid=0(root)" > /dev/null 2>&1 || exit 1;
+
 rpilogit "started reboot_setuid build";
 
 # clean up old

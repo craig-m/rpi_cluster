@@ -23,15 +23,8 @@
     RUNLEVEL: 1
   tags: [keepalived]
 
-#-------------------------------------------------------------------------------
 
-- name: primary keepalived
-  debug: msg="primary keepalived "
-  when: "'loadbal_prime' in group_names"
-  tags: [keepalived]
-
-
-- name: keepalived conf for Primary
+- name: keepalived conf
   template:
     src: primary.j2
     dest: /etc/keepalived/keepalived.conf
@@ -40,30 +33,8 @@
     group: root
   notify: keepalived_reload
   become: yes
-  when: "'loadbal_prime' in group_names"
   tags: [keepalived]
 
-#-------------------------------------------------------------------------------
-
-- name: secondary keepalived
-  debug: msg="secondary keepalived "
-  when: "'loadbal_second' in group_names"
-  tags: [keepalived]
-
-
-- name: keepalived conf for Secondary
-  template:
-    src: secondary.j2
-    dest: /etc/keepalived/keepalived.conf
-    mode: 0644
-    owner: root
-    group: root
-  notify: keepalived_reload
-  become: yes
-  when: "'loadbal_second' in group_names"
-  tags: [keepalived]
-
-#-------------------------------------------------------------------------------
 
 # enabled on boot
 - name: keepalived enabled on boot

@@ -6,30 +6,6 @@ epsilon ansible_host=epsilon.local rpi_ip=20.20.20.XX rpi_mac=b8:27:eb:bf:XX:XX 
 gamma ansible_host=gamma.local rpi_ip=20.20.20.XX rpi_mac=b8:27:eb:ad:XX:XX rpi_racked="R3"
 delta ansible_host=delta.local rpi_ip=20.20.20.XX rpi_mac=b8:27:eb:31:XX:XX rpi_racked="R4"
 
-# Keepalived -------------------------------------------------------------------
-
-# The floating IP {{ rpi_loadbal_float_ip }} (Set in group_vars/all/vars) will
-# exist on *at least* one of these.
-
-[frontend:children]
-loadbal_prime
-loadbal_second
-
-[loadbal_prime]
-delta haproxy_cfg_file=compute
-
-[loadbal_second]
-epsilon haproxy_cfg_file=compute
-
-# Haproxy ----------------------------------------------------------------------
-
-[compute_api_back:children]
-api_backend
-
-[api_backend]
-zeta
-gamma
-
 # Docker -----------------------------------------------------------------------
 
 [docker:children]

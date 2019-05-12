@@ -1,4 +1,4 @@
-! /etc/keepalived/keepalived.conf - Primary config.
+! /etc/keepalived/keepalived.conf
 ! {{ ansible_managed }}
 
 global_defs {
@@ -6,10 +6,10 @@ global_defs {
 }
 
 vrrp_instance VI_1 {
-    state MASTER
+    state {{ keepalived_state }}
     interface eth0
     virtual_router_id {{ keepalived_vrouteid }}
-    priority 101
+    priority {{ keepalived_priority }}
     advert_int 1
     authentication {
         auth_type PASS

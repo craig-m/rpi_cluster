@@ -12,6 +12,7 @@
   loop:
        - environment-modules
        - lmod
+       - lua-posix
   retries: 2
   become: yes
 

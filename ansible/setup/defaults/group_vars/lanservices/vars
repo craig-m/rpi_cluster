@@ -17,7 +17,4 @@ rpi_dnsd_enabled: true
 # chrooted Busybox webserver
 rpi_bb_httpd_enabled: true
 
-# Gluster server:
-rpi_glustersrv_enabled: false
-
 #-------------------------------------------------------------------------------

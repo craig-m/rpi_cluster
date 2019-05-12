@@ -55,3 +55,6 @@ end
 describe user('computeadm') do
   it { should_not exist }
 end
+describe user('puppet') do
+  it { should_not exist }
+end

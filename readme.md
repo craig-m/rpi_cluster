@@ -80,25 +80,29 @@ The other bits and pieces in this cluster:
 
 The Deployer runs from x1 R-Pi. This configures all of the other hosts. It also acts as a Certificate Authority, for TLS and SSH. Infrastructure for system admins.
 
-* [Ansible](https://www.ansible.com/) - the control node
+* [Ansible](https://www.ansible.com/) - configuration management
 * [ARA](https://ara.readthedocs.io/en/stable/) - web interface to analyze Ansible results
 * [Redis](https://redis.io/) - for the Ansible fact cache
 * [ServerSpec](http://serverspec.org/) - RSpec tests for infrastructure
 * [Invoke](http://www.pyinvoke.org/) - a task execution tool
+* [pass](https://www.passwordstore.org/) -  a password manager for unix
 
 
-Redundancy: can fail and the cluster will continue to operate, but it cannot be altered. Small amounts of downtime for this host can be tolerated while it gets restored from backup. This SD card can be cloned onto a spare one as a backup option.
+Redundancy: can fail and the cluster will continue to operate, but it cannot be altered. Small amounts of downtime for this host can be tolerated while it gets restored from backup.
+
+This SD card can be cloned onto a spare one as a backup option. This is the only node that is not immutable.
 
 
 ### LanServices - Main
 
 To provide redundant essential services for the LAN. Longer running infrastructure to handle services for the more ephemeral nodes.
 
-* [DHCP Server](https://www.isc.org/downloads/dhcp/) (in high availability)
-* [DNS Server](https://www.isc.org/downloads/bind/) (Bind with zone replication between master/secondary)
+* isc.org [DHCP Server](https://www.isc.org/downloads/dhcp/) (in high availability)
+* isc.org [DNS Server](https://www.isc.org/downloads/bind/) (Bind with zone replication between master/secondary)
 * NTP Server
 * FTP Daemon (for BOOTP clients)
 * BusyBox httpd (running in chroot)
+* [Keepalived](https://github.com/acassen/keepalived) - a floating IP address, over x2 nodes, that will be present in *at least* one place at any given time.
 
 Redundancy: any 1 of the 2 nodes can fail.
 
@@ -112,7 +116,7 @@ For miscellaneous, non-essential, net services. Used for dev, reporting, buildin
 * [HAproxy](https://www.haproxy.org/)
 * [Hugo](https://github.com/gohugoio/hugo) - static website generator
 * [Yarn](https://github.com/yarnpkg/yarn/)
-* Docker (standalone)
+* Docker
 
 Redundancy: not redundant, does not provide services for the LAN. Immutable - no data to backup from this node.
 
@@ -121,13 +125,10 @@ Redundancy: not redundant, does not provide services for the LAN. Immutable - no
 
 To play with services, and things like Kubernetes. Subdivided into a frontend and backend group. These nodes run services for public consumption, this is "production". Immutable infrastructure.
 
-* [Keepalived](https://github.com/acassen/keepalived) - a floating IP address over x2 nodes
 * [DistCC](https://github.com/distcc/distcc) - for distributed compiling
 * [C mpich](https://www.mpich.org/) - distributed code with the C Message Passing Interface
-* [HAproxy](https://www.haproxy.org/)
-* Nginx
 * Docker + Kubernetes + Weave network addon
 
-Redundancy: 1 of 2 'front', and 1 of 2 'back-end' nodes can fail.
+Redundancy: the herd.
 
 ---
