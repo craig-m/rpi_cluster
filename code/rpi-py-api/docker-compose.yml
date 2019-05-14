@@ -1,10 +1,46 @@
 version: '3'
+
 services:
-  web:
-    build: .
-    ports:
-     - "8382:8382"
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile-pyapp
+    environment:
+     - RPIPYAPI_VER=development
     depends_on:
       - redis
+    volumes:
+      - weblogs-data:/logs
+    networks:
+      - web_net
+      - db_net
+
   redis:
     image: "redis:alpine"
+    volumes:
+      - redis-data:/data
+    networks:
+      - db_net
+
+  nginx:
+    image: "nginx:latest"
+    ports:
+      - "80:8080"
+    depends_on:
+      - app
+    volumes:
+      - ./nginx.conf.d:/etc/nginx/conf.d
+      - ./web/pub/:/var/www/pub/
+    networks:
+      - web_net
+
+volumes: 
+  redis-data:
+  weblogs-data:
+
+networks:
+  web_net:
+    driver: bridge
+  db_net:
+    driver: bridge

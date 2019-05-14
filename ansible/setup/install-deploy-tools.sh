@@ -68,9 +68,6 @@ sleep 2s;
 
 # Environment ------------------------------------------------------------------
 
-# change bash prompt so we know we are on a deployer node
-export PS1="\[\033[01;32m\]\u\[\033[01;34m\]@\[\033[31m\]\\h\[\033[01;34m\] jobs:\j \t \w $ \[\033[00m\]"
-
 # Remount /proc with hidepid option to hide processes from other users
 /usr/bin/sudo mount -o remount,rw,hidepid=2 /proc
 

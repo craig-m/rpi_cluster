@@ -2,7 +2,7 @@
 # --- rpi-py-api Dockerfile --- #
 # ----------------------------- #
 
-FROM python
+FROM python:3
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -18,8 +18,11 @@ COPY appsrc /app
 # Set the working directory to /app
 WORKDIR /app
 
-RUN chown -R omegapyapi:omegapyapi /app/
+RUN mkdir /logs/
 
+RUN chown -R omegapyapi:omegapyapi /app/ /logs/
+
+# install app requirements
 RUN pip install -r /app/requirements.txt
 
 USER omegapyapi

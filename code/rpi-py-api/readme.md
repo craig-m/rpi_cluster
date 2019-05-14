@@ -1,8 +1,8 @@
-Python Flask API
-----------------
-http://flask.pocoo.org/
+# rpi-py-api
 
-A simple Flask app, with redis db, that runs in Docker.
+A simple PoC Flask app, with redis db backend, and nginx frontend.
+
+All setup with Docker-Compose.
 
 
 On the R-Pi nodes:
@@ -12,27 +12,15 @@ On the R-Pi nodes:
 source /opt/cluster/docker/compose/venv/bin/activate
 ```
 
-
-Build and run:
+Build and run (anywhere that has docker-compose + docker):
 
 ```
 docker-compose build && docker-compose up -d
 ```
 
-
-
-test:
+Attach to the app container and test:
 
 ```
-pi@omega:~ $ curl -X GET --unix-socket omegapyapi_socket http/hello/curltest
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Hello from flask</title>
-  <link rel="stylesheet" type="text/css" href="/static/style.css">
-</head>
-<body>
-  <h1>Hello curltest!</h1>
-</body>
-</html>
+docker exec -it $(docker ps | grep "rpi-py-api_app" | awk '{print $1}') /bin/bash 
+curl -X GET --unix-socket /app/omegapyapi.socket http/hello/curltest
 ```

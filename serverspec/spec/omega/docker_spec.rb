@@ -19,6 +19,6 @@ describe process("dockerd") do
   its(:user) { should eq "root" }
 end
 
-describe process("containerd") do
-  its(:user) { should eq "root" }
-end
+#describe process("containerd") do
+#  its(:user) { should eq "root" }
+#end

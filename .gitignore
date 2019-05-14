@@ -1,5 +1,6 @@
 # ---- ignore ----
 #
+.vscode/
 ignore_me/*
 nohup.out
 ansible/inventory/*

@@ -64,8 +64,8 @@ All run Raspbian GNU/Linux (stretch), a Debian-based OS.
 The other bits and pieces in this cluster:
 
 * D-Link 16 port Gbit ethernet switch
-* x2 6 Port RAVPower USB Chargers (each 60W 12A) (https://www.ravpower.com/6-port-usb-wall-charger-black-.html)
-* Raspberry Pi SenseHat (https://www.raspberrypi.org/products/sense-hat/)
+* x2 6 Port [RAVPower USB Chargers](https://www.ravpower.com/6-port-usb-wall-charger-black-.html) (each 60W 12A) 
+* Raspberry Pi [Sense Hat](https://www.raspberrypi.org/products/sense-hat/)
 * x9 ethernet cables
 * x8 micro usb cables (for power)
 
