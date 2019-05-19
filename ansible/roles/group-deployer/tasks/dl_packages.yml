@@ -21,6 +21,8 @@
        - mpich
        - maven
        - neofetch
+       - proxychains
+       - autossh
   become: yes
   retries: 2
 

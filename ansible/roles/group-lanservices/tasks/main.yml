@@ -11,6 +11,8 @@
        - nmap
        - telnet
        - lynx
+       - redir
+       - proxychains
   become: yes
   retries: 2
   tags: [lanservices]

@@ -5,11 +5,11 @@
 
 
 # vars:
-chroot_dir="opt/chroot_bb"
+chroot_dir="/opt/chroot_bb"
 chroot_user="bbweb"
 
 # cd into the dir this script is located in
-cd "$(dirname "$0")"
+cd "$(dirname "$0")" | exit 1;
 pwd
 
 #-------------------------------------------------------------------------------
@@ -26,7 +26,7 @@ test_user_exist=$(id -u ${chroot_user})
 if [ $? -eq 0 ]; then
   echo "user exists";
 else
-  adduser $chroot_user --disabled-password --gecos "" --no-create-home --shell /bin/false
+  adduser $chroot_user --disabled-password --gecos "" --no-create-home --shell /bin/false || exit 1;
 fi
 
 # file and folders -------------------------------------------------------------
@@ -55,7 +55,7 @@ sleep 1s;
 
 cp -v httpd.conf /${chroot_dir}/etc/httpd.conf
 
-cp -v index.html /opt/chroot_bb/www/index.html
+#cp -v index.html /opt/chroot_bb/www/index.html
 cp -v glinder1.png /opt/chroot_bb/www/static/glinder1.png
 
 cp -v hello /${chroot_dir}/www/cgi-bin/hello
@@ -63,10 +63,18 @@ chmod 555 /${chroot_dir}/www/cgi-bin/hello
 
 chown pi:pi -R /${chroot_dir}/www/
 
-mknod /${chroot_dir}/dev/urandom c 1 9
-chmod 0666 /${chroot_dir}/dev/urandom
-mknod /${chroot_dir}/dev/ptmx c 5 2
-chmod 0666 /${chroot_dir}/dev/ptmx
+# create dev/urandom if not exists
+if [ ! -e /${chroot_dir}/dev/urandom ]; then
+  mknod /${chroot_dir}/dev/urandom c 1 9
+  chmod 0666 /${chroot_dir}/dev/urandom
+fi
+
+# create dev/ptmx if not exists
+if [ ! -e /${chroot_dir}/dev/ptmx ]; then
+  mknod /${chroot_dir}/dev/ptmx c 5 2
+  chmod 0666 /${chroot_dir}/dev/ptmx
+fi
+
 mount -o bind /proc /${chroot_dir}/proc/
 
 cp -v /etc/localtime /${chroot_dir}/etc/
@@ -106,7 +114,14 @@ grep ^${chroot_user} /etc/shadow >> /${chroot_dir}/etc/shadow
 #-------------------------------------------------------------------------------
 
 # test chroot
-chroot --userspec=${chroot_user}:${chroot_user} /${chroot_dir}/ /bin/busybox id || echo "ERROR with chroot"
+chroot --userspec=${chroot_user}:${chroot_user} /${chroot_dir}/ /bin/busybox id 
+if [ $? -eq 0 ]; then
+  echo "chroot tested OK";
+  touch -f /opt/chroot_bb/etc/tested
+else
+  echo "error testing chroot"
+  exit 1;
+fi
 
 rpilogit "chroot_bb starting service"
 

@@ -1,10 +1,7 @@
 About
 ------
 
-After the setup described in `doc/readme.md`.. .
-
-
-Then the usual workflow is:
+After following the setup procedure described in `doc/readme.md` the usual workflow is:
 
 ```
 pi@psi:~ $ source ~/env/bin/activate
@@ -28,12 +25,19 @@ Execute a command via a Jump Box
 beta
 ```
 
-or two:
+or three:
 
 ```
-(env) pi@psi:~ $ ssh -J pi@alpha.local,pi@beta.local pi@omega.local
-omega
+(env) pi@psi:~ $ ssh -J pi@alpha.local,pi@beta.local,pi@omega.local pi@zeta.local hostname;
+zeta
 ```
+
+ssh port forwarding also works (the httpd on zeta is available on deployer at localhost:8888):
+
+```
+(env) pi@psi:~ $ ssh -J pi@alpha.local,pi@beta.local,pi@omega.local pi@zeta.local -L 8888:127.0.0.1:80
+```
+
 
 ## key renew
 

@@ -62,11 +62,17 @@ pass="x";
 # remove old reports
 rm -rf -- reports/*.html reports/*.json
 
-echo -e "running rake \n"
+# run ServerSpec
 
-# run
-#bundle exec rake spec
-rake -j 10 spec
+if [ $# -eq 0 ]; then
+  # no host specified - run on all nodes
+  echo -e "testing entire cluster \n"
+  rake -j 10 spec
+else
+  # run on a specific host
+  echo -e "run rake on a single host \n"
+  rake serverspec:$1
+fi
 
 
 # close ssh-agent

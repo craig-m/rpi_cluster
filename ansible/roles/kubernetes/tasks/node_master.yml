@@ -8,7 +8,8 @@
 
 # check if the cluster is alreadly initialized
 - name: check for kube_info.txt
-  stat: path=/opt/cluster/docker/kubecnf/kube_info.txt
+  stat: 
+    path: "/opt/cluster/docker/kubecnf/kube_info.txt"
   register: kube_info_txt
   changed_when: False
   when:

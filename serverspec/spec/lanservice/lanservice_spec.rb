@@ -49,9 +49,6 @@ end
 describe user('redis') do
   it { should_not exist }
 end
-describe user('omegapyapi') do
-  it { should_not exist }
-end
 describe user('computeadm') do
   it { should_not exist }
 end

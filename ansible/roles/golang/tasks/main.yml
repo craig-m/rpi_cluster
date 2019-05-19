@@ -3,11 +3,21 @@
 # https://golang.org/dl/
 
 
+- name: check we have go src
+  stat: 
+    path: "/opt/cluster/mysrc/{{ goland_targz }}"
+  register: go_src_current
+  changed_when: False
+  tags: [golang]
+
+
 - name: download go binary
   get_url:
     url: https://dl.google.com/go/{{ goland_targz }}
     dest: /opt/cluster/mysrc/
     checksum: "{{ golang_shasum }}"
+  when: 
+    - "go_src_current.stat.exists == False"
   tags: [golang]
 
 

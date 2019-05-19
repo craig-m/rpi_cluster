@@ -1,8 +1,8 @@
 #!/bin/bash
 #
 # name: install-deploy-tools.sh
+#
 # desc: install tools in requirements.txt (ansible etc), and packages from apt.
-
 
 # pre-run sanity checks --------------------------------------------------------
 
@@ -299,6 +299,10 @@ EOF
 # -- file stop --
 
 chmod 755 /etc/ansible/facts.d/deploytool.fact;
+
+# apt cleanup
+/usr/bin/sudo apt clean
+/usr/bin/sudo apt autoremove --purge -y
 
 # done
 touch ~/.rpibs/completed;

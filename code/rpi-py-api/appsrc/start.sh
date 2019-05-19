@@ -2,8 +2,12 @@
 
 echo "start.sh: starting gunicorn";
 
-if [[ root = "$(whoami)" ]]; then
-  echo "ERROR: do not run as root";
+# do some sanity checks before starting gunicorn
+
+if [[ omegapyapi = "$(whoami)" ]]; then
+  echo "running as omegapyapi - good";
+else
+  echo "ERROR: not running as omegapyapi";
   exit 1;
 fi
 
@@ -17,6 +21,11 @@ if [ ! -d /logs/ ]; then
   exit 1;
 fi
 
+
+# check we have python version 3
+python --version | awk '{print $2}' | cut -c1-1 | grep 3 || exit 1
+
+
 gunicorn omegapyapi:app \
   --pid /app/pyapi-gunicorn.pid \
   --bind unix:/app/omegapyapi.socket \
@@ -26,12 +35,6 @@ gunicorn omegapyapi:app \
   --timeout 30 \
   --backlog 200 \
   --limit-request-fields 50 \
-  --log-file=/logs/gunicorn.log \
-  --access-logfile=/logs/gunicorn-access.log \
-  --daemon;
-
-# keep container from exiting:
-tail -f /logs/gunicorn-access.log -f /logs/gunicorn.log
-
+  --log-file=/logs/gunicorn.log
 
 # eof

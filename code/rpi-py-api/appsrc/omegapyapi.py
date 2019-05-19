@@ -40,7 +40,7 @@ class ReverseProxied(object):
         return self.app(environ, start_response)
 
 
-app = flask.Flask(__name__, static_url_path='/static')
+app = flask.Flask(__name__, static_url_path='/static/')
 
 app.wsgi_app = ReverseProxied(app.wsgi_app)
 
@@ -58,16 +58,16 @@ def index():
 def about():
     return render_template('about.html')
 
-@app.route("/counter")
+@app.route("/counter/")
 def hitcount():
     try:
-        visits = redis.incr("/hits/rpiadmin/counter")
+        visits = redis.incr("/hits/rpiadmin/counter/")
     except RedisError:
         visits = "<i>error connecting to redis</i>"
     html = "<span><b>requests:</b> {visits} </span>"
     return html.format(visits=visits)
 
-@app.route('/ip', methods=['GET'])
+@app.route('/ip/', methods=['GET'])
 def name():
     return request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
 

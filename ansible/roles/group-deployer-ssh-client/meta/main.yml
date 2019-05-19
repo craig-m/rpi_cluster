@@ -1,0 +1,12 @@
+---
+galaxy_info:
+  role_name: group-deployer-ssh-client
+  author: crgm
+  description: This role is run on the Deployer node. It populates ~/.ssh/config and /etc/hosts with all nodes in our inventory.
+  company: crgm inc
+  license: license (no)
+  min_ansible_version: 2.7
+  platforms:
+  - name: Raspbian
+    versions:
+      - stretch

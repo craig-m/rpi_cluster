@@ -13,6 +13,11 @@ if [ $# -eq 0 ]; then
     exit 1;
 fi
 
+rpilogit () {
+	echo -e "rpicluster: $1 \n";
+	logger -t rpicluster "$1";
+}
+
 # get ssh key password from pass
 pass=$(pass ssh/id_rsa)
 
@@ -28,6 +33,8 @@ else
   # start ssh-agent
   eval `ssh-agent`
 fi
+
+rpilogit "ssh_to_host.sh on: $1";
 
 # enter ssh-key password into agent
 expect << EOF

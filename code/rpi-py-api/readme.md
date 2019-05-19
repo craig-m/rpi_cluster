@@ -1,6 +1,6 @@
 # rpi-py-api
 
-A simple PoC Flask app, with redis db backend, and nginx frontend.
+A small Python Flask app, with redis database backend, and nginx webserver frontend.
 
 All setup with Docker-Compose.
 

@@ -20,7 +20,9 @@ end
 
 ## install + use
 
-use `install-serverspec.sh` to setup the deplot node, and `run.sh` to run tests on the cluster.
+use `install-serverspec.sh` to setup the deploy node, and `run.sh` to run tests on all nodes in the cluster.
+
+You can use `run.sh alpha` to test a single node.
 
 Needs refining, and integrating with ansible.
 
@@ -32,14 +34,5 @@ Needs refining, and integrating with ansible.
 * tests: 240 - group: deployer node (x1)
 
 The total ServerSpec cases performed after `run.sh` is getting up there :)
-
-
-## use
-
-```
-source ~/.rvm/scripts/rvm
-rvm gemset use serverspec
-rake serverspec:omega
-```
 
 These tests can be run from cron, hourly or daily monitoring is nice.

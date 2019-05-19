@@ -23,24 +23,14 @@
   tags: [bbhttpd]
 
 
-# chmod +x install script
-- name: make install script exec
-  file:
-    dest: "{{ bbhttpd_src_tmp }}/chroot_bb.sh"
-    mode: 0755
-  become: yes
-  when: rpi_bb_httpd_enabled == true
-  register: pi_bb_httpd_script
-  tags: [bbhttpd]
-
-
 # run installer script
 - name: install busybox chroot
-  command: "{{ bbhttpd_src_tmp }}/chroot_bb.sh"
+  script: "chroot_bb.sh"
+  args:
+    creates: /opt/chroot_bb/etc/tested
   become: yes
   when:
     - "rpi_bb_httpd_enabled == true"
-    - pi_bb_httpd_script.changed
   tags:
    - bbhttpd
    - skip_ansible_lint

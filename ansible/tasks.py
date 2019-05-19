@@ -1,11 +1,15 @@
 """
 Raspberry Pi Cluster Admin tasks.
 """
-# Use this file with Invoke - http://www.pyinvoke.org/
+#
+# This file is used with Invoke - http://www.pyinvoke.org/
+#
+# Ansible is not a good task runner, repetitive actions with long command line
+# arguments are easier with Invoke.
 
 from invoke import task, run
 
-# deployer ---------------------------------------------------------------------
+# tasks run on deployer ------------------------------------------------------
 
 @task
 def deployer_ansible(c):
@@ -35,6 +39,12 @@ def ansible_sshd(c, hostname):
     print("Running ssh-server role")
     c.run('ansible-playbook --limit "%s" -e "ansible_user=pi ansible_ssh_pass=raspberry host_key_checking=False runtherole=ssh-server" -v single-role.yml' % hostname)
 
+# serverspec test a host
+@task
+def serverspec_host(c, hostname):
+    """ ServerSpec test a specific host. """
+    print("Running ServerSpec")
+    c.run("cd ../serverspec/ && bash run.sh %s" % hostname)
 
 # lanservices group ------------------------------------------------------------
 
@@ -72,19 +82,13 @@ def compute_ansible_container_rm(c):
     c.run('ansible docker -i /etc/ansible/inventory/compute -m shell -a "/bin/bash -c /opt/cluster/docker/scripts/remove-kube.sh"')
 
 
-# tasks fo all hosts  ----------------------------------------------------------
+# tasks for all hosts  ----------------------------------------------------------
 
 @task
 def ansible_gather_facts(c):
     """ Gather facts on all hosts. """
     print("Gathering facts")
     c.run('ansible all -m setup &> /dev/null')
-
-@task
-def ansible_test_default(c):
-    """ Test default SSH creds on all hosts. """
-    print("Testing default SSH password of raspberry")
-    c.run('ansible all -a "uname -a" -f 10 -e "ansible_user=pi ansible_ssh_pass=raspberry host_key_checking=False"')
 
 # R-Pi Cluster maint - excludes the Deployer R-Pi.
 @task
@@ -95,7 +99,7 @@ def ansible_maint(c):
 
 # test all nodes in the clsuter with ServerSpec
 @task
-def cluster_serverspec(c):
+def serverspec_cluster(c):
     """ ServerSpec tests. """
     print("Running ServerSpec")
     c.run('cd ../serverspec/ && bash run.sh')

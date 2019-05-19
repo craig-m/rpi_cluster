@@ -47,12 +47,6 @@
 #    - yarn
 
 
-- name: git init an empty repo
-  command: git init --bare /srv/gitrepo/git-test
-  args:
-    creates: /srv/gitrepo/git-test/HEAD
-
-
 # log
 - name: output to rpicluster log
   command: logger -t rpicluster ansible deployer role ran

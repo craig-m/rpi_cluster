@@ -28,16 +28,21 @@ StrictModes yes
 PubkeyAuthentication yes
 
 {% if not 'deploy' in group_names %}
-# Only accept SSH keys signed by our CA
+# Only accept SSH keys signed by our CA keys on Deployer nodes
 TrustedUserCAKeys /etc/ssh/ca.pub
 
 # do not accept other key files
 AuthorizedKeysFile /dev/null
+
+# allow anyone to connect to forwarded ports
+GatewayPorts clientspecified
 {% endif %}
 
 {% if 'deploy' in group_names %}
 # deployer can manage own keys
 AuthorizedKeysFile /home/pi/.ssh/authorized_keys
+
+GatewayPorts no
 {% endif %}
 
 # Don't read the user's ~/.rhosts and ~/.shosts files

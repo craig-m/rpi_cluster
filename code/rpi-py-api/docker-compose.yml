@@ -32,6 +32,7 @@ services:
     volumes:
       - ./nginx.conf.d:/etc/nginx/conf.d
       - ./web/pub/:/var/www/pub/
+      - ./nginx.logs:/var/log/nginx
     networks:
       - web_net
 

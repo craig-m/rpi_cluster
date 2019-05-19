@@ -27,7 +27,9 @@ RUN pip install -r /app/requirements.txt
 
 USER omegapyapi
 
-# entry point
+# entry point - launch gunicorn
 CMD ["bash", "/app/start.sh"]
 
 EXPOSE 8382
+
+# EOF

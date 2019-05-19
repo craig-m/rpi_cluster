@@ -102,7 +102,7 @@ To provide redundant essential services for the LAN. Longer running infrastructu
 * NTP Server
 * FTP Daemon (for BOOTP clients)
 * BusyBox httpd (running in chroot)
-* [Keepalived](https://github.com/acassen/keepalived) - a floating IP address, over x2 nodes, that will be present in *at least* one place at any given time.
+* [Keepalived](https://github.com/acassen/keepalived) - a floating IP address, over x2 nodes, that will be present in *at least* one place at any given time (no fencing).
 
 Redundancy: any 1 of the 2 nodes can fail.
 
@@ -123,12 +123,12 @@ Redundancy: not redundant, does not provide services for the LAN. Immutable - no
 
 ### Compute / Worker
 
-To play with services, and things like Kubernetes. Subdivided into a frontend and backend group. These nodes run services for public consumption, this is "production". Immutable infrastructure.
+To play with services, and things like Kubernetes. These nodes run services for public consumption, this is "production".
 
 * [DistCC](https://github.com/distcc/distcc) - for distributed compiling
 * [C mpich](https://www.mpich.org/) - distributed code with the C Message Passing Interface
 * Docker + Kubernetes + Weave network addon
 
-Redundancy: the herd.
+Redundancy: the herd. Immutable infrastructure.
 
 ---

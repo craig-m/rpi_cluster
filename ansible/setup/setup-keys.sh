@@ -87,7 +87,7 @@ gpg-agent bash
 sleep 2s;
 
 
-# gen new keys
+# generate new PGP keys
 rpilogit "* create gpg private key";
 gpg --batch --gen-key /mnt/ramstore/data/gpg.batch
 if [ $? -eq 0 ]; then
@@ -149,6 +149,12 @@ fi
 # SSH keys ---------------------------------------------------------------------
 # create a SSH-CA key and then sign SSH keys with it
 
+
+# SSHD will only accept keys signed this key pair (excludes deployer)
+# SSH CA key setup described at:
+# https://code.facebook.com/posts/365787980419535/scalable-and-secure-access-with-ssh/
+
+
 # --- create the CA certs ---
 mkdir -pv ~/.ssh/my-ssh-ca/ || exit 1
 cd ~/.ssh/my-ssh-ca/ || exit 1
@@ -192,7 +198,10 @@ fi
 ssh-keygen -P "${idrsapass}" -o -f ~/.ssh/id_rsa -t rsa || exit 1;
 # --- sign our SSH key with CA key ---
 rpilogit "note: keys are valid for 1 week";
-ssh-keygen -s ~/.ssh/my-ssh-ca/ca -P ${thesshcapw} -I ${USER} -n pi -V +1w -z 1 ~/.ssh/id_rsa || exit 1;
+# get key id
+sshkeyid_redis=$(/usr/bin/redis-cli --raw incr /rpi/deployer/keys/ssh_key_id)
+# make key
+ssh-keygen -s ~/.ssh/my-ssh-ca/ca -P ${thesshcapw} -I ${USER} -n pi -V +1w -z ${sshkeyid_redis} ~/.ssh/id_rsa || exit 1;
 # cleanup
 thesshkeypw="x";
 thesshcapw="x";

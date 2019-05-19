@@ -12,8 +12,15 @@ fi
 # Run on psi:
 hostname | grep psi || exit 1;
 
+rpilogit () {
+	echo -e "rpicluster: $1 \n";
+	logger -t rpicluster "$1";
+}
+
 # test /usr/bin/sudo <cmd> works OK
 # /usr/bin/sudo id | grep "uid=0(root)" > /dev/null 2>&1 || exit 1;
+
+rpilogit "renew_ssh_priv_key.sh started";
 
 # exit ssh agent
 killall ssh-agent
@@ -33,11 +40,14 @@ else
   echo "pass length ok"
 fi
 
+# create SSH key pair
 ssh-keygen -P "${sshprvpass}" -o -f ~/.ssh/id_rsa -t rsa
+
+sshkeyid_redis=$(/usr/bin/redis-cli --raw incr /rpi/deployer/keys/ssh_key_id)
 
 # sign our SSH key with CA key
 thesshcapw=$(pass ssh/CA)
-ssh-keygen -s ~/.ssh/my-ssh-ca/ca -P ${thesshcapw} -I pi -n pi -V +1w -z 1 ~/.ssh/id_rsa
+ssh-keygen -s ~/.ssh/my-ssh-ca/ca -P ${thesshcapw} -I pi -n pi -V +1w -z ${sshkeyid_redis} ~/.ssh/id_rsa
 
 # clear vars
 sshprvpass="x"
@@ -45,4 +55,4 @@ thesshcapw="x"
 
 bash -c 'cat /home/pi/.ssh/id_rsa.pub >> /home/pi/.ssh/authorized_keys'
 
-echo "done"
+rpilogit "renew_ssh_priv_key.sh finished";

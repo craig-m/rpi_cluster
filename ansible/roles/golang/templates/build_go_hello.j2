@@ -7,7 +7,7 @@ mkdir -pv $HOME/go/src/hello
 cd $HOME/go/src/hello || exit 1;
 
 cat > $HOME/go/src/hello/hello.go << EOF
-// modified {{ ansible_date_time.time}} {{ ansible_date_time.date }}
+
 package main
 
 import "fmt"

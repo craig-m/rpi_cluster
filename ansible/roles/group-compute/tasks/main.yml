@@ -10,8 +10,7 @@
     name: "{{ item }}"
     state: present
   loop:
-       - openjdk-8-jdk
-       - openjdk-8-doc
+       - openjdk-9-jdk-headless
   become: yes
   retries: 2
   tags: [computenode]

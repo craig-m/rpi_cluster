@@ -78,18 +78,17 @@ Available tasks:
 
   ansible-gather-facts           Gather facts on all hosts.
   ansible-maint                  upgrade all R-Pi server hosts (includes rolling reboots).
-  ansible-ping                   Ansible Ping a host. ex: invoke ansible-ping omega
-  ansible-sshd                   Change default SSH login on new R-Pi.
-  ansible-test-default           Test default SSH creds on all hosts.
-  cluster-serverspec             ServerSpec tests.
+  ansible-ping                   Ansible Ping a host. example: invoke ansible-ping compute
+  ansible-sshd                   Change default SSH login on new R-Pi. example: invoke ansible_sshd beta
   compute-ansible-base           ansible base playbook on compute group.
   compute-ansible-container      Setup Docker k8 cluster.
   compute-ansible-container-rm   shutdown and remove docker and k8 cluster.
-  compute-ansible-web            Setup Web frontend.
   deployer-ansible               ansible deployer role on Psi (localhost).
   deployer-ssh-config            Generate ~/.ssh/config file from Ansible inventory.
   lanservices-main-ansible       ansible services-main playbook on Alpha and Beta.
   lanservices-misc-ansible       ansible services-misc playbook on Omega.
+  serverspec-cluster             ServerSpec tests.
+  serverspec-host                ServerSpec test a specific host.
 
 ```
 
@@ -97,7 +96,6 @@ Setup the deployer, this runs Ansible on the local deployer:
 
 ```
 (env) pi@raspberrypi:~/rpi_cluster/ansible $ invoke deployer-ansible
-Running play-rpi-deployer.yml
 ```
 
 
@@ -147,10 +145,19 @@ Configure Alpha + Beta nodes:
 (env) pi@psi:~/rpi_cluster/ansible $ invoke lanservices-main-ansible
 ```
 
+Test them:
+
+```
+(env) pi@psi:~/rpi_cluster/ansible $ invoke serverspec-host alpha
+(env) pi@psi:~/rpi_cluster/ansible $ invoke serverspec-host beta
+```
+
+
 Configure Omega node:
 
 ```
 (env) pi@psi:~/rpi_cluster/ansible $ invoke lanservices-misc-ansible
+(env) pi@psi:~/rpi_cluster/ansible $ invoke serverspec-host omega
 ```
 
 
@@ -159,10 +166,7 @@ Configure Omega node:
 Change the default password on the new hosts:
 
 ```
-(env) pi@psi:~/rpi_cluster/ansible $ invoke ansible-sshd zeta
-(env) pi@psi:~/rpi_cluster/ansible $ invoke ansible-sshd epsilon
-(env) pi@psi:~/rpi_cluster/ansible $ invoke ansible-sshd gamma
-(env) pi@psi:~/rpi_cluster/ansible $ invoke ansible-sshd delta
+(env) pi@psi:~/rpi_cluster/ansible $ invoke ansible-sshd compute
 ```
 
 Compute base setup:
