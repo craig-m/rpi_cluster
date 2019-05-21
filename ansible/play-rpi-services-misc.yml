@@ -33,6 +33,7 @@
     - redis
     - docker
     - nodejs
+    - yarn
     - hugo
     - php
     - nginx

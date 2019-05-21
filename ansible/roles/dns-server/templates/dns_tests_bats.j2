@@ -3,20 +3,20 @@
 
 @test "host dns dns1.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {
   run bash -c "host dns1.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}"
-  [ "$output" = "dns1.dc1.b3rry.clust0r has address hostvars['alpha']['rpi_ip']" ]
+  [ "$output" = "dns1.dc1.b3rry.clust0r has address {{ hostvars['alpha']['rpi_ip'] }}" ]
 }
 @test "host dns alpha.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {
   run bash -c "host alpha.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}"
-  [ "$output" = "alpha.dc1.b3rry.clust0r has address hostvars['alpha']['rpi_ip']" ]
+  [ "$output" = "alpha.dc1.b3rry.clust0r has address {{ hostvars['alpha']['rpi_ip'] }}" ]
 }
 
 @test "host dns dns2.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {
   run bash -c "host dns2.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}"
-  [ "$output" = "dns2.dc1.b3rry.clust0r has address hostvars['beta']['rpi_ip']" ]
+  [ "$output" = "dns2.dc1.b3rry.clust0r has address {{ hostvars['beta']['rpi_ip'] }}" ]
 }
 @test "host dns beta.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {
   run bash -c "host beta.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}"
-  [ "$output" = "beta.dc1.b3rry.clust0r has address hostvars['beta']['rpi_ip']" ]
+  [ "$output" = "beta.dc1.b3rry.clust0r has address {{ hostvars['beta']['rpi_ip'] }}" ]
 }
 
 @test "check_host icmp float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {

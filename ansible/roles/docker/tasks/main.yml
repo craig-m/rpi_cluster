@@ -27,7 +27,7 @@
   tags: [docker]
 
 
-# copy docker scripts
+# copy docker scripts to /opt/cluster/docker/scripts/
 - name: copy bash scripts
   copy:
     src: "{{ item.file }}"
@@ -39,20 +39,24 @@
   tags: [docker]
 
 
+# install script
 - name: run docker install script
   script: install_docker.sh
   args:
-    creates: /opt/cluster/docker/.dockerbin
+    creates: /opt/cluster/docker/docker-installed.txt
     chdir: /opt/cluster/docker/scripts/
   become: yes
   tags: [docker]
 
 
+# get docker version
 - name: get docker version
   command: /usr/bin/docker --version
   register: docker_apt_version
   become: yes
   changed_when: false
+  failed_when:
+    - docker_apt_version.rc != 0
   tags: [docker]
 
 
@@ -65,8 +69,6 @@
   tags: [docker]
 
 
-#-------------------------------------------------------------------------------
-
 - name: docker enabled on boot
   service:
     name: docker
@@ -76,8 +78,6 @@
   tags: [docker]
   when: rpi_docker_enabled == true
 
-
-#-------------------------------------------------------------------------------
 
 # add user to docker group.
 # Note: this gives them root on the host.
@@ -89,34 +89,15 @@
     append: yes
   tags: [docker]
 
+
 # tools for managing docker containers/images
 - import_tasks: manage_tools.yml
   tags: [docker]
 
-#-------------------------------------------------------------------------------
-# Test docker daemon is OK by running hello-world
-# https://hub.docker.com/_/hello-world/
 
-- name: pull hello world
-  command: docker pull hello-world
-  changed_when: false
-  become: yes
+- import_tasks: docker_hello_world.yml
   tags: [docker]
 
-#- name: pull hello-world
-#  docker_image:
-#    name: _/hello-world
-
-- name: run hello world
-  command: docker run hello-world
-  changed_when: false
-  register: docker_hello_world
-  become: yes
-  failed_when:
-    - "'installation appears to be working correctly' not in docker_hello_world.stdout"
-  tags: [docker]
-
-#-------------------------------------------------------------------------------
 
 # log
 - name: output to rpicluster log

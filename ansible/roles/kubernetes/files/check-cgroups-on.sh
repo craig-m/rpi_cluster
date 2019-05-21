@@ -1,4 +1,6 @@
 #!/bin/bash
+# name: check-cgroups-on.sh
+# Desc: Small script to check if cgroups are enabled on this host.
 
 CGRPSTATUS=$(cat /proc/cgroups | grep memory | awk {'print $4'})
 

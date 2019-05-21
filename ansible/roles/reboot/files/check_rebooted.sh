@@ -1,4 +1,6 @@
-# check uptime and alert if greater than 10 minutes
+#!/bin/bash
+# name: check_rebooted.sh
+# desc: check our uptime and alert if greater than 10 minutes.
 
 cur_up=$(awk '{print $0/60;}' /proc/uptime)
 

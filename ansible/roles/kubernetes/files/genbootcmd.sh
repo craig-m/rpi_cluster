@@ -2,10 +2,18 @@
 # this will enable cgroups in Raspberry Pi cmdline.txt
 # I found i needed the cgroup options before "rootwait"
 
+# NOTE: will overwrite /boot/cmdline.txt
+
 rpilogit () {
 	echo -e "rpicluster: $1 \n";
 	logger -t rpicluster "$1";
 }
+
+# run as root
+if [[ root != "$(whoami)" ]]; then
+  echo "Error: requires root";
+  exit 1;
+fi
 
 rpilogit "starting genbootcmd.sh"
 

@@ -1,6 +1,9 @@
-#!/bin/bash
-# remove-kube.sh
-# shutdown cluster, and destroyy all Kube setup.
+#!/bin/bash#
+# clean up our k8 installation
+#
+# Usage:
+# 
+#   ansible compute -a "/opt/cluster/docker/scripts/remove-kube.sh" --become -f 10
 
 rpilogit () {
 	echo -e "rpicluster: $1 \n";
@@ -19,6 +22,7 @@ sleep 10s;
 	kubelet;
 sleep 10s;
 
+/usr/bin/sudo rm -rfv -- /etc/apt/preferences.d/kubebin
 /usr/bin/sudo rm -rfv -- /etc/kubernetes/
 /usr/bin/sudo rm -rfv -- /var/lib/kubelet/
 /usr/bin/sudo rm -rfv -- /var/lib/etcd/
@@ -33,12 +37,14 @@ sleep 10s;
 /usr/bin/sudo rm -rfv -- /opt/cluster/docker/kubecnf/kube_info.txt
 /usr/bin/sudo rm -rvf -- /opt/cluster/docker/kubecnf/kube_joined_cli.txt
 /usr/bin/sudo rm -rvf -- /opt/cluster/docker/kubecnf/kube_net.txt
-
-/usr/bin/sudo rm -rvf -- /opt/cluster/docker/.kubeadm
-/usr/bin/sudo rm -rvf -- /opt/cluster/docker/.kubeinit
+/usr/bin/sudo rm -rvf -- /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+/usr/bin/sudo rm -rvf -- /opt/cluster/docker/kube-installed.txt
+/usr/bin/sudo rm -rvf -- /opt/cluster/docker/kubeinit.txt
 
 # Purge all Images + Containers + Networks + Volumes
-docker system prune -a -f >/dev/null
+if [ -f /usr/bin/docker ]; then
+	docker system prune -a -f >/dev/null
+fi
 
 /usr/bin/sudo rm -rfv -- /var/lib/kubelet
 

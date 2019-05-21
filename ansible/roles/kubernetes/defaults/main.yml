@@ -14,6 +14,7 @@ k8_dir: [
   { dir: '/opt/cluster/docker/data/', mode: '0775', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" }
 ]
 
+# copy to /opt/cluster/docker/scripts/
 bashscriptk8: [
   {file: 'install-kube-apt.sh'},
   {file: 'install-kube-bin.sh'},

@@ -40,13 +40,6 @@
   with_items: "{{ deployscript_binfile }}"
 
 
-# yarn
-#- import_tasks: yarn.yml
-#  tags:
-#    - deployer
-#    - yarn
-
-
 # log
 - name: output to rpicluster log
   command: logger -t rpicluster ansible deployer role ran

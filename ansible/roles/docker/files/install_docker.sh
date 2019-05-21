@@ -22,9 +22,9 @@ EOF
 # to check what versions are available from apt:
 # apt-cache madison docker-ce | grep "18.06"
 
-cat <<EOF > /etc/apt/preferences.d/dockerce
-Package: docker-ce*
-Pin: version 18.06.*
+cat <<EOF > /etc/apt/preferences.d/docker.conf
+Package: docker-ce
+Pin: version 18.09.*
 Pin-Priority: 1000
 EOF
 
@@ -74,7 +74,7 @@ fi
 
 sleep 3s;
 
-/usr/bin/docker version > /opt/cluster/docker/.dockerbin
+/usr/bin/docker version > /opt/cluster/docker/docker-installed.txt
 if [ $? -eq 0 ]; then
 	rpilogit "docker-ce installed"
 else
@@ -82,6 +82,9 @@ else
 	exit 1;
 fi
 
+
+# lock docker version
 apt-mark hold docker-ce
+
 
 rpilogit "finished install_docker.sh"

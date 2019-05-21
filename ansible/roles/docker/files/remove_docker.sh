@@ -1,5 +1,10 @@
 #!/bin/bash
-# ansible compute -a "/opt/cluster/docker/scripts/emove_docker.sh" --become -f 10
+#
+# clean up docker a installation
+#
+# Usage:
+# 
+#   ansible compute -a "/opt/cluster/docker/scripts/remove_docker.sh" --become -f 10
 
 # run as root
 if [[ root != "$(whoami)" ]]; then
@@ -12,18 +17,22 @@ rpilogit () {
 	logger -t rpicluster "$1";
 }
 
-rpilogit "removing all traces of docker"
+rpilogit "remove_docker.sh started"
 
 # Purge all Images + Containers + Networks + Volumes
-docker system prune -a -f
+if [ -f /usr/bin/docker ]; then
+	docker system prune -a -f >/dev/null
+fi
 
 # stop daemon
 systemctl stop docker.service
 systemctl stop docker.socket
 
 # purge
-apt-get remove -y --purge docker-ce
+apt-get -y -q purge docker-ce --allow-change-held-packages || exit 1
 
+rm -fv -- /etc/apt/sources.list.d/docker.list
+rm -fv -- /etc/apt/preferences.d/dockerce
 rm -rfv -- /etc/docker/key.json
 rm -rfv -- /var/lib/docker/
 rm -rfv -- /var/run/docker/
@@ -32,8 +41,8 @@ rm -fv -- /usr/local/bin/docker-machine
 rm -fv -- /opt/cluster/mysrc/getdocker.sh
 rm -rfv -- /opt/cluster/mysrc/docker-gc
 
-rm -rfv -- /opt/cluster/docker/.dockerbin
+rm -rfv -- /opt/cluster/docker/docker-installed.txt
 
-rpilogit "removed docker"
+rpilogit "remove_docker.sh finished"
 
 #rm -rfv /opt/cluster/bin/remove_docker.sh

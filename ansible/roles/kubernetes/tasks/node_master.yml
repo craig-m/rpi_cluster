@@ -30,22 +30,16 @@
 - name: init the master node
   script: init-kube.sh
   args:
-    creates: /opt/cluster/docker/.kubeinit
+    creates: /opt/cluster/docker/kubeinit.txt
     chdir: /opt/cluster/docker/scripts/
   become: yes
   when:
     - "rpi_docker_enabled == True"
     - "'docker_master' in group_names"
   register: initialized_main_node
+  failed_when:
+    - initialized_main_node.rc != 0
 
-
-- name: wait for .kubeinit
-  wait_for:
-    path: /opt/cluster/docker/.kubeinit
-    delay: 30
-  when:
-    - "rpi_docker_enabled == True"
-    - "'docker_master' in group_names"
 
 - name: pausing
   pause:

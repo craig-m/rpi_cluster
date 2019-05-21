@@ -85,7 +85,7 @@ The Deployer runs from x1 R-Pi. This configures all of the other hosts. It also 
 * [Redis](https://redis.io/) - for the Ansible fact cache
 * [ServerSpec](http://serverspec.org/) - RSpec tests for infrastructure
 * [Invoke](http://www.pyinvoke.org/) - a task execution tool
-* [pass](https://www.passwordstore.org/) -  a password manager for unix
+* [pass](https://www.passwordstore.org/) -  a password manager for unix (used with ansible-vault)
 
 
 Redundancy: can fail and the cluster will continue to operate, but it cannot be altered. Small amounts of downtime for this host can be tolerated while it gets restored from backup.

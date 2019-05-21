@@ -45,3 +45,9 @@
        - yarn
   become: yes
   retries: 2
+
+
+# log
+- name: output to rpicluster log
+  command: logger -t rpicluster ansible yarn role ran
+  changed_when: False

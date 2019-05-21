@@ -56,15 +56,15 @@ sshcompute() {
   done
 }
 
-sshcompute sudo apt-get purge kubeadm kubectl kubernetes-cni kubelet docker-* -y;
+destroy_k8() {
+  sshcompute sudo apt-get -q purge kubeadm kubectl kubernetes-cni kubelet docker-* --allow-change-held-packages -y;
+  sshcompute sudo apt-get -q autoremove -y -f;
+  sshcompute sudo rm -rfv -- \
+    /etc/apt/preferences.d/docker* \
+    /etc/apt/preferences.d/kubebin* \
+    /opt/cluster/docker/kubecnf/*.txt;
+  sshcompute sudo reboot now;
+}
 
-sshcompute sudo apt-get autoremove -y -f;
-
-sshcompute sudo rm -rfv -- \
-  /etc/apt/preferences.d/docker* \
-  /etc/apt/preferences.d/kubebin* \
-  /opt/cluster/docker/.dockerbin \
-  /opt/cluster/docker/kubecnf/*.txt;
-
-sshcompute sudo reboot now;
+destroy_k8;
 ```

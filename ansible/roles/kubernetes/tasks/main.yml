@@ -71,7 +71,7 @@
 - name: install kube
   script: install-kube-bin.sh
   args:
-    creates: /opt/cluster/docker/.kubeadm
+    creates: /opt/cluster/docker/kube-installed.txt
     chdir: /opt/cluster/docker/scripts/
   become: yes
   tags: [kube]

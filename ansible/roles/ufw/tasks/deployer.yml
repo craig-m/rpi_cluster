@@ -35,3 +35,11 @@
     comment: spare port to catch shells
   notify: ufw_restart
   become: yes
+
+
+# Log ufw to ara
+- name: 
+  ara_record:
+    key: "{{ inventory_hostname }}_ufw"
+    type: "text"
+    value: "enabled"

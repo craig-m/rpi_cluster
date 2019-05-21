@@ -1,4 +1,6 @@
 ---
+# A playbook to reboot a node, and then test the system went down
+
 - debug: msg="rebooting {{ inventory_hostname }} "
 
 
