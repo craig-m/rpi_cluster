@@ -2,6 +2,7 @@
 - debug: msg="Installing Docker container engine "
 - debug: msg="enabled and started {{ rpi_docker_enabled }} "
 
+# For now all K8 and Docker setup is largely handled by bash scripts
 
 # folder structure
 - name: Create docker folders

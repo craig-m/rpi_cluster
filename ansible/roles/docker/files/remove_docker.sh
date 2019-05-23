@@ -32,7 +32,7 @@ systemctl stop docker.socket
 apt-get -y -q purge docker-ce --allow-change-held-packages || exit 1
 
 rm -fv -- /etc/apt/sources.list.d/docker.list
-rm -fv -- /etc/apt/preferences.d/dockerce
+rm -fv -- /etc/apt/preferences.d/docker-ce
 rm -rfv -- /etc/docker/key.json
 rm -rfv -- /var/lib/docker/
 rm -rfv -- /var/run/docker/

@@ -3,19 +3,20 @@
   when:
     - "'docker_worker' in group_names"
 
-- name: get kube init api info
+
+- name: k8Worker get kube init api info
   shell: tail -n5 /opt/cluster/backup/{{ kube_master_node }}/opt/cluster/docker/kubecnf/kube_info.txt | grep -e kubeadm -e token -e discovery -e hash
   delegate_to: localhost
   register: join_kube_mast
   changed_when: False
 
 
-- name: check kube_cli.txt
+- name: k8Worker check kube_cli.txt
   stat: path=/opt/cluster/docker/kubecnf/joined_cli.txt
   register: kube_clitxt
 
 
-- name: join the master
+- name: k8Worker join the master
   command: "{{ join_kube_mast.stdout }}"
   become: yes
   register: joined_master
@@ -24,13 +25,13 @@
     - "'docker_worker' in group_names"
 
 
-- name: pausing
+- name: k8Worker pausing
   pause:
     seconds: 30
   when: joined_master.changed
 
 
-- name: joined a master
+- name: k8Worker joined a master
   copy:
     dest: "/opt/cluster/docker/kubecnf/joined_cli.txt"
     content: "joined"
@@ -38,6 +39,6 @@
 
 
 # log
-- name: output to rpicluster log
+- name: k8Worker output to rpicluster log
   command: logger -t rpicluster ansible kubernetes join master roll ran
   changed_when: False

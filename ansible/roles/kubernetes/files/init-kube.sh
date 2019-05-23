@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# name: init-kube.sh
+# desc: create a K8 master node on a fresh cluster deployment
+
 rpilogit () {
 	echo -e "rpicluster: $1 \n";
 	logger -t rpicluster "$1";
@@ -11,8 +14,13 @@ if [[ root != "$(whoami)" ]]; then
   exit 1;
 fi
 
+if [ -f /opt/cluster/docker/kubeinit.txt ]; then
+	rpilogit "ERROR: already ran k8 init scripts";
+	exit 1;
+fi
 
-rpilogit "starting init-kube.sh"
+hostname=$(hostname)
+rpilogit "starting init-kube.sh on ${hostname}";
 
 
 rpilogit "get kube docker images"
@@ -30,35 +38,54 @@ fi
 
 rpilogit "start kube init"
 
-# sed -i 's/initialDelaySeconds: [0-9]\+/initialDelaySeconds: 180/' /etc/kubernetes/manifests/kube-apiserver.yaml
+date -u
 
+# raspberry pi timeout waiting on init:
+# "error execution phase wait-control-plane: couldn't initialize a Kubernetes cluster"
+
+# 70 minute timeout:
+sed -i 's/failureThreshold:: [0-9]\+/failureThreshold:: 15/' /etc/kubernetes/manifests/*.yaml
+sed -i 's/initialDelaySeconds: [0-9]\+/initialDelaySeconds: 2400/' /etc/kubernetes/manifests/*.yaml
+sed -i 's/timeoutSeconds: [0-9]\+/timeoutSeconds: 2400/' /etc/kubernetes/manifests/*.yaml
+
+
+# Init cluster!
 kubeadm init --ignore-preflight-errors=all --token-ttl=0 | tee > /opt/cluster/docker/kubecnf/kube_info.txt
+
 
 # test init
 if [ $? -eq 0 ]; then
 	# init success
-  rpilogit "kubeadm init ran OK"
+	rpilogit "kubeadm init ran OK"
+
+	chown pi:pi /opt/cluster/docker/kubecnf/kube_info.txt
 else
 	# init failure -
-	rpilogit "kubeadm init FAILED - trying again"
+	rpilogit "kubeadm init FAILED"
 	exit 1;
 fi
+
 
 rpilogit "pausing"
 sleep 5m;
 
-# Setup networking with Weave
-# https://www.weave.works/docs/net/latest/kubernetes/kube-addon/
-kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')" > /opt/cluster/docker/kubecnf/kube_net.txt
-if [ $? -eq 0 ]; then
-  rpilogit "kubectl apply networking OK"
-	sleep 120s;
-else
-	rpilogit "kubectl apply networking FAILED"
-	exit 1;
-fi
 
+# for kube admin
+mkdir -p -v /home/pi/.kube
+cp /etc/kubernetes/admin.conf /home/pi/admin.conf
+cp -i -v -- /etc/kubernetes/admin.conf /opt/cluster/docker/kubecnf/admin.conf
+chown pi:pi /opt/cluster/docker/kubecnf/admin.conf
+mkdir -pv /etc/cni/net.d
+echo "source <(kubectl completion bash)" >> ~/.bashrc
+
+
+sudo -u pi kubectl config view
+
+
+# Finished!
+
+date -u
 
 touch -f /opt/cluster/docker/kubeinit.txt
 
-rpilogit "finished init-kube.sh"
+rpilogit "finished init-kube.sh on $hostname";

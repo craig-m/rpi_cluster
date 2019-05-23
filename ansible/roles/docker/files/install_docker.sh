@@ -11,7 +11,9 @@ if [[ root != "$(whoami)" ]]; then
   exit 1;
 fi
 
-rpilogit "starting install_docker.sh"
+hostname=$(hostname)
+
+rpilogit "starting install_docker.sh on $hostname";
 
 
 cat <<EOF > /etc/apt/sources.list.d/docker.list
@@ -20,9 +22,9 @@ EOF
 
 
 # to check what versions are available from apt:
-# apt-cache madison docker-ce | grep "18.06"
+# apt-cache madison docker-ce | grep "18.09"
 
-cat <<EOF > /etc/apt/preferences.d/docker.conf
+cat <<EOF > /etc/apt/preferences.d/dockerce.conf
 Package: docker-ce
 Pin: version 18.09.*
 Pin-Priority: 1000
@@ -64,7 +66,11 @@ export DEBIAN_FRONTEND=noninteractive
 
 apt-get -q update
 
-apt-get -q install -y docker-ce
+# Install docker - at set version
+
+apt-get -q install -y \
+docker-ce=5:18.09.0~3-0~raspbian-stretch \
+docker-ce-cli=5:18.09.0~3-0~raspbian-stretch
 if [ $? -eq 0 ]; then
   rpilogit "docker installed";
 else
@@ -84,7 +90,7 @@ fi
 
 
 # lock docker version
-apt-mark hold docker-ce
+apt-mark hold docker-ce docker-ce-cli;
 
 
-rpilogit "finished install_docker.sh"
+rpilogit "finished install_docker.sh on ${hostname}";

@@ -17,6 +17,7 @@
     - userac
     - base-system
     - hostsfile
+    - ufw
     - env-modules
     - rpilog
     - ssh-server

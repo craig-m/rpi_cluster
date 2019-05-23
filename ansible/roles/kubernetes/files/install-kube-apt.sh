@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# name: install-kube-apt.sh
+# desc: setup apt source and install GPG key - then update. 
+# This does not install any packages.
+
 rpilogit () {
 	echo -e "rpicluster: $1 \n";
 	logger -t rpicluster "$1";

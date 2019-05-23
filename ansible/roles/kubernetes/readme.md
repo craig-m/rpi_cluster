@@ -44,7 +44,7 @@ https://www.weave.works/docs/net/latest/kubernetes/kube-addon/
 
 # Clean up
 
-For when you really want to clear the cluster, with a hammer, right away:
+For the impatient, copy/paste:
 
 
 ```
@@ -62,6 +62,8 @@ destroy_k8() {
   sshcompute sudo rm -rfv -- \
     /etc/apt/preferences.d/docker* \
     /etc/apt/preferences.d/kubebin* \
+    /etc/systemd/system/kubelet.service.d/10-kubeadm.conf \
+    /opt/cluster/docker/*.txt; \
     /opt/cluster/docker/kubecnf/*.txt;
   sshcompute sudo reboot now;
 }

@@ -2,12 +2,16 @@
 - debug: msg="ufw rules for Compute group "
 
 
-- name: Allow all access on local subnet
+- name: Allow internal subnets
   ufw:
     rule: allow
-    src: "{{ rpi_net_id }}/{{ rpi_net_maskbit }}"
-  become: yes
+    src: '{{ item }}'
   notify: ufw_restart
+  become: yes
+  with_items:
+    - 10.0.0.0/8
+    - 172.16.0.0/12
+    - 192.168.0.0/16
 
 
 # Log ufw to ara

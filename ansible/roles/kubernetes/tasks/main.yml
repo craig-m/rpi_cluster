@@ -1,5 +1,8 @@
 ---
 # install kubernetes on compute nodes
+# For now all K8 and Docker setup is largely handled by bash scripts
+
+
 - debug: msg="kubernetes setup on compute nodes "
 
 
@@ -68,7 +71,7 @@
   tags: [kube]
 
 
-- name: install kube
+- name: run install-kube-bin.sh
   script: install-kube-bin.sh
   args:
     creates: /opt/cluster/docker/kube-installed.txt
@@ -125,28 +128,6 @@
   when:
     - "'docker_worker' in group_names"
     - "rpi_docker_enabled == True"
-
-#-------------------------------------------------------------------------------
-
-# show nodes in cluster
-- name: get nodes
-  command: kubectl get nodes
-  tags: [kube]
-  changed_when: False
-  when:
-    - "'docker_master' in group_names"
-    - "rpi_docker_enabled == True"
-
-# show pod servic
-- name: kubectl get pods
-  command: kubectl get pods --namespace=kube-system
-  tags: [kube]
-  changed_when: False
-  when:
-    - "'docker_master' in group_names"
-    - "rpi_docker_enabled == True"
-
-#-------------------------------------------------------------------------------
 
 
 # log

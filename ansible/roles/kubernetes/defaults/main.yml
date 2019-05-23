@@ -19,6 +19,7 @@ bashscriptk8: [
   {file: 'install-kube-apt.sh'},
   {file: 'install-kube-bin.sh'},
   {file: 'init-kube.sh'},
+  {file: 'init-kube-net.sh'},
   {file: 'remove-kube.sh'},
   {file: 'setup-kube.sh'},
   {file: 'genbootcmd.sh'},

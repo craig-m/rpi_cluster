@@ -3,20 +3,17 @@
   when:
     - "'docker_master' in group_names"
 
-#-------------------------------------------------------------------------------
-# init
 
 # check if the cluster is alreadly initialized
-- name: check for kube_info.txt
+- name: k8Master check for kube_info.txt
   stat: 
     path: "/opt/cluster/docker/kubecnf/kube_info.txt"
   register: kube_info_txt
   changed_when: False
-  when:
-    - "'docker_master' in group_names"
+
 
 # config
-- name: kubeadm config
+- name: k8Master kubeadm config
   copy:
     dest: "/etc/systemd/system/kubelet.service.d/10-kubeadm.conf"
     content: |
@@ -26,29 +23,27 @@
   when:
     - "'docker_master' in group_names"
 
+
 # initialize the cluster (if not yet)
-- name: init the master node
+- name: k8Master init-kube.sh to create master node
   script: init-kube.sh
   args:
     creates: /opt/cluster/docker/kubeinit.txt
     chdir: /opt/cluster/docker/scripts/
   become: yes
-  when:
-    - "rpi_docker_enabled == True"
-    - "'docker_master' in group_names"
   register: initialized_main_node
   failed_when:
     - initialized_main_node.rc != 0
 
 
-- name: pausing
+- name: k8Master pausing
   pause:
     seconds: 30
   when: initialized_main_node.changed
 
 
 # save init info to kube_info.txt
-- name: "initialization info"
+- name: k8Master save initialization info"
   copy:
     content: "{{ initialized_main_node.stdout }}"
     dest: "/opt/cluster/docker/kubecnf/kube_info.txt"
@@ -59,44 +54,77 @@
 
 
 # fetch init details
-- name: fetch kube master api info
+- name: k8Master fetch kube master api info
   fetch:
     src: /opt/cluster/docker/kubecnf/kube_info.txt
     dest: /opt/cluster/backup
   when:
     - created_kube_info_txt.changed
 
-#-------------------------------------------------------------------------------
 
-- name: pausing
+- name: k8Master pausing
   pause:
     seconds: 5
 
-- name: run setup-kube.sh
+
+# copy admin.conf so you can use kubectl
+- name: k8Master run setup-kube.sh
   script: setup-kube.sh
   args:
     creates: /opt/cluster/docker/kubecnf/admin.conf
     chdir: /opt/cluster/docker/scripts/
 
 
-#-------------------------------------------------------------------------------
+# setup networking
+- name: k8Master init-kube-net.sh to create master node
+  script: init-kube-net.sh
+  args:
+    creates: /opt/cluster/docker/kubeinit-net.txt
+    chdir: /opt/cluster/docker/scripts/
+  become: yes
+  when:
+    - "rpi_docker_enabled == True"
+    - "'docker_master' in group_names"
+  register: initialized_main_node_net
+  failed_when:
+    - initialized_main_node.rc != 0
 
 
-- name: get cluster info
+- name: k8Master get cluster info
   command: kubectl cluster-info
   register: kube_cluster_info
   changed_when: False
 
 
 # ara record: cluster info
-- name: record cluster info
+- name: k8Master record cluster info
   ara_record:
     key: "kube_cluster_info"
     value: "{{ kube_cluster_info.stdout }}"
   register: kubeclustinfo
 
 
+# show nodes in cluster
+- name: k8Master get nodes
+  command: kubectl get nodes
+  tags: [kube]
+  changed_when: False
+  when:
+    - "'docker_master' in group_names"
+    - "rpi_docker_enabled == True"
+
+
+# show pod servic
+- name: k8Master kubectl get pods
+  command: kubectl get pods --namespace=kube-system
+  tags: [kube]
+  changed_when: False
+  when:
+    - "'docker_master' in group_names"
+    - "rpi_docker_enabled == True"
+
+
 # log
-- name: output to rpicluster log
+- name: k8Master output to rpicluster log
   command: logger -t rpicluster ansible kubernetes master boss role ran
   changed_when: False
