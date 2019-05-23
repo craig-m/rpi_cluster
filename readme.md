@@ -116,7 +116,7 @@ For miscellaneous, non-essential, net services. Used for dev, reporting, buildin
 * [HAproxy](https://www.haproxy.org/)
 * [Hugo](https://github.com/gohugoio/hugo) - static website generator
 * [Yarn](https://github.com/yarnpkg/yarn/)
-* Docker
+* [Docker](https://www.docker.com)
 
 Redundancy: not redundant, does not provide services for the LAN. Immutable - no data to backup from this node.
 
@@ -127,7 +127,7 @@ To play with services, and things like Kubernetes. These nodes run services for 
 
 * [DistCC](https://github.com/distcc/distcc) - for distributed compiling
 * [C mpich](https://www.mpich.org/) - distributed code with the C Message Passing Interface
-* Docker + Kubernetes + Weave network addon
+* [Docker](https://www.docker.com) + [kubernetes](https://kubernetes.io) + [Weave](https://www.weave.works/docs/net/latest/overview/) network addon
 
 Redundancy: the herd. Immutable infrastructure.
 

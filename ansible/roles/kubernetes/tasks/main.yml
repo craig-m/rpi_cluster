@@ -129,6 +129,17 @@
     - "'docker_worker' in group_names"
     - "rpi_docker_enabled == True"
 
+#-------------------------------------------------------------------------------
+
+
+# enable services on boot
+
+- name: kubelet.service
+  service:
+    name: kubelet.service
+    enabled: yes
+  become: yes
+
 
 # log
 - name: output to rpicluster log

@@ -50,7 +50,10 @@ sed -i 's/timeoutSeconds: [0-9]\+/timeoutSeconds: 2400/' /etc/kubernetes/manifes
 
 
 # Init cluster!
-kubeadm init --ignore-preflight-errors=all --token-ttl=0 | tee > /opt/cluster/docker/kubecnf/kube_info.txt
+kubeadm init \
+	--ignore-preflight-errors=all \
+	--token-ttl=0 \
+	| tee > /opt/cluster/docker/kubecnf/kube_info.txt
 
 
 # test init
