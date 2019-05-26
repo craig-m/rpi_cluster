@@ -36,6 +36,7 @@
 
 - name: gather facts on nodes
   hosts: all
+  serial: 8
   gather_facts: True
   roles:
     - ansible-post-role

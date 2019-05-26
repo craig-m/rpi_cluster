@@ -1,11 +1,11 @@
 #!/bin/bash
 
 rpilogit () {
-	echo -e "rpicluster: $1 \n";
-	logger -t rpicluster "$1";
+	echo -e "rpicluster: setup-kubectl.sh $1 \n";
+	logger -t rpicluster "setup-kubectl.sh $1";
 }
 
-rpilogit "starting setup-kube.sh"
+rpilogit "starting"
 
 mkdir -p -v /home/pi/.kube
 
@@ -23,6 +23,4 @@ mkdir -p -v /home/pi/.kube
 # add autocomplete permanently to your bash shell.
 echo "source <(kubectl completion bash)" >> ~/.bashrc
 
-touch -f /opt/cluster/data/.setup-kube
-
-rpilogit "finished setup-kube.sh"
+rpilogit "finished"

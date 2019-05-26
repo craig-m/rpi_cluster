@@ -18,7 +18,7 @@
 
 - name: put inventory into etc hosts
   template:
-    src: etc_hosts.j2
+    src: etc/hosts.j2
     dest: /etc/hosts
   delegate_to: localhost
   become: yes
@@ -37,6 +37,30 @@
   delegate_to: localhost
   changed_when: False
   ignore_errors: True
+
+
+- name: add host hostname to known_hosts
+  shell: ssh-keyscan {{ inventory_hostname }} >> ~/.ssh/known_hosts
+  delegate_to: localhost
+  changed_when: False
+  ignore_errors: True
+
+
+- name: /etc/ethers
+  template:
+    src: etc/ethers.j2
+    dest: /etc/ethers
+    mode: 0644
+  become: yes
+  delegate_to: localhost
+  register: static_arp_update
+
+
+- name: update state arp entries
+  shell: /usr/sbin/arp -f /etc/ethers
+  become: yes
+  delegate_to: localhost
+  when: static_arp_update.changed
 
 
 - name: roles info txt

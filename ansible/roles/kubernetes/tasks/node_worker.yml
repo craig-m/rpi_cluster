@@ -1,41 +1,22 @@
 ---
-- debug: msg="kubernetes join a master node "
-  when:
-    - "'docker_worker' in group_names"
+- debug: msg="k8Worker join a master node "
 
 
-- name: k8Worker get kube init api info
-  shell: tail -n5 /opt/cluster/backup/{{ kube_master_node }}/opt/cluster/docker/kubecnf/kube_info.txt | grep -e kubeadm -e token -e discovery -e hash
-  delegate_to: localhost
-  register: join_kube_mast
-  changed_when: False
-
-
-- name: k8Worker check kube_cli.txt
-  stat: path=/opt/cluster/docker/kubecnf/joined_cli.txt
-  register: kube_clitxt
-
-
-- name: k8Worker join the master
-  command: "{{ join_kube_mast.stdout }}"
-  become: yes
-  register: joined_master
-  when:
-    - kube_clitxt.stat.exists == False
-    - "'docker_worker' in group_names"
-
-
-- name: k8Worker pausing
-  pause:
-    seconds: 30
-  when: joined_master.changed
-
-
-- name: k8Worker joined a master
+# get join command/API key
+- name: k8Worker upload k8_rpi_join script
   copy:
-    dest: "/opt/cluster/docker/kubecnf/joined_cli.txt"
-    content: "joined"
-  when: joined_master.changed
+    src: /opt/cluster/backup/epsilon/opt/cluster/docker/kubecnf/k8_rpi_join.sh
+    dest: /opt/cluster/docker/kubecnf/k8_rpi_join.sh
+    owner: pi
+    group: pi
+    mode: '0755'
+
+
+# join cluster
+- name: k8Worker run k8_rpi_join to join cluster
+  shell: /opt/cluster/docker/kubecnf/k8_rpi_join.sh
+  become: true
+  register: join_kube_mast
 
 
 # log

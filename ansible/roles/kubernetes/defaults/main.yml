@@ -21,7 +21,7 @@ bashscriptk8: [
   {file: 'init-kube.sh'},
   {file: 'init-kube-net.sh'},
   {file: 'remove-kube.sh'},
-  {file: 'setup-kube.sh'},
+  {file: 'setup-kubectl.sh'},
   {file: 'genbootcmd.sh'},
   {file: 'check-cgroups-on.sh'}
 ]

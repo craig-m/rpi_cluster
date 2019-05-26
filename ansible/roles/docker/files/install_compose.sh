@@ -1,8 +1,8 @@
 #!/bin/bash
 
 rpilogit () {
-	echo -e "rpicluster: $1 \n";
-	logger -t rpicluster "$1";
+	echo -e "rpicluster: install_compose.sh $1 \n";
+	logger -t rpicluster "install_compose.sh $1";
 }
 
 

@@ -2,7 +2,7 @@
 - debug: msg="altering /etc/hosts "
 
 
-# hosts file
+# /etc/hosts file
 - name: etc hosts file
   template:
     src: etc-hosts.j2

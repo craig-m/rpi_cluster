@@ -2,18 +2,16 @@
 - debug: msg="Base System apt-repo"
 
 
-- name: remove default rpi apt repository
+- name: apt-repo remove default repository
   apt_repository:
     repo: deb http://raspbian.raspberrypi.org/raspbian/ stretch main contrib non-free rpi
     state: absent
   become: yes
 
 
-# Use the AARNet Mirror
-# https://mirror.aarnet.edu.au/about.html
-- name: add raspbian apt repository
+- name: apt-repo add raspbian mirror
   apt_repository:
-    repo: deb http://mirror.aarnet.edu.au/pub/raspbian/raspbian stretch main contrib non-free rpi
+    repo: "deb {{ apt_local_mirror }} stretch main contrib non-free rpi"
     state: present
     update_cache: yes
   become: yes

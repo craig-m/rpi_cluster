@@ -4,8 +4,8 @@
 # desc: Install a specific version of K8 tools from apt, and then pin them.
 
 rpilogit () {
-	echo -e "rpicluster: $1 \n";
-	logger -t rpicluster "$1";
+	echo -e "rpicluster: install-kube-bin.sh $1 \n";
+	logger -t rpicluster "install-kube-bin.sh $1";
 }
 
 
@@ -26,11 +26,14 @@ rpilogit "starting install-kube-bin.sh on ${hostname}"
 
 
 # apt pin to set version
-cat <<EOF > /etc/apt/preferences.d/kubebin.conf
-Package: /kubeadm/kubelet/kubectl/kubernetes-cni/
-Pin: version 1.13.*
-Pin-Priority: 1000
-EOF
+# cat <<EOF > /etc/apt/preferences.d/kubebin.conf
+# Package: kube*
+# Pin: version 1.13.*
+# Pin-Priority: 1000
+# EOF
+
+ls -la /etc/apt/preferences.d/kubebin.conf
+
 
 export DEBIAN_FRONTEND=noninteractive;
 
@@ -38,9 +41,9 @@ export DEBIAN_FRONTEND=noninteractive;
 
 # k8 packages
 apt-get -q install -y \
-	kubeadm \
-	kubelet \
-	kubectl \
+	kubeadm=1.13.6-00 \
+	kubelet=1.13.6-00 \
+	kubectl=1.13.6-00 \
 	kubernetes-cni;
 if [ $? -eq 0 ]; then
   rpilogit "installed kubeadm tools";
@@ -52,6 +55,16 @@ fi
 
 # lock kubernetes version
 apt-mark hold kubeadm kubelet kubectl kubernetes-cni;
+
+
+# kubeadm version info
+/usr/bin/kubeadm version
+if [ $? -eq 0 ]; then
+	echo "kubeadm executes OK";
+else
+	rpilogit "could NOT exec kubeadm"
+	exit 1;
+fi
 
 
 # finished

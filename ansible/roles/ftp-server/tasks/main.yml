@@ -15,13 +15,14 @@
   tags: [ftpd]
 
 
-- name: make /srv/tftp/pxelinux
+- name: common ftp folders
   file:
-    path: /srv/tftp/pxelinux/
+    path: "{{ item.dir }}"
     state: directory
-    mode: 0775
-    owner: root
-    group: root
+    mode: "{{ item.mode }}"
+    owner: "{{ item.owner }}"
+    group: "{{ item.group }}"
+  with_items: "{{ common_ftp_dir }}"
   become: yes
   tags: [ftpd]
 
@@ -36,17 +37,6 @@
     backup: yes
   become: yes
   notify: ftpd-restart
-  tags: [ftpd]
-
-
-- name: make /srv/tftp/dl
-  file:
-    path: /srv/tftp/dl/
-    state: directory
-    mode: 0775
-    owner: root
-    group: root
-  become: yes
   tags: [ftpd]
 
 

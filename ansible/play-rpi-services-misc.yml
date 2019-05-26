@@ -7,6 +7,7 @@
     - alpha
     - beta
     - omega
+  serial: 3
   gather_facts: True
   roles:
     - ansible-pre-role
@@ -46,5 +47,6 @@
 - name: gather facts on other hosts
   hosts: alpha, beta, omega
   gather_facts: True
+  serial: 3
   roles:
     - ansible-post-role

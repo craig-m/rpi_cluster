@@ -190,5 +190,12 @@ Test the local deployer:
 pytest files/test-rpideployer.py
 ```
 
-
 ---
+
+
+Upgrade Ansible, and all other python packages:
+
+```
+pip install --upgrade pip
+pip install --upgrade -r requirements.txt
+```

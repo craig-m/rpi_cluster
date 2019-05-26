@@ -5,6 +5,7 @@
 
 - name: setup access to fresh Rpi
   hosts: all
+  serial: 8
   roles:
     - ssh-server
     - userac

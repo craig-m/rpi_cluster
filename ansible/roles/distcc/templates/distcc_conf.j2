@@ -3,12 +3,13 @@
 
 STARTDISTCC="true"
 
-ALLOWEDNETS="0.0.0.0/0"
+ALLOWEDNETS="{{ rpi_net_id }}/{{ rpi_net_maskbit }}"
 
 LISTENER="0.0.0.0"
 
 NICE="10"
 
+# one job per cpu core
 JOBS="4"
 
 ZEROCONF="true"

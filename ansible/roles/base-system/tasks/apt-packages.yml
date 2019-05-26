@@ -1,97 +1,90 @@
 ---
-- debug: msg="Base System apt-packages"
 
 
-- name: clients and network
-  apt:
-    name: "{{ item }}"
-    state: present
-  loop:
-       - arping
-       - hping3
-       - wget
-       - curl
-       - dnsutils
-       - socat
-       - libnss3-tools
+- name: Base System apt-packages
+  block:
+  - name: clients and network
+    apt:
+      name: "{{ item }}"
+      state: present
+    retries: 3
+    loop:
+        - arping
+        - hping3
+        - wget
+        - curl
+        - dnsutils
+        - socat
+        - libnss3-tools
+  - name: System misc util
+    apt:
+      name: "{{ item }}"
+      state: present
+    retries: 3
+    loop:
+        - linuxlogo
+        - vim
+        - nano
+        - htop
+        - multitail
+        - yara
+        - exiftool
+        - zip
+        - unzip
+        - jq
+        - expect
+        - reptyr
+        - screen
+        - tmux
+        - bats
+        - attr
+        - xattr
+  - name: System base
+    apt:
+      name: "{{ item }}"
+      state: present
+    retries: 3
+    loop:
+        - apt-transport-https
+        - apt-show-versions
+        - lsof
+        - busybox
+        - ntpstat
+        - monitoring-plugins-common
+        - monitoring-plugins-basic
+        - libnss-myhostname
+        - libssl-dev
+        - gfortran
+        - libffi-dev
+        - xsltproc
+        - gawk
+        - bc
+        - git-core
+        - moreutils
+        - pass
+        - dos2unix
+        - inotify-tools
+        - uuid
+        - uuid-runtime
+  - name: python pip and dev packages
+    apt:
+      name: "{{ item }}"
+      state: present
+    retries: 3
+    loop:
+        - python-pip
+        - python-dev
+        - libpython-all-dev
+        - python3
+        - python3-pip
+        - python3-dev
   become: yes
-  retries: 2
-
-
-- name: System misc util
-  apt:
-    name: "{{ item }}"
-    state: present
-  loop:
-       - linuxlogo
-       - vim
-       - nano
-       - htop
-       - multitail
-       - yara
-       - exiftool
-       - zip
-       - unzip
-       - jq
-       - expect
-       - reptyr
-       - screen
-       - tmux
-       - bats
-       - attr
-       - xattr
-  become: yes
-  retries: 2
-
-
-- name: System base
-  apt:
-    name: "{{ item }}"
-    state: present
-  loop:
-       - apt-transport-https
-       - apt-show-versions
-       - lsof
-       - busybox
-       - ntpstat
-       - monitoring-plugins-common
-       - monitoring-plugins-basic
-       - libnss-myhostname
-       - libssl-dev
-       - gfortran
-       - libffi-dev
-       - xsltproc
-       - gawk
-       - bc
-       - git-core
-       - moreutils
-       - pass
-       - dos2unix
-       - inotify-tools
-       - uuid
-       - uuid-runtime
-  become: yes
-  retries: 2
-
-
-- name: python pip and dev packages
-  apt:
-    name: "{{ item }}"
-    state: present
-  loop:
-       - python-pip
-       - python-dev
-       - libpython-all-dev
-       - python3
-       - python3-pip
-       - python3-dev
-  become: yes
-  retries: 2
 
 
 - name: install virtualenv with pip
   pip:
     name: virtualenv
+    state: present
   become: yes
 
 

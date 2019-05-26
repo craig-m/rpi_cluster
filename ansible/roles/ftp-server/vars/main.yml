@@ -1,0 +1,7 @@
+---
+
+
+common_ftp_dir: [
+  { dir: '/srv/tftp/pxelinux', mode: '0755', owner: 'root', group: 'root' },
+  { dir: '/srv/tftp/dl/', mode: '0755', owner: 'root', group: 'root' }
+]

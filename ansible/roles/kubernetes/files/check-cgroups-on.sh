@@ -5,8 +5,8 @@
 CGRPSTATUS=$(cat /proc/cgroups | grep memory | awk {'print $4'})
 
 rpilogit () {
-	echo -e "rpicluster: $1 \n";
-	logger -t rpicluster "$1";
+	echo -e "rpicluster: check-cgroups-on.sh $1 \n";
+	logger -t rpicluster "check-cgroups-on.sh $1";
 }
 
 if [[ 1 = "$CGRPSTATUS" ]]; then

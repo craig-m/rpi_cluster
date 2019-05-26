@@ -3,61 +3,16 @@
 - debug: msg="Base System sysctl"
 
 
-- name: sysctl ipv6 disable
+# change in role vars folder
+
+- name: change etc sysctl conf settings
   sysctl:
-    name: "net.ipv6.conf.all.disable_ipv6"
-    value: "{{ sysctl_cnf_ipv6_off }}"
-    sysctl_set: yes
-    state: present
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set:  "{{ item.set }}"
+    state: "{{ item.state }}"
     reload: yes
+  with_items: "{{ sysctl_settings }}"
   become: yes
 
 
-- name: sysctl ipv6 disable
-  sysctl:
-    name: "net.ipv6.conf.default.disable_ipv6"
-    value: "{{ sysctl_cnf_ipv6_off }}"
-    sysctl_set: yes
-    state: present
-    reload: yes
-  become: yes
-
-
-- name: sysctl rmem_max
-  sysctl:
-    name: "net.core.rmem_max"
-    value: "{{ sysctl_cnf_rmem_max }}"
-    sysctl_set: yes
-    state: present
-    reload: yes
-  become: yes
-
-
-- name: sysctl wmem_max
-  sysctl:
-    name: "net.core.wmem_max"
-    value: "{{ sysctl_cnf_wmem_max }}"
-    sysctl_set: yes
-    state: present
-    reload: yes
-  become: yes
-
-
-- name: sysctl local_port_range
-  sysctl:
-    name: "net.ipv4.ip_local_port_range"
-    value: "1024 65535"
-    sysctl_set: yes
-    state: present
-    reload: yes
-  become: yes
-
-
-- name: sysctl socket reuse
-  sysctl:
-    name: "net.ipv4.tcp_tw_reuse"
-    value: "1"
-    sysctl_set: yes
-    state: present
-    reload: yes
-  become: yes

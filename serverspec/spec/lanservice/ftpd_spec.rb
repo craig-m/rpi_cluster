@@ -20,13 +20,13 @@ end
 describe file('/srv/tftp/pxelinux/') do
   it { should be_directory }
   it { should be_owned_by 'root' }
-  it { should be_mode 775 }
+  it { should be_mode 755 }
 end
 
 describe file('/srv/tftp/dl/') do
   it { should be_directory }
   it { should be_owned_by 'root' }
-  it { should be_mode 775 }
+  it { should be_mode 755 }
 end
 
 describe process("in.tftpd") do

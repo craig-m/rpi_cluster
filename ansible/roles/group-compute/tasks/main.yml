@@ -10,7 +10,8 @@
     name: "{{ item }}"
     state: present
   loop:
-       - openjdk-9-jdk-headless
+       - ca-certificates-java
+       - openjdk-8-jdk
   become: yes
   retries: 2
   tags: [computenode]
@@ -19,8 +20,8 @@
 #-------------------------------------------------------------------------------
 
 
-# copy lanservices-boot.sh
-- name: lanservices-boot script
+# copy compute-boot.sh
+- name: compute-boot script
   template:
     src: compute-boot.j2
     dest: /opt/cluster/bin/compute-boot.sh

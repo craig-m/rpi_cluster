@@ -5,7 +5,7 @@
 - name: gather facts on other hosts
   hosts: all
   gather_facts: True
-  serial: 10
+  serial: 8
   roles:
     - ansible-pre-role
 
@@ -18,7 +18,6 @@
     - base-system
     - hostsfile
     - ufw
-    - env-modules
     - rpilog
     - ssh-server
     - haveged
@@ -33,5 +32,6 @@
 - name: gather facts on nodes
   hosts: all
   gather_facts: True
+  serial: 8
   roles:
     - ansible-post-role

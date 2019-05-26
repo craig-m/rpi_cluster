@@ -1,8 +1,8 @@
 #!/bin/bash
 
 rpilogit () {
-	echo -e "rpicluster: $1 \n";
-	logger -t rpicluster "$1";
+	echo -e "rpicluster: install_docker.sh $1 \n";
+	logger -t rpicluster "install_docker.sh $1";
 }
 
 # run as root
@@ -13,25 +13,21 @@ fi
 
 hostname=$(hostname)
 
-rpilogit "starting install_docker.sh on $hostname";
+rpilogit "starting on $hostname";
 
-
-cat <<EOF > /etc/apt/sources.list.d/docker.list
-deb [arch=armhf] https://download.docker.com/linux/raspbian stretch test
-EOF
-
+# create a temp dir
+dock_inst_tmpdir=$(mktemp -d)
 
 # to check what versions are available from apt:
 # apt-cache madison docker-ce | grep "18.09"
 
-cat <<EOF > /etc/apt/preferences.d/dockerce.conf
-Package: docker-ce
-Pin: version 18.09.*
-Pin-Priority: 1000
-EOF
 
-# create a temp dir
-dock_inst_tmpdir=$(mktemp -d)
+# cat <<EOF > /etc/apt/preferences.d/dockerce.conf
+# Package: docker-ce
+# Pin: version 18.09.*
+# Pin-Priority: 1000
+# EOF
+
 
 # get docker gpg key
 wget https://download.docker.com/linux/debian/gpg -O ${dock_inst_tmpdir}/dock.gpg;
@@ -62,12 +58,17 @@ else
 	exit 1;
 fi
 
+# Add Docker Apt repo
+cat <<EOF > /etc/apt/sources.list.d/docker.list
+deb [arch=armhf] https://download.docker.com/linux/raspbian stretch test
+EOF
+
 export DEBIAN_FRONTEND=noninteractive
 
 apt-get -q update
 
-# Install docker - at set version
 
+# Install docker - at set version
 apt-get -q install -y \
 docker-ce=5:18.09.0~3-0~raspbian-stretch \
 docker-ce-cli=5:18.09.0~3-0~raspbian-stretch
@@ -92,5 +93,7 @@ fi
 # lock docker version
 apt-mark hold docker-ce docker-ce-cli;
 
+# show docker version
+docker version | grep version
 
-rpilogit "finished install_docker.sh on ${hostname}";
+rpilogit "finished on ${hostname}";

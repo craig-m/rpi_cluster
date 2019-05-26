@@ -11,17 +11,6 @@
     mode: 0700
 
 
-# create /opt/cluster/
-- name: R Pi cluster base dir
-  file:
-    path: /opt/cluster/
-    state: directory
-    owner: "{{ ansible_user_id }}"
-    group: "{{ ansible_user_id }}"
-    mode: 0770
-  become: yes
-
-
 # create folders
 - name: Create common folders
   file:
@@ -85,6 +74,7 @@
     filter: ansible_local
 
 
+# /etc/rc.local
 - name: etc rc.local
   template:
     src: etc/rc_local.j2
@@ -93,9 +83,9 @@
     owner: root
     group: root
   become: yes
-  changed_when: False
 
 
+# /etc/issue
 - name: copy etc issue
   copy:
     src: etc/issue

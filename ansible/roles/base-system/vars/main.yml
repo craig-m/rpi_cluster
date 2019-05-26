@@ -2,6 +2,10 @@
 # no override for these vars
 
 
+# Use the AARNet Mirror - https://mirror.aarnet.edu.au/about.html
+apt_local_mirror: "http://mirror.aarnet.edu.au/pub/raspbian/raspbian"
+
+
 # create folders (on every R-Pi)
 common_dir: [
   { dir: '/opt/cluster/', mode: '0770', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
@@ -12,6 +16,7 @@ common_dir: [
   { dir: '/home/{{ ansible_user_id }}/tmp/', mode: '0750', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
   { dir: '/etc/ansible/', mode: '0755', owner: 'root', group: 'root' },
   { dir: '/etc/ansible/facts.d/', mode: '0755', owner: 'root', group: 'root' },
+  { dir: '/etc/rpicluster/', mode: '0700', owner: 'root', group: 'root' },
   { dir: '/root/rpicluster/', mode: '0750', owner: 'root', group: 'root' },
   { dir: '/root/bin/', mode: '0750', owner: 'root', group: 'root' },
   { dir: '/root/tmp/', mode: '0750', owner: 'root', group: 'root' },
@@ -46,4 +51,36 @@ binfile: [
 package_remove: [
   {rmapt: 'avahi-daemon'},
   {rmapt: 'triggerhappy'},
+]
+
+
+# /etc/sysctl.conf settings
+sysctl_settings: [
+  {name: 'net.ipv6.conf.all.disable_ipv6', value: '1', set: 'yes', state: 'present'},
+  {name: 'net.ipv6.conf.default.disable_ipv6', value: '1', set: 'yes', state: 'present'},
+  {name: 'net.core.rmem_max', value: '16777216', set: 'yes', state: 'present'},
+  {name: 'net.core.wmem_max', value: '4194304', set: 'yes', state: 'present'},
+  {name: 'net.ipv4.ip_local_port_range', value: '1024 65535', set: 'yes', state: 'present'},
+  {name: 'net.ipv4.tcp_tw_reuse', value: '1', set: 'yes', state: 'present'}
+]
+
+
+# blacklist these kernel momdules
+kern_blacklist_mod: [
+  {name: 'snd_bcm2835'},
+  {name: 'brcmfmac'},
+  {name: 'brcmutil'},
+  {name: 'cfg80211'}
+]
+
+
+# stop these system services
+services_to_stop: [
+  {name: 'avahi-daemon.socket'},
+  {name: 'avahi-daemon.service'},
+  {name: 'apt-daily.timer'},
+  {name: 'apt-daily-upgrade.timer'},
+  {name: 'apt-daily.service'},
+  {name: 'apt-daily-upgrade.service'},
+  {name: 'bluetooth.service'}
 ]

@@ -1,6 +1,8 @@
 ---
 # only used for nodes that have a static IP set,
 # as this is where you set static IP's on Raspbian now.
+#
+# the rpi_ip value from the inventory is used.
 
 - debug: msg="set static IP with dhcpcd "
 - debug: msg="IP will be {{ hostvars[inventory_hostname]['rpi_ip'] }}"

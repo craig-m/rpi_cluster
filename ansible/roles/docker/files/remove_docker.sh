@@ -13,11 +13,11 @@ if [[ root != "$(whoami)" ]]; then
 fi
 
 rpilogit () {
-	echo -e "rpicluster: $1 \n";
-	logger -t rpicluster "$1";
+	echo -e "rpicluster: remove_docker.sh $1 \n";
+	logger -t rpicluster "remove_docker.sh $1";
 }
 
-rpilogit "remove_docker.sh started"
+rpilogit "started"
 
 # Purge all Images + Containers + Networks + Volumes
 if [ -f /usr/bin/docker ]; then
@@ -43,6 +43,6 @@ rm -rfv -- /opt/cluster/mysrc/docker-gc
 
 rm -rfv -- /opt/cluster/docker/docker-installed.txt
 
-rpilogit "remove_docker.sh finished"
+rpilogit "finished"
 
 #rm -rfv /opt/cluster/bin/remove_docker.sh

@@ -1,9 +1,9 @@
 ---
 # setup requirements, enable cgroups etc
-- debug: msg="kubernetes system setup "
+- debug: msg="k8System setup "
 
 
-- name: disable swap
+- name: k8System disable swap
   script: /opt/cluster/bin/disable-swap.sh
   args:
     creates: /opt/cluster/data/swap_disabled
@@ -11,7 +11,7 @@
   tags: [kube]
 
 
-- name: enable port forwarding
+- name: k8System enable port forwarding
   sysctl:
     name: "net.ipv4.ip_forward"
     value: 1
@@ -22,20 +22,20 @@
 
 
 # Save /boot/cmdline.txt to /opt/cluster/backup/<host>/boot/cmdline.txt
-- name: fetch cmdline txt
+- name: k8System fetch cmdline txt
   fetch:
     src: /boot/cmdline.txt
     dest: /opt/cluster/backup
 
 
-- name: check right options set in cmdline.txt
+- name: k8System check right options set in cmdline.txt
   shell: grep "cgroup_enable=memory cgroup_memory=1" /boot/cmdline.txt | wc -l
   register: check_cmdlineopt
   ignore_errors: yes
   changed_when: False
 
 
-- name: add boot options and reboot
+- name: k8System add boot options and reboot
   script: genbootcmd.sh
   args:
     chdir: /opt/cluster/docker/scripts/
@@ -44,21 +44,21 @@
   register: kube_bootopts
 
 
-- name: pause
+- name: k8System pause
   pause:
     seconds: 15
   when: kube_bootopts.changed
 
 
 # log
-- name: output to rpicluster log
+- name: k8System output to rpicluster log
   command: logger -t rpicluster kubeernetes role changed /boot/cmdline.txt
   when: kube_bootopts.changed
 
 
 # reboot if cmdline.txt changes
 # reboot host
-- name: rebooting host after change
+- name: k8System rebooting host after change
   shell: sleep 2 && reboot now
   become: yes
   async: 30
@@ -69,7 +69,7 @@
 
 
 # wait for host
-- name: waiting for reboot
+- name: k8System waiting for reboot
   wait_for:
     host: '{{ ansible_default_ipv4.address }}'
     port: 22
@@ -83,6 +83,6 @@
 
 
 # check cgroups
-- name: test cgroups are OK
+- name: k8System test cgroups are OK
   shell: /opt/cluster/docker/scripts/check-cgroups-on.sh
   changed_when: False

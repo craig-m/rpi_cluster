@@ -3,6 +3,7 @@
 - debug: msg="enabled and started {{ rpi_docker_enabled }} "
 
 # For now all K8 and Docker setup is largely handled by bash scripts
+# Docker installation is stable, nothing much changes.
 
 # folder structure
 - name: Create docker folders
@@ -59,6 +60,15 @@
   failed_when:
     - docker_apt_version.rc != 0
   tags: [docker]
+
+
+- name: use pip to install docker
+  pip:
+    name: docker
+    state: present
+  become: yes
+  tags: [docker]
+
 
 
 # Log version to ara

@@ -4,8 +4,8 @@
 # desc: create a K8 master node on a fresh cluster deployment
 
 rpilogit () {
-	echo -e "rpicluster: $1 \n";
-	logger -t rpicluster "$1";
+	echo -e "rpicluster: init-kube.sh $1 \n";
+	logger -t rpicluster "init-kube.sh $1";
 }
 
 # run as root
@@ -20,75 +20,78 @@ if [ -f /opt/cluster/docker/kubeinit.txt ]; then
 fi
 
 hostname=$(hostname)
-rpilogit "starting init-kube.sh on ${hostname}";
+rpilogit "starting on ${hostname}";
 
 
+# pull images
 rpilogit "get kube docker images"
 kubeadm config images pull
 if [ $? -eq 0 ]; then
-  rpilogit "pulled images OK"
+	rpilogit "pulled images OK"
 	sleep 120s;
 else
 	rpilogit "pulled images FAILED"
 	exit 1;
 fi
 
-# reset
-#kubeadm reset -f
 
-rpilogit "start kube init"
+# K8 Init function
+k8_clust_init () {
+	kubeadm init \
+		--ignore-preflight-errors=all \
+		--token-ttl=0 | tee > /opt/cluster/docker/kubecnf/kube_info.txt;
+}
 
-date -u
+k8_img_timeout () {
+	# raspberry pi timeout waiting on init:
+	# "error execution phase wait-control-plane: couldn't initialize a Kubernetes cluster"
+	#
+	# 70 minute timeout:
+	rpilogit "update timeout values in manifests"
+	sed -i 's/failureThreshold:: [0-9]\+/failureThreshold:: 15/' /etc/kubernetes/manifests/*.yaml
+	sed -i 's/initialDelaySeconds: [0-9]\+/initialDelaySeconds: 2400/' /etc/kubernetes/manifests/*.yaml
+	sed -i 's/timeoutSeconds: [0-9]\+/timeoutSeconds: 2400/' /etc/kubernetes/manifests/*.yaml
+}
 
-# raspberry pi timeout waiting on init:
-# "error execution phase wait-control-plane: couldn't initialize a Kubernetes cluster"
 
-# 70 minute timeout:
-sed -i 's/failureThreshold:: [0-9]\+/failureThreshold:: 15/' /etc/kubernetes/manifests/*.yaml
-sed -i 's/initialDelaySeconds: [0-9]\+/initialDelaySeconds: 2400/' /etc/kubernetes/manifests/*.yaml
-sed -i 's/timeoutSeconds: [0-9]\+/timeoutSeconds: 2400/' /etc/kubernetes/manifests/*.yaml
+rm -fv /opt/cluster/docker/kubecnf/kube_info.txt
 
 
-# Init cluster!
-kubeadm init \
-	--ignore-preflight-errors=all \
-	--token-ttl=0 \
-	| tee > /opt/cluster/docker/kubecnf/kube_info.txt
+# adjust timeouts
+k8_img_timeout;
+
+
+# Try Init 
+rpilogit "kubeadm init starting"
+k8_clust_init;
 
 
 # test init
 if [ $? -eq 0 ]; then
 	# init success
 	rpilogit "kubeadm init ran OK"
-
-	chown pi:pi /opt/cluster/docker/kubecnf/kube_info.txt
 else
-	# init failure -
-	rpilogit "kubeadm init FAILED"
-	exit 1;
+	# init failure
+	rpilogit "kubeadm init FAILED - try again"
+	# adjust timeouts
+	k8_img_timeout;
+	# try init again
+	k8_clust_init;
+	if [ $? -eq 0 ]; then
+		# init success
+		rpilogit "kubeadm init ran OK 2nd try"
+	else
+		rpilogit "kubeadm init FAILED 2nd try"
+		exit 1;
+	fi
 fi
 
 
-rpilogit "pausing"
-sleep 5m;
+chown -v pi:pi /opt/cluster/docker/kubecnf/kube_info.txt
 
+tail -n5 /opt/cluster/docker/kubecnf/kube_info.txt | grep -e kubeadm -e token -e discovery -e hash > /opt/cluster/docker/kubecnf/k8_rpi_join.sh
+chown -v pi:pi /opt/cluster/docker/kubecnf/k8_rpi_join.sh
 
-# for kube admin
-mkdir -p -v /home/pi/.kube
-cp /etc/kubernetes/admin.conf /home/pi/admin.conf
-cp -i -v -- /etc/kubernetes/admin.conf /opt/cluster/docker/kubecnf/admin.conf
-chown pi:pi /opt/cluster/docker/kubecnf/admin.conf
-mkdir -pv /etc/cni/net.d
-echo "source <(kubectl completion bash)" >> ~/.bashrc
+rpilogit "finished on $hostname"
 
-
-sudo -u pi kubectl config view
-
-
-# Finished!
-
-date -u
-
-touch -f /opt/cluster/docker/kubeinit.txt
-
-rpilogit "finished init-kube.sh on $hostname";
+exit 0;

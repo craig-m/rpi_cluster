@@ -1,19 +1,51 @@
 ---
 
 
+
+- name: install requirements
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+       - libre2-3
+       - libre2-dev
+       - libpcre3-dev
+       - libpcre++-dev
+       - libpcre2-dbg
+  become: yes
+
+
 - name: download ossec src
-   get_url:
-     url: "{{ ossec_bin_url }}"
-     dest: /opt/cluster/mysrc/
-     checksum: "{{ ossec_bin_sha }}"
+  get_url:
+    url: "https://github.com/ossec/ossec-hids/archive/{{ ossec_ver }}.tar.gz"
+    dest: /opt/cluster/mysrc/
+    checksum: "{{ ossec_bin_sha }}"
 
 
 - name: Extract archive
   unarchive:
     dest: /opt/cluster/mysrc/
-    src: "/opt/cluster/mysrc/{{ ossec_bin_dl }}/"
-    creates: /opt/cluster/mysrc/
+    src: "/opt/cluster/mysrc/ossec-hids-{{ ossec_ver }}.tar.gz"
+    creates: "/opt/cluster/mysrc/ossec-hids-{{ ossec_ver }}/etc/"
     copy: no
+
+
+- name: copy Unattended Source Installation
+  template:
+    src: preloaded-vars_conf.j2
+    dest: "/opt/cluster/mysrc/ossec-hids-{{ ossec_ver }}/etc/preloaded-vars.conf"
+    mode: 0644
+    owner: pi
+    group: pi
+
+
+
+- name: run installer
+  shell: "/opt/cluster/mysrc/ossec-hids-{{ ossec_ver }}/install.sh"
+  args:
+    creates: /opt/cluster/docker/kubecnf/k8_rpi_join.sh
+  become: yes
+  register: initialized_main_node
 
 
 - name: roles info txt

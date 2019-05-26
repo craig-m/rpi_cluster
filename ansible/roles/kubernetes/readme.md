@@ -64,7 +64,9 @@ destroy_k8() {
     /etc/apt/preferences.d/kubebin* \
     /etc/systemd/system/kubelet.service.d/10-kubeadm.conf \
     /opt/cluster/docker/*.txt; \
-    /opt/cluster/docker/kubecnf/*.txt;
+    /opt/cluster/docker/kubecnf/*.txt \
+    /opt/cluster/docker/kubecnf/k8_rpi_join.sh \
+    /home/pi/.kube/;
   sshcompute sudo reboot now;
 }
 

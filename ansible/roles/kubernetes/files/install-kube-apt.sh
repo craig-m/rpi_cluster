@@ -5,8 +5,8 @@
 # This does not install any packages.
 
 rpilogit () {
-	echo -e "rpicluster: $1 \n";
-	logger -t rpicluster "$1";
+	echo -e "rpicluster: install-kube-apt.sh $1 \n";
+	logger -t rpicluster "install-kube-apt.sh $1";
 }
 
 # run as root

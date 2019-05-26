@@ -13,9 +13,12 @@ cd "$(dirname "$0")" | exit 1;
 pwd
 
 #-------------------------------------------------------------------------------
+
+script_name=$(basename -- "$0")
+
 rpilogit () {
-	echo -e "rpicluster: $1 \n";
-	logger -t rpicluster "$1";
+	echo -e "rpicluster: $script_name $1 \n";
+	logger -t rpicluster "$script_name $1";
 }
 
 rpilogit "starting busybox httpd chroot install"
@@ -123,7 +126,7 @@ else
   exit 1;
 fi
 
-rpilogit "chroot_bb starting service"
+rpilogit "starting service"
 
 # systemd service
 systemctl daemon-reload

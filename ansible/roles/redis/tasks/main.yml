@@ -30,6 +30,18 @@
   tags: [redis]
 
 
+- name: get redis server info
+  command: redis-cli info server
+  register: redis_server_info
+  changed_when: false
+
+
+- name: check redis server ok
+  assert:
+    that:
+      - "'process_id' in redis_server_info.stdout"
+
+
 - name: Configure local redis to have 500 max clients
   redis:
     command: config

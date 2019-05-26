@@ -7,7 +7,7 @@
 - name: copy mpi_sample.c
   copy:
     src: mpi_sample.c
-    dest: /home/mpiuser/mpi_sample.c"
+    dest: /home/mpiuser/bin/mpi_sample.c
     owner:
     group:
     mode: 0644
@@ -27,10 +27,12 @@
 
 # make mpi_sample.c
 - name: compile mpi_sample
-  command: mpic++ -o ~/bin/mpi_sample mpi_sample.c
+  shell: mpic++ -o /home/mpiuser/bin/mpi_sample /home/mpiuser/bin/mpi_sample.c
   args:
-    chdir: /home/mpiuser/
+    chdir: /home/mpiuser/bin/
+    creates: /home/mpiuser/bin/mpi_sample
   when: mpi_sample_c.stat.exists == False
   become: yes
   become_user: mpiuser
   tags: [mpich]
+

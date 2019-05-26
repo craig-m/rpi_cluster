@@ -5,16 +5,19 @@
 # https://hub.docker.com/_/hello-world/
 
 
+#- name: pull hello-world
+#  docker_image:
+#    name: _/hello-world
+#    source: pull
+#  register: pull-docker-hello-world
+#  tags: [docker]
+
+
 - name: pull hello world
   command: docker pull hello-world
   changed_when: false
   become: yes
   tags: [docker]
-
-
-#- name: pull hello-world
-#  docker_image:
-#    name: _/hello-world
 
 
 - name: run hello world

@@ -2,6 +2,8 @@
 - debug: msg="ufw rules for Compute group "
 
 
+# for Docker network addons - allow all inernal subnets
+
 - name: Allow internal subnets
   ufw:
     rule: allow

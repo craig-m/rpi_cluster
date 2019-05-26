@@ -3,13 +3,6 @@
 - debug: msg="deployer role "
 
 
-- name: Verify min ansible version requirements.
-  assert:
-    that: "ansible_version.full is version_compare('2.7', '>=')"
-    msg: >
-      "Upgrade ansible, this version is not supported"
-
-
 - name: create user deployops
   user:
     name: deployops

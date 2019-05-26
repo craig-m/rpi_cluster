@@ -32,6 +32,8 @@ sleep 10s;
 
 /usr/bin/sudo rm -rfv -- /etc/apt/sources.list.d/kubernetes.list
 
+/usr/bin/sudo rm -rfv -- /opt/cluster/docker/kubecnf/k8_rpi_join.sh
+
 # remove ansible role setup files
 /usr/bin/sudo rm -rfv -- /opt/cluster/docker/kubecnf/admin.conf
 /usr/bin/sudo rm -rfv -- /opt/cluster/docker/kubecnf/kube_info.txt
