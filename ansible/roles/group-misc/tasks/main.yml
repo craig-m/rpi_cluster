@@ -28,6 +28,9 @@
 - import_tasks: cron.yml
 
 
+- import_tasks: rsyslog.yml
+
+
 # php pub
 - name: create /srv/php/omegaapp/pub
   file:

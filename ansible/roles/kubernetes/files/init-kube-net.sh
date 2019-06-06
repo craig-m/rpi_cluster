@@ -9,6 +9,10 @@ rpilogit () {
 	logger -t rpicluster "init-kube-net.sh $1";
 }
 
+hostname=$(hostname)
+rpilogit "starting on ${hostname}";
+
+
 sudo -u pi kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')" > /opt/cluster/docker/kubecnf/kube_net.txt
 if [ $? -eq 0 ]; then
 	rpilogit "kubectl apply networking OK"
@@ -18,4 +22,7 @@ else
 	exit 1;
 fi
 
+
 touch -f /opt/cluster/docker/kubeinit-net.txt
+
+rpilogit "finished on ${hostname}";

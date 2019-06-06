@@ -155,7 +155,7 @@ pi@psi:~ $ source ~/env/bin/activate
 (env) pi@psi:~/rpi_cluster/ansible $ ansible-lint site.yml
 ```
 
-Of the [https://docs.ansible.com/ansible-lint/rules/default_rules.html](default rules) list there are a couple of little issues to fix up ;)
+Of the [https://docs.ansible.com/ansible-lint/rules/default_rules.html](default_rules) list there are a couple of little issues to fix up ;)
 
 
 testinfra

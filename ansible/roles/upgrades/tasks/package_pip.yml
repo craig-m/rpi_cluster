@@ -1,0 +1,11 @@
+---
+
+
+- debug: msg="package upgrades for pip "
+
+
+- name: update python pip packages
+  pip:
+    name: "*"
+    state: latest
+  become: yes

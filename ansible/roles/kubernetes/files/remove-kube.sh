@@ -3,7 +3,8 @@
 #
 # Usage:
 # 
-#   ansible compute -a "/opt/cluster/docker/scripts/remove-kube.sh" --become -f 10
+#   ansible compute -a "bash /opt/cluster/docker/scripts/remove-kube.sh" --become -f 10
+
 
 rpilogit () {
 	echo -e "rpicluster: $1 \n";
@@ -12,8 +13,10 @@ rpilogit () {
 
 rpilogit "starting remove-kube.sh"
 
+
 /usr/bin/sudo kubeadm reset -f
 sleep 10s;
+
 
 /usr/bin/sudo apt-get -q purge -y \
 	kubeadm \
@@ -21,6 +24,7 @@ sleep 10s;
 	kubernetes-cni \
 	kubelet;
 sleep 10s;
+
 
 /usr/bin/sudo rm -rfv -- /etc/apt/preferences.d/kubebin
 /usr/bin/sudo rm -rfv -- /etc/kubernetes/
@@ -56,6 +60,9 @@ fi
 # remove weave
 /usr/bin/sudo rm -rfv -- /etc/cni/
 /usr/bin/sudo rm -rfv -- /opt/cni/
+
+
+true
 
 # done
 rpilogit "finished remove-kube.sh"

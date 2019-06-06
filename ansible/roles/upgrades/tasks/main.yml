@@ -10,44 +10,14 @@
   tags: [maintenance]
 
 
-- name: Check we get a http status 200 from raspbian mirror
-  uri:
-    url: "{{ apt_mirror_rasp }}"
+# apt packages
+- import_tasks: package_apt.yml
 
+# ruby gems
+#- import_tasks: package_gem.yml
 
-# update Apt cache
-- name: update apt cache
-  apt:
-    update_cache: yes
-  become: yes
-  retries: 2
-  check_mode: no
-  changed_when: False
-  tags: [maintenance]
-
-
-- name: pause
-  pause:
-    seconds: 2
-  tags: [maintenance]
-
-
-# Upgrade all Apt packages
-- name: Upgrade all packages to the latest version
-  apt:
-    name: "*"
-    state: latest
-  retries: 2
-  become: yes
-  register: apt_upgraded
-  tags: [maintenance]
-
-
-- name: pause
-  pause:
-    seconds: 2
-  tags: [maintenance]
-  when: apt_upgraded.changed
+# python pip
+#- import_tasks: package_pip.yml
 
 
 # Update R-Pi firmware in /boot/
@@ -69,21 +39,13 @@
   changed_when: False
 
 
-- name: pause
-  pause:
-    seconds: 3
-  tags: [maintenance]
-  when: apt_upgraded.changed
-
-
-# actually check all packages are current
-- name: check apt packages are current
-  command: /usr/lib/nagios/plugins/check_apt
-  register: checkapt_nag
+# check system units OK
+- name: check for failed system services
+  command: /bin/systemctl list-units --all --state=failed
   become: yes
   changed_when: False
-  failed_when:
-    - "'APT OK: 0 packages available for upgrade (0 critical updates)' not in checkapt_nag.stdout"
+  register: systemctl_failed_units
+  failed_when: "'0 loaded units listed.' not in systemctl_failed_units.stdout"
 
 
 # log

@@ -1,0 +1,11 @@
+---
+
+
+- debug: msg="package upgrades for ruby "
+
+
+- name: update ruby gems packages
+  gem:
+    name: "*"
+    state: latest
+  become: yes

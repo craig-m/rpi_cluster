@@ -13,7 +13,7 @@
     src: ssh_client_conf.j2
     dest: ~/.ssh/config
   delegate_to: localhost
-  changed_when: False
+  run_once: true
 
 
 - name: put inventory into etc hosts
@@ -22,7 +22,7 @@
     dest: /etc/hosts
   delegate_to: localhost
   become: yes
-  changed_when: False
+  run_once: true
 
 
 - name: empty known_hosts file
@@ -30,6 +30,7 @@
   delegate_to: localhost
   changed_when: False
   ignore_errors: True
+  run_once: true
 
 
 - name: add host to known_hosts
@@ -37,6 +38,7 @@
   delegate_to: localhost
   changed_when: False
   ignore_errors: True
+  run_once: true
 
 
 - name: add host hostname to known_hosts
@@ -44,6 +46,7 @@
   delegate_to: localhost
   changed_when: False
   ignore_errors: True
+  run_once: true
 
 
 - name: /etc/ethers
@@ -54,6 +57,7 @@
   become: yes
   delegate_to: localhost
   register: static_arp_update
+  run_once: true
 
 
 - name: update state arp entries
@@ -61,6 +65,7 @@
   become: yes
   delegate_to: localhost
   when: static_arp_update.changed
+  run_once: true
 
 
 - name: roles info txt
@@ -71,3 +76,5 @@
     group: root
     mode: 0444
   become: yes
+  delegate_to: localhost
+  run_once: true

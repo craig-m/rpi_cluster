@@ -3,6 +3,7 @@
 # name: install-kube-bin.sh
 # desc: Install a specific version of K8 tools from apt, and then pin them.
 
+
 rpilogit () {
 	echo -e "rpicluster: install-kube-bin.sh $1 \n";
 	logger -t rpicluster "install-kube-bin.sh $1";
@@ -40,15 +41,15 @@ export DEBIAN_FRONTEND=noninteractive;
 # apt-cache madison kubeadm | grep "1.13"
 
 # k8 packages
-apt-get -q install -y \
-	kubeadm=1.13.6-00 \
-	kubelet=1.13.6-00 \
-	kubectl=1.13.6-00 \
+apt-get -q install -y --allow-change-held-packages \
+	kubeadm=1.14.2-00 \
+	kubelet=1.14.2-00 \
+	kubectl=1.14.2-00 \
 	kubernetes-cni;
 if [ $? -eq 0 ]; then
-  rpilogit "installed kubeadm tools";
+	rpilogit "installed kubeadm tools";
 else
-  rpilogit "ERROR: apt install of kubeadm failed";
+	rpilogit "ERROR: apt install of kubeadm failed";
 	exit 1;
 fi
 
@@ -65,6 +66,29 @@ else
 	rpilogit "could NOT exec kubeadm"
 	exit 1;
 fi
+
+
+# Setup docker daemon
+# doc: https://kubernetes.io/docs/setup/cri/#docker
+#
+cat > /etc/docker/daemon.json <<EOF
+{
+  "exec-opts": ["native.cgroupdriver=systemd"],
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "50m"
+  },
+  "storage-driver": "overlay2"
+}
+EOF
+
+
+# reload systemd settings
+systemctl daemon-reload
+
+# restart docker + kubelet
+systemctl restart docker
+systemctl restart kubelet
 
 
 # finished

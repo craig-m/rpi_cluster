@@ -24,7 +24,19 @@
   tags: [rpilog]
 
 
-# first line rpicluster.log
+# copy test script - will check this role is working after run
+- name: copy testing script
+  copy:
+    src: test-rpilog.sh
+    dest: /opt/cluster/bin/test-rpilog.sh
+    mode: 0755
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+  register: rpiclustlog_test_sh
+  tags: [rpilog]
+
+
+  # first line rpicluster.log
 - name: log test
   shell: echo "first log line!" > /var/log/rpicluster.log
   when: rpiclustlog_created.changed == True
@@ -58,9 +70,9 @@
   tags: [rpilog]
 
 
-- name: output to rpicluster log
-  command: logger -t rpicluster rpilog test
-  changed_when: false
+- name: test the role is working
+  script: test-rpilog.sh
+  when: rpiclustlog_test_sh.changed == True
   tags: [rpilog]
 
 

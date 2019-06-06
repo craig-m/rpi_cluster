@@ -69,7 +69,7 @@ apt-get -q update
 
 
 # Install docker - at set version
-apt-get -q install -y \
+apt-get -q install -y --allow-change-held-packages \
 docker-ce=5:18.09.0~3-0~raspbian-stretch \
 docker-ce-cli=5:18.09.0~3-0~raspbian-stretch
 if [ $? -eq 0 ]; then

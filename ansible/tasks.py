@@ -14,14 +14,21 @@ from invoke import task, run
 @task
 def deployer_ansible(c):
     """ ansible deployer role on Psi (localhost). """
-    print("Running play-rpi-deployer.yml")
-    c.run('ansible-playbook --connection=local -i /etc/ansible/inventory/deploy -v play-rpi-deployer.yml')
+    print("Running playbook-rpi-deployer.yml")
+    c.run('ansible-playbook --connection=local -i /etc/ansible/inventory/deploy -v playbook-rpi-deployer.yml')
 
 @task
 def deployer_ssh_config(c):
     """ Generate ~/.ssh/config file from Ansible inventory. """
     print("Creating new ssh config file")
     c.run('ansible-playbook --connection=local -e "runtherole=group-deployer-ssh-client" -v single-role.yml')
+
+@task
+def deployer_upgrade(c):
+    """ Run upgrade maint role on Deployer """
+    print("Updating")
+    c.run('ansible-playbook --connection=local -i /etc/ansible/inventory/deploy -e "runtherole=upgrades" -v single-role.yml')
+
 
 
 # specific hosts ---------------------------------------------------------------
@@ -51,14 +58,14 @@ def serverspec_host(c, hostname):
 @task
 def lanservices_main_ansible(c):
     """ ansible services-main playbook on Alpha and Beta. """
-    print("Running play-rpi-services-main.yml")
-    c.run('ansible-playbook -v play-rpi-services-main.yml')
+    print("Running playbook-rpi-services-main.yml")
+    c.run('ansible-playbook -v playbook-rpi-services-main.yml')
 
 @task
 def lanservices_misc_ansible(c):
     """ ansible services-misc playbook on Omega. """
-    print("Running play-rpi-services-misc.yml")
-    c.run('ansible-playbook -v play-rpi-services-misc.yml')
+    print("Running playbook-rpi-services-misc.yml")
+    c.run('ansible-playbook -v playbook-rpi-services-misc.yml')
 
 
 # compute cluster (x4 rpi) -----------------------------------------------------
@@ -66,14 +73,14 @@ def lanservices_misc_ansible(c):
 @task
 def compute_ansible_base(c):
     """ ansible base playbook on compute group. """
-    print("Running play-rpi-compute.yml")
-    c.run('ansible-playbook -v play-rpi-compute.yml')
+    print("Running playbook-rpi-compute.yml")
+    c.run('ansible-playbook -v playbook-rpi-compute.yml')
 
 @task
 def compute_ansible_container(c):
     """ Setup Docker k8 cluster. """
-    print("Running play-rpi-compute-containers.yml")
-    c.run('ansible-playbook -v play-rpi-compute-containers.yml')
+    print("Running playbook-rpi-compute-containers.yml")
+    c.run('ansible-playbook -v playbook-rpi-compute-containers.yml')
 
 @task
 def compute_ansible_container_rm(c):
@@ -94,8 +101,8 @@ def ansible_gather_facts(c):
 @task
 def ansible_maint(c):
     """ upgrade all R-Pi server hosts (includes rolling reboots). """
-    print("Running play-rpi-all-maint.yml")
-    c.run('ansible-playbook -v play-rpi-all-maint.yml')
+    print("Running playbook-rpi-all-maint.yml")
+    c.run('ansible-playbook -v playbook-rpi-all-maint.yml')
 
 # test all nodes in the clsuter with ServerSpec
 @task

@@ -34,12 +34,14 @@
   command: redis-cli info server
   register: redis_server_info
   changed_when: false
+  tags: [redis]
 
 
 - name: check redis server ok
   assert:
     that:
       - "'process_id' in redis_server_info.stdout"
+  tags: [redis]
 
 
 - name: Configure local redis to have 500 max clients

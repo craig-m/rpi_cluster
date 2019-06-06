@@ -37,9 +37,8 @@
 
 
 - name: K8 setup kubernetes apt repo
-  shell: install-kube-apt.sh
+  shell: /opt/cluster/docker/scripts/install-kube-apt.sh
   args:
-    chdir: /opt/cluster/docker/scripts/
     creates: /etc/apt/sources.list.d/kubernetes.list
   register: installkubesh
   become: true

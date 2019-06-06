@@ -15,7 +15,7 @@
   copy:
     dest: "/etc/systemd/system/kubelet.service.d/10-kubeadm.conf"
     content: |
-      Environment="KUBELET_EXTRA_ARGS=--enable-controller-attach-detach=false"
+      Environment="KUBELET_EXTRA_ARGS=--enable-controller-attach-detach=false --cgroup-driver=systemd"
   become: yes
   tags: [kube]
 

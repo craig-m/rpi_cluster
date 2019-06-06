@@ -2,10 +2,6 @@
 
 kube_master_node: "delta"
 
-kubeadm_init_flags: ""
-
-kube_token: "69cpro.e6ux3nnev2dwuppx"
-
 
 k8_dir: [
   { dir: '/etc/systemd/system/kubelet.service.d/', mode: '0755', owner: root, group: root },

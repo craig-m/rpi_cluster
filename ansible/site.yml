@@ -3,9 +3,9 @@
 #
 # $ ansible-playbook site.yml
 #
-- import_playbook: play-rpi-deployer.yml
-- import_playbook: play-rpi-services-main.yml
-- import_playbook: play-rpi-services-misc.yml
-- import_playbook: play-rpi-compute.yml
-- import_playbook: play-rpi-compute-webfront.yml
-- import_playbook: play-rpi-all-maint.yml
+- import_playbook: playbook-rpi-deployer.yml
+- import_playbook: playbook-rpi-services-main.yml
+- import_playbook: playbook-rpi-services-misc.yml
+- import_playbook: playbook-rpi-compute.yml
+- import_playbook: playbook-rpi-compute-webfront.yml
+- import_playbook: playbook-rpi-all-maint.yml

@@ -19,6 +19,7 @@ if [ -f /opt/cluster/docker/kubeinit.txt ]; then
 	exit 1;
 fi
 
+
 hostname=$(hostname)
 rpilogit "starting on ${hostname}";
 
@@ -42,6 +43,8 @@ k8_clust_init () {
 		--token-ttl=0 | tee > /opt/cluster/docker/kubecnf/kube_info.txt;
 }
 
+
+# update manifest values
 k8_img_timeout () {
 	# raspberry pi timeout waiting on init:
 	# "error execution phase wait-control-plane: couldn't initialize a Kubernetes cluster"
@@ -54,42 +57,64 @@ k8_img_timeout () {
 }
 
 
-rm -fv /opt/cluster/docker/kubecnf/kube_info.txt
-
+# check we have token
+k8_token_check () {
+	tail -n5 /opt/cluster/docker/kubecnf/kube_info.txt | grep --silent -e kubeadm -e token -e discovery -e hash
+}
 
 # adjust timeouts
 k8_img_timeout;
 
 
-# Try Init 
-rpilogit "kubeadm init starting"
+# Try Init of k8 master node
+rpilogit "kubeadm master init starting"
 k8_clust_init;
 
 
-# test init
+# check we have the token
+k8_token_check;
+
+
+# test cluster init
 if [ $? -eq 0 ]; then
+
 	# init success
-	rpilogit "kubeadm init ran OK"
+	rpilogit "kubeadm master init ran OK";
+
 else
+
 	# init failure
-	rpilogit "kubeadm init FAILED - try again"
+	rpilogit "kubeadm init FAILED - try again";
+
 	# adjust timeouts
 	k8_img_timeout;
+
 	# try init again
 	k8_clust_init;
+
+	# check we have the token
+	k8_token_check;
+	
+	# test cluster init
 	if [ $? -eq 0 ]; then
+
 		# init success
-		rpilogit "kubeadm init ran OK 2nd try"
+		rpilogit "kubeadm master init ran OK 2nd try"
+
 	else
-		rpilogit "kubeadm init FAILED 2nd try"
+
+		rpilogit "kubeadm master init FAILED 2nd try"
 		exit 1;
+
 	fi
+
 fi
 
 
 chown -v pi:pi /opt/cluster/docker/kubecnf/kube_info.txt
 
 tail -n5 /opt/cluster/docker/kubecnf/kube_info.txt | grep -e kubeadm -e token -e discovery -e hash > /opt/cluster/docker/kubecnf/k8_rpi_join.sh
+
 chown -v pi:pi /opt/cluster/docker/kubecnf/k8_rpi_join.sh
 
 rpilogit "finished on $hostname"

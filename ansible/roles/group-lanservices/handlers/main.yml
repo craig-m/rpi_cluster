@@ -19,3 +19,10 @@
 - name: static-arp-ethers
   command: /usr/sbin/arp -f /etc/ethers
   become: yes
+
+
+- name: reload-rsyslog
+  service:
+    name: rsyslog.service
+    state: restarted
+  become: yes

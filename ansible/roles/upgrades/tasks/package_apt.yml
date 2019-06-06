@@ -1,0 +1,53 @@
+---
+# upgrade all apt packages, and check after
+- debug: msg="package upgrades for apt "
+
+
+- name: Check we get a http status 200 from raspbian mirror
+  uri:
+    url: "{{ apt_mirror_rasp }}"
+
+
+# update Apt cache
+- name: update apt cache
+  apt:
+    update_cache: yes
+  become: yes
+  retries: 2
+  check_mode: no
+  changed_when: False
+  tags: [maintenance]
+
+
+- name: pause
+  pause:
+    seconds: 2
+  tags: [maintenance]
+
+
+# Upgrade all Apt packages
+- name: Upgrade all packages to the latest version
+  apt:
+    name: "*"
+    state: latest
+  retries: 2
+  become: yes
+  register: apt_upgraded
+  tags: [maintenance]
+
+
+- name: pause
+  pause:
+    seconds: 3
+  tags: [maintenance]
+  when: apt_upgraded.changed
+
+
+# actually check all packages are current
+- name: check apt packages are current
+  command: /usr/lib/nagios/plugins/check_apt
+  register: checkapt_nag
+  become: yes
+  changed_when: False
+  failed_when:
+    - "'APT OK: 0 packages available for upgrade (0 critical updates)' not in checkapt_nag.stdout"

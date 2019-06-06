@@ -4,6 +4,8 @@
 ignore_me/*
 nohup.out
 ansible/inventory/*
+ansible/group_vars/*
+ansible/host_vars/*
 #
 # ---- code ----
 #

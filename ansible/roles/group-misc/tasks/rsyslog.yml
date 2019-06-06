@@ -1,0 +1,20 @@
+---
+
+
+- name: set etc syslog conf
+  template:
+    src: etc/rsyslog_conf.j2
+    dest: /etc/rsyslog.conf
+    mode: 0644
+  become: yes
+  notify: reload-rsyslog
+
+
+- name: var log remote syslog
+  file:
+    path: /var/log/rpilan/
+    state: directory
+    mode: 0775
+    owner: "root"
+    group: "adm"
+  become: yes

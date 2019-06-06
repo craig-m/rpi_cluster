@@ -16,9 +16,9 @@ host *
 
 # mac: {{ hostvars[host]['rpi_mac'] }} - rack position: {{ hostvars[host]['rpi_racked'] }}
 host {{ hostvars[host]['inventory_hostname'] }} {{ hostvars[host]['inventory_hostname'] }}.local
-  User pi
+	User pi
 	StrictHostKeyChecking no
-  HostName {{ hostvars[host]['rpi_ip'] }}
+	HostName {{ hostvars[host]['rpi_ip'] }}
 {% endfor %}
 
 #-------------------------------------------------------------------------------

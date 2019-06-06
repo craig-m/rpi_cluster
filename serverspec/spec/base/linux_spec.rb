@@ -22,10 +22,6 @@ describe command('systemctl list-units --all --state=failed | head -n1') do
   its(:stdout) { should match /0 loaded units listed./ }
 end
 
-describe command('systemctl list-unit-files --all --state=failed | tail -n1') do
-  its(:stdout) { should match /0 unit files listed./ }
-end
-
 
 describe command('whoami') do
   let(:disable_sudo) { true }

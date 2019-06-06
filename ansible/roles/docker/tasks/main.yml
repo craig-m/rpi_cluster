@@ -62,12 +62,12 @@
   tags: [docker]
 
 
-- name: use pip to install docker
-  pip:
-    name: docker
-    state: present
-  become: yes
-  tags: [docker]
+#- name: use pip to install docker
+#  pip:
+#    name: docker-py
+#    state: present
+#  become: yes
+#  tags: [docker]
 
 
 
