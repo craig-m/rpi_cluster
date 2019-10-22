@@ -9,9 +9,9 @@
     name: "{{ item }}"
     state: present
   loop:
-       - mpich
-       - mpich-doc
-       - gfortran
+      - mpich
+      - mpich-doc
+      - gfortran
   become: yes
   retries: 2
   tags: [mpich]

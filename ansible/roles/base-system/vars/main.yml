@@ -70,7 +70,8 @@ kern_blacklist_mod: [
   {name: 'snd_bcm2835'},
   {name: 'brcmfmac'},
   {name: 'brcmutil'},
-  {name: 'cfg80211'}
+  {name: 'cfg80211'},
+  {name: 'bluetooth'}
 ]
 
 

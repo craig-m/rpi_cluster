@@ -5,4 +5,10 @@
   service:
     name: rsyslog
     state: restarted
+  notify: test the role is working
   become: yes
+
+
+- name: test the role is working
+  script: /opt/cluster/bin/test-rpilog.sh
+  changed_when: false

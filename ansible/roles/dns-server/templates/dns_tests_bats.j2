@@ -36,13 +36,13 @@
 }
 
 @test "check_host icmp alpha.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {
-  run bash -c "/usr/lib/nagios/plugins/check_host  hostvars['alpha']['rpi_ip']"
+  run bash -c "/usr/lib/nagios/plugins/check_host {{ hostvars['alpha']['rpi_ip'] }}"
 }
 
 @test "check_host icmp beta.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {
-  run bash -c "/usr/lib/nagios/plugins/check_host  hostvars['beta']['rpi_ip']"
+  run bash -c "/usr/lib/nagios/plugins/check_host {{ hostvars['beta']['rpi_ip'] }}"
 }
 
 @test "check_host icmp omega.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {
-  run bash -c "/usr/lib/nagios/plugins/check_host  {{ hostvars['omega']['ansible_default_ipv4']['address'] }}"
+  run bash -c "/usr/lib/nagios/plugins/check_host {{ hostvars['omega']['rpi_ip'] }}"
 }

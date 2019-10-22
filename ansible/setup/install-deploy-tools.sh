@@ -3,6 +3,7 @@
 # name: install-deploy-tools.sh
 #
 # desc: install tools in requirements.txt (ansible etc), and packages from apt.
+# This is only run on the deployer R-Pi.
 
 # pre-run sanity checks --------------------------------------------------------
 
@@ -129,7 +130,7 @@ if [ ! -f ~/.rpibs/rpibs_packages ]; then
   # install packages
   rpilogit "install some apt packages";
   /usr/bin/sudo apt-get -q install -y \
-  build-essential autoconf automake libtool bison flex dos2unix htop jq \
+  build-essential autoconf automake aptitude libtool bison flex dos2unix htop jq \
   sshpass scanssh wget curl git rsync vim nano lsof screen tmux pgpgpg bc gawk \
   sshfs tcpdump nmap socat netdiscover sqlite3 pwgen \
   libssl-dev libyaml-dev libgmp-dev libgdbm-dev libffi-dev libpython-all-dev \
@@ -203,6 +204,7 @@ if [ ! -f ~/.rpibs/rpibs_redis ]; then
   redis-cli set /rpi/deployer/test test || echo "ERROR redis down";
   # ok
   touch ~/.rpibs/rpibs_redis;
+  redis-server -v >> ~/.rpibs/rpibs_redis;
   sleep 1s;
 fi
 
@@ -220,14 +222,14 @@ if [ ! -f /usr/local/bin/virtualenv ]; then
   rpilogit "pip install virtualenv"
   # create isolated Python environments with virtualenv.
   # https://pypi.python.org/pypi/virtualenv/
-  /usr/bin/sudo pip install virtualenv;
-  /usr/bin/sudo pip install --upgrade setuptools
+  /usr/bin/sudo pip3 install virtualenv;
+  /usr/bin/sudo pip3 install --upgrade setuptools
   sleep 1s;
 fi
 
 # create + activate virtual environment
 if [ ! -d ~/env/ ]; then
-  /usr/local/bin/virtualenv --no-site-packages ~/env;
+  /usr/local/bin/virtualenv --python=python3.7 --no-site-packages ~/env;
   sleep 1s;
 fi
 
@@ -236,7 +238,7 @@ source ~/env/bin/activate;
 
 # install python packages
 stat -t requirements.txt || exit 1;
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 sleep 1s;
 
 # Check programs were installed and are now in our path
@@ -263,6 +265,11 @@ if [ ! -d /var/log/ansible/ ]; then
   /usr/bin/sudo chown "$USER:$USER" /var/log/ansible/;
 fi
 
+# symlink to ansible log
+if [ ! -f ~/ansible.log ]; then
+  ln -s /var/log/ansible/ansible.log ~/ansible.log
+fi
+
 # Ansible etc dir
 if [ ! -d /etc/ansible/ ]; then
   rpilogit "creating /etc/ansible dirs";
@@ -281,7 +288,7 @@ export ANSIBLE_CONFIG="$PWD"
 
 # Load environment variables that inform Ansible to use ARA
 # regardless of its location or python version
-source <(python -m ara.setup.env)
+source <(python3 -m ara.setup.env)
 
 # check ansible version
 ansible --version || exit 1;
@@ -306,6 +313,7 @@ chmod 755 /etc/ansible/facts.d/deploytool.fact;
 
 # done
 touch ~/.rpibs/completed;
+echo "${script_name} completed" >> ~/.rpibs/completed
 rpilogit "**** finished ****";
 
 #-------------------------------------------------------------------------------

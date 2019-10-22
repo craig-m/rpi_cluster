@@ -25,7 +25,7 @@ end
 
 describe user('bind') do
   it { should exist }
-  it { should have_login_shell '/bin/false' }
+  it { should have_login_shell '/usr/sbin/nologin' }
 end
 
 describe file('/etc/bind/named.conf.options') do

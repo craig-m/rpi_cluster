@@ -7,7 +7,7 @@
     rule: allow
     src: '{{ item }}'
     proto: tcp
-    port: 22
+    port: '22'
     comment: SSH to deployer from private networks
   become: yes
   notify: ufw_restart
@@ -29,17 +29,9 @@
 - name: port to catch shells
   ufw:
     rule: allow
-    port: 1337
+    port: '1337'
     proto: tcp
     src: '{{ rpi_net_id }}/{{ rpi_net_maskbit }}'
     comment: spare port to catch shells
   notify: ufw_restart
   become: yes
-
-
-# Log ufw to ara
-- name: 
-  ara_record:
-    key: "{{ inventory_hostname }}_ufw"
-    type: "text"
-    value: "enabled"

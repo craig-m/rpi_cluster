@@ -4,7 +4,6 @@
 
 
 # change in role vars folder
-
 - name: change etc sysctl conf settings
   sysctl:
     name: "{{ item.name }}"
@@ -14,5 +13,3 @@
     reload: yes
   with_items: "{{ sysctl_settings }}"
   become: yes
-
-

@@ -33,6 +33,10 @@ describe file('/etc/ssh/sshd_config') do
   it { should be_mode 600 }
 end
 
+describe command('/usr/sbin/sshd -t') do
+  its(:stdout) { should match // }
+end
+
 describe file('/etc/motd') do
   its(:content) { should match /Raspberry Pi Cluster/ }
   it { should be_mode 644 }

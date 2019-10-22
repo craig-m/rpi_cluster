@@ -1,6 +1,5 @@
 # ---- ignore ----
 #
-.vscode/
 ignore_me/*
 nohup.out
 ansible/inventory/*
@@ -15,6 +14,8 @@ code/omegapyapi/flask/
 code/hugo-site/public/*
 yarn-error.log
 node_modules/
+code/rpi-py-api/nginx.logs/error.log
+code/rpi-py-api/nginx.logs/access.log
 #
 # ---- python ----
 #
@@ -51,4 +52,3 @@ Network Trash Folder
 Temporary Items
 .apdisk
 #
-# ---- eof ----

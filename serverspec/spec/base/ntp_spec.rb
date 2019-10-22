@@ -3,7 +3,7 @@ require 'spec_helper'
 # time and date
 describe command('timedatectl status') do
   its(:stdout) { should contain('UTC') }
-  its(:stdout) { should contain('NTP synchronized: yes') }
+  its(:stdout) { should contain('System clock synchronized: yes') }
 end
 
 describe command('date') do
@@ -31,7 +31,7 @@ end
 
 describe user('ntp') do
   it { should exist }
-  it { should have_login_shell '/bin/false' }
+  it { should have_login_shell '/usr/sbin/nologin' }
 end
 
 describe host('au.pool.ntp.org') do

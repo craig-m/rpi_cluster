@@ -7,8 +7,8 @@ rpilogit () {
 
 # run as root
 if [[ root != "$(whoami)" ]]; then
-  echo "Error: requires root";
-  exit 1;
+	echo "Error: requires root";
+	exit 1;
 fi
 
 hostname=$(hostname)
@@ -32,9 +32,9 @@ dock_inst_tmpdir=$(mktemp -d)
 # get docker gpg key
 wget https://download.docker.com/linux/debian/gpg -O ${dock_inst_tmpdir}/dock.gpg;
 if [ $? -eq 0 ]; then
-  echo "downloaded gpg key ok";
+	echo "downloaded gpg key ok";
 else
-  rpilogit "FAILED to download docker deiban gpg key"
+	rpilogit "FAILED to download docker deiban gpg key"
 	exit 1;
 fi
 
@@ -52,9 +52,9 @@ fi
 
 apt-key fingerprint 0EBFCD88 | grep "9DC8 5822 9FC7 DD38 854A  E2D8 8D81 803C 0EBF CD88"
 if [ $? -eq 0 ]; then
-  echo "key fingerprint ok";
+	echo "key fingerprint ok";
 else
-  rpilogit "BAD key fingerprint"
+	rpilogit "BAD key fingerprint"
 	exit 1;
 fi
 
@@ -67,15 +67,16 @@ export DEBIAN_FRONTEND=noninteractive
 
 apt-get -q update
 
+dockerinstv="5:19.03.3~3-0~raspbian-stretch"
 
 # Install docker - at set version
 apt-get -q install -y --allow-change-held-packages \
-docker-ce=5:18.09.0~3-0~raspbian-stretch \
-docker-ce-cli=5:18.09.0~3-0~raspbian-stretch
+docker-ce=${dockerinstv} \
+docker-ce-cli=${dockerinstv}
 if [ $? -eq 0 ]; then
-  rpilogit "docker installed";
+	rpilogit "docker installed";
 else
-  rpilogit "error installing docker"
+	rpilogit "error installing docker"
 	exit 1;
 fi
 
@@ -85,7 +86,7 @@ sleep 3s;
 if [ $? -eq 0 ]; then
 	rpilogit "docker-ce installed"
 else
-  rpilogit "error docker not executing"
+	rpilogit "error docker not executing"
 	exit 1;
 fi
 

@@ -105,7 +105,7 @@ if [ -f /mnt/ramstore/data/gpg.batch ]; then
 fi
 
 # public key id
-mypubkeyid=$(gpg2 --list-public-keys pi@psi | head -n2 | tail -1 | tr -d '\ ')
+mypubkeyid=$(gpg --list-public-keys pi@psi | head -n2 | tail -1 | tr -d '\ ')
 
 # GnuPG config
 cat > ~/.gnupg/gpg-agent.conf << EOF
@@ -210,4 +210,5 @@ thesshcapw="x";
 # Finished ---------------------------------------------------------------------
 
 touch ~/.rpibs/setup-keys;
+echo "setup-keys.sh finished" >>  ~/.rpibs/setup-keys;
 rpilogit "finished setup-keys.sh";

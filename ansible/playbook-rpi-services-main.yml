@@ -29,7 +29,7 @@
     - dns-server
     - dhcp-server
     - dhcp-client
-    - busybox-httpd
+#    - busybox-httpd
     - keepalived
     - group-lanservices
 

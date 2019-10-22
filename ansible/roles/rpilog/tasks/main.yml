@@ -3,10 +3,10 @@
 - debug: msg="rpilog "
 
 
-# stat rpicluster.log
-- name: check for rpicluster log
-  stat: path=/var/log/rpicluster.log
-  register: rpiclustlog
+- name: check for ssl cert
+  stat: 
+    path: /var/log/rpicluster.log
+  register: rpiclustlog_exist
   tags: [rpilog]
 
 
@@ -19,7 +19,7 @@
     group: adm
     mode: 0664
   become: yes
-  when: rpiclustlog.stat.exists == False
+  when: rpiclustlog_exist.stat.exists == false
   register: rpiclustlog_created
   tags: [rpilog]
 
@@ -67,12 +67,6 @@
     group: root
   become: yes
   notify: syslog-restart
-  tags: [rpilog]
-
-
-- name: test the role is working
-  script: test-rpilog.sh
-  when: rpiclustlog_test_sh.changed == True
   tags: [rpilog]
 
 

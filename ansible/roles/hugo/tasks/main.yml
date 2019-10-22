@@ -42,15 +42,6 @@
       - "'Hugo Static Site Generator' in hugo_version.stdout"
 
 
-# Log version to ara
-- name: log hugo version to ARA
-  ara_record:
-    key: "hugo_version"
-    type: "text"
-    value: "{{ hugo_version.stdout }}"
-  tags: [hugo]
-
-
 - name: roles info txt
   lineinfile:
     path: /opt/cluster/data/info_roles.txt

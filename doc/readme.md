@@ -3,7 +3,7 @@ Setup guide
 
 Directions for bootstrapping this Raspberry Pi cluster.
 
-Tested on `2019-04-08-raspbian-stretch-lite.img`
+Tested on `2019-09-26-raspbian-buster-lite`
 
 ---
 
@@ -125,18 +125,14 @@ Setup the cluster hosts
 
 ## LanServices group
 
-The new Alpha, Beta and Omega nodes should all be up, with the default SSH settings/password. The other hosts will not have IP addresses yet.
+The new Alpha and Beta nodes should be up, with the default SSH settings/password. The other hosts will not have IP addresses yet.
 
-```
-(env) pi@psi:~/rpi_cluster/ansible $ invoke ansible-test-default
-```
 
 Change default SSH access on the hosts (disable password auth):
 
 ```
 (env) pi@psi:~/rpi_cluster/ansible $ invoke ansible-sshd alpha
 (env) pi@psi:~/rpi_cluster/ansible $ invoke ansible-sshd beta
-(env) pi@psi:~/rpi_cluster/ansible $ invoke ansible-sshd omega
 ```
 
 Configure Alpha + Beta nodes:
@@ -156,6 +152,7 @@ Test them:
 Configure Omega node:
 
 ```
+(env) pi@psi:~/rpi_cluster/ansible $ invoke ansible-sshd omega
 (env) pi@psi:~/rpi_cluster/ansible $ invoke lanservices-misc-ansible
 (env) pi@psi:~/rpi_cluster/ansible $ invoke serverspec-host omega
 ```

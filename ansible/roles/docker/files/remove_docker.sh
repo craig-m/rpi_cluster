@@ -8,8 +8,8 @@
 
 # run as root
 if [[ root != "$(whoami)" ]]; then
-  echo "Error: requires root";
-  exit 1;
+	echo "Error: requires root";
+	exit 1;
 fi
 
 rpilogit () {

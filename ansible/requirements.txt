@@ -1,4 +1,5 @@
 ansible
+ansible-lint
 redis
 tox
 passlib
@@ -6,6 +7,7 @@ invoke
 httpie
 testinfra
 diceware
-ansible-lint
 ara
 docker
+molecule
+mitogen

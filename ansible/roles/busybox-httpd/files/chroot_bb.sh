@@ -102,7 +102,7 @@ pwd
 ln -sf busybox ash
 ls -la
 
-cp -v /usr/lib/arm-linux-gnueabihf/libarmmem.so /${chroot_dir}/usr/lib/
+cp -v /usr/lib/arm-linux-gnueabihf/libarmmem-v6l.so /${chroot_dir}/usr/lib/
 cp -v /lib/ld-linux-armhf.so.3 /${chroot_dir}/lib/
 cp -v /lib/arm-linux-gnueabihf/libc.so.6 /${chroot_dir}/lib/
 

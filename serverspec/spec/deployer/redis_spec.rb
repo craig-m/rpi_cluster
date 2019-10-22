@@ -14,7 +14,7 @@ end
 
 describe user('redis') do
   it { should exist }
-  it { should have_login_shell '/bin/false' }
+  it { should have_login_shell '/usr/sbin/nologin' }
 end
 
 describe process("/usr/bin/redis-server") do

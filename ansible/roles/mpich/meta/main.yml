@@ -5,7 +5,7 @@ galaxy_info:
   description: setup mpich and run a small test program
   company: crgm inc
   license: license (no)
-  min_ansible_version: 2.7
+  min_ansible_version: 2.8
   platforms:
   - name: Raspbian
     versions:

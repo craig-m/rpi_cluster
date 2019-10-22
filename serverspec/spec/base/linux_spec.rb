@@ -4,7 +4,7 @@ require 'spec_helper'
 describe file('/etc/debian_version') do
  it { should be_file }
  it { should be_owned_by 'root' }
- its(:content) { should contain('9') }
+ its(:content) { should contain('10') }
 end
 
 describe file('/') do
@@ -70,10 +70,6 @@ describe process("cron") do
 end
 
 describe process("rsyslogd") do
-  its(:user) { should eq "root" }
-end
-
-describe process("systemd-journald") do
   its(:user) { should eq "root" }
 end
 

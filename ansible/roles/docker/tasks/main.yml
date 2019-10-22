@@ -71,15 +71,6 @@
 
 
 
-# Log version to ara
-- name: docker version to ARA
-  ara_record:
-    key: "doker_version"
-    type: "text"
-    value: "{{ docker_apt_version.stdout }}"
-  tags: [docker]
-
-
 - name: docker enabled on boot
   service:
     name: docker

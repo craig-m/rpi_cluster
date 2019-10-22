@@ -14,7 +14,7 @@ end
 
 describe user('tftp') do
   it { should exist }
-  it { should have_login_shell '/bin/false' }
+  it { should have_login_shell '/usr/sbin/nologin' }
 end
 
 describe file('/srv/tftp/pxelinux/') do

@@ -51,7 +51,7 @@ k8_img_timeout () {
 	#
 	# 70 minute timeout:
 	rpilogit "update timeout values in manifests"
-	sed -i 's/failureThreshold:: [0-9]\+/failureThreshold:: 15/' /etc/kubernetes/manifests/*.yaml
+	sed -i 's/failureThreshold:: [0-9]\+/failureThreshold:: 25/' /etc/kubernetes/manifests/*.yaml
 	sed -i 's/initialDelaySeconds: [0-9]\+/initialDelaySeconds: 2400/' /etc/kubernetes/manifests/*.yaml
 	sed -i 's/timeoutSeconds: [0-9]\+/timeoutSeconds: 2400/' /etc/kubernetes/manifests/*.yaml
 }

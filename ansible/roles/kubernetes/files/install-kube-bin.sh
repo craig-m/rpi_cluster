@@ -40,11 +40,13 @@ export DEBIAN_FRONTEND=noninteractive;
 
 # apt-cache madison kubeadm | grep "1.13"
 
+kubeinstv="1.14.3-00"
+
 # k8 packages
 apt-get -q install -y --allow-change-held-packages \
-	kubeadm=1.14.2-00 \
-	kubelet=1.14.2-00 \
-	kubectl=1.14.2-00 \
+	kubeadm=${kubeinstv} \
+	kubelet=${kubeinstv} \
+	kubectl=${kubeinstv} \
 	kubernetes-cni;
 if [ $? -eq 0 ]; then
 	rpilogit "installed kubeadm tools";

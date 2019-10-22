@@ -94,9 +94,7 @@
 - name: Refresh inventory
   meta: refresh_inventory
   tags: [dhcpserver]
-  when:
-    - dhcpd_new.changed
-    - rpi_dhcpd_enabled == true
+
 
 #-------------------------------------------------------------------------------
 

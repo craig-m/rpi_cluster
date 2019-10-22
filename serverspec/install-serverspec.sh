@@ -48,7 +48,7 @@ rake --tasks || exit 1
 # finish up --------------------------------------------------------------------
 
 touch ~/.serverspecinstall
-echo OK > ~/.serverspecinstall
+echo "install-serverspec.sh completed" > ~/.serverspecinstall
 
 rpilogit "serverspec install finished";
 

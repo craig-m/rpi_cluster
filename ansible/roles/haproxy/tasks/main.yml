@@ -60,7 +60,8 @@
 
 # self signed cert
 - name: check for ssl cert
-  stat: path=/etc/haproxy/ssl/default_cert.pem
+  stat: 
+    path: /etc/haproxy/ssl/default_cert.pem
   register: haproxy_ss_ssl
   become: yes
   tags: [haproxy]

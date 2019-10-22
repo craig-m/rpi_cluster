@@ -25,7 +25,7 @@
     name: "lansrv main daily"
     minute: "30"
     hour: "01"
-    weekday: 7
+    weekday: "7"
     job: "/root/crontab/lansrvmain-cron-daily"
     user: root
   become: yes

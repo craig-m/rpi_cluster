@@ -9,8 +9,8 @@
     comment: lanservice_misc deny port
   become: yes
   with_items:
-    - 3306
-    - 6379
+    - '3306'
+    - '6379'
     - "{{ nginx_port }}"
     - "{{ nginx_port2 }}"
   notify: ufw_restart
@@ -29,7 +29,7 @@
 - name: Allow internal subnet access to webserver
   ufw:
     rule: allow
-    port: 80
+    port: '80'
     proto: tcp
     src: '{{ item }}'
   notify: ufw_restart
@@ -38,11 +38,3 @@
     - 10.0.0.0/8
     - 172.16.0.0/12
     - 192.168.0.0/16
-
-
-# Log ufw to ara
-- name: 
-  ara_record:
-    key: "{{ inventory_hostname }}_ufw"
-    type: "text"
-    value: "enabled"

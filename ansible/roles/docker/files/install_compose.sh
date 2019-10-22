@@ -20,9 +20,9 @@ if [ ! -d /opt/cluster/docker/compose/venv/ ]; then
   pip install docker-compose
   docker-compose --version
   if [ $? -eq 0 ]; then
-  	rpilogit "installed docker-compose"
+    rpilogit "installed docker-compose"
   else
     rpilogit "error installing docker-compose"
-  	exit 1;
+    exit 1;
   fi
 fi

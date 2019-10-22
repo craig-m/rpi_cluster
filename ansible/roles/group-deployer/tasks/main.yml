@@ -3,6 +3,11 @@
 - debug: msg="deployer role "
 
 
+- name: check test password was set
+  debug:
+    msg: "{{ lookup('passwordstore', 'test/test') }}"
+
+
 - name: create user deployops
   user:
     name: deployops

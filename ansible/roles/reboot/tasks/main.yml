@@ -49,13 +49,6 @@
   tags: [maintenance]
 
 
-- name: rebooted
-  ara_record:
-    key: "data"
-    type: "text"
-    value: "{{ rpi_my_uptime_check.stdout }}"
-
-
 # show uptime
 - debug: msg="uptime {{ rpi_my_uptime }} "
   tags: [maintenance]

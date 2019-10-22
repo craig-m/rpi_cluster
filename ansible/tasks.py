@@ -21,13 +21,13 @@ def deployer_ansible(c):
 def deployer_ssh_config(c):
     """ Generate ~/.ssh/config file from Ansible inventory. """
     print("Creating new ssh config file")
-    c.run('ansible-playbook --connection=local -e "runtherole=group-deployer-ssh-client" -v single-role.yml')
+    c.run('ansible-playbook --connection=local -e "runtherole=group-deployer-ssh-client" -v playbook-single-role.yml')
 
 @task
 def deployer_upgrade(c):
     """ Run upgrade maint role on Deployer """
     print("Updating")
-    c.run('ansible-playbook --connection=local -i /etc/ansible/inventory/deploy -e "runtherole=upgrades" -v single-role.yml')
+    c.run('ansible-playbook --connection=local -i /etc/ansible/inventory/deploy -e "runtherole=upgrades" -v playbook-single-role.yml')
 
 
 
@@ -44,7 +44,7 @@ def ansible_ping(c, hostname):
 def ansible_sshd(c, hostname):
     """ Change default SSH login on new R-Pi. example: invoke ansible_sshd beta """
     print("Running ssh-server role")
-    c.run('ansible-playbook --limit "%s" -e "ansible_user=pi ansible_ssh_pass=raspberry host_key_checking=False runtherole=ssh-server" -v single-role.yml' % hostname)
+    c.run('ansible-playbook --limit "%s" -e "ansible_user=pi ansible_ssh_pass=raspberry host_key_checking=False runtherole=ssh-server" -v playbook-single-role.yml' % hostname)
 
 # serverspec test a host
 @task

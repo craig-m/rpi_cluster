@@ -1,5 +1,9 @@
 require 'spec_helper'
 
+describe command('journalctl --verify') do
+  its(:exit_status) { should eq 0 }
+end
+
 # find large log files
 describe command('find /var/log/ -size +2M -exec ls {} -lah \;') do
   its(:stdout) { should match // }

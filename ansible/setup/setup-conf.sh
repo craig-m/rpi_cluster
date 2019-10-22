@@ -108,4 +108,6 @@ fi
 
 # Finished ---------------------------------------------------------------------
 
+touch ~/.rpibs/setup-conf;
+echo "setup-conf.sh finished" >>  ~/.rpibs/setup-conf;
 rpilogit "finished setup-conf.sh";

@@ -33,15 +33,16 @@
   notify: ufw_restart
 
 
-- debug: msg="deployer IP {{ hostvars['psi']['ansible_eth0']['ipv4']['address'] }} "
+
+- debug: msg="deployer IP {{ hostvars['psi']['ansible_facts']['eth0']['ipv4']['address'] }} "
 
 
 # Firewall Rule: SSH access from deployer
 - name: ssh access from deployer host psi IP
   ufw:
     rule: allow
-    from_ip: "{{ hostvars['psi']['ansible_eth0']['ipv4']['address'] }}"
-    port: 22
+    from_ip: "{{ hostvars['psi']['ansible_facts']['eth0']['ipv4']['address'] }}"
+    port: "22"
     proto: tcp
     comment: ssh from deployer node
   notify: ufw_restart
@@ -78,7 +79,7 @@
 # Enable Firewall
 - name: Enable UFW
   ufw:
-    state: enabled
+    state: 'enabled'
   become: true
 
 

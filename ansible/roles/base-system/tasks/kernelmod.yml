@@ -4,7 +4,6 @@
 
 
 # change in role vars folder
-
 - name: blacklist these kernel modules
   kernel_blacklist:
     name: "{{ item.name }}"
@@ -13,4 +12,3 @@
   become: yes
   ignore_errors: yes
   tags: [kernelmod]
-

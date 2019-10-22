@@ -4,7 +4,7 @@
 
 
 - name: check we have go src
-  stat: 
+  stat:
     path: "/opt/cluster/mysrc/{{ goland_targz }}"
   register: go_src_current
   changed_when: False
@@ -16,7 +16,7 @@
     url: https://dl.google.com/go/{{ goland_targz }}
     dest: /opt/cluster/mysrc/
     checksum: "{{ golang_shasum }}"
-  when: 
+  when:
     - "go_src_current.stat.exists == False"
   tags: [golang]
 

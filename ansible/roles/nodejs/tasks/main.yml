@@ -64,15 +64,6 @@
   tags: [nodejs]
 
 
-# Log version to ara
-- name: log nodejs version to ARA
-  ara_record:
-    key: "{{ inventory_hostname }}_nodejs_ver"
-    type: "text"
-    value: "{{ nodejs_inst_ver.stdout }}"
-  tags: [nodejs]
-
-
 - name: roles info txt
   lineinfile:
     path: /opt/cluster/data/info_roles.txt

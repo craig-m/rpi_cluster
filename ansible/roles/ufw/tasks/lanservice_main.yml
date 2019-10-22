@@ -22,16 +22,8 @@
   become: yes
   notify: ufw_restart
   with_items:
-    - 53
-    - 67
-    - 68
-    - 69
-    - 123
-
-
-# Log ufw to ara
-- name: 
-  ara_record:
-    key: "{{ inventory_hostname }}_ufw"
-    type: "text"
-    value: "enabled"
+    - '53'
+    - '67'
+    - '68'
+    - '69'
+    - '123'
