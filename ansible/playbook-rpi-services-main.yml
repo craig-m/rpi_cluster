@@ -10,10 +10,12 @@
 
 
 # do one server at a time (serial 1)
+# stop the play if a task on a host fails
 - name: LanServices Main (Alpha and Beta)
   hosts: lanservices
   gather_facts: false
   serial: 1
+  any_errors_fatal: true
   roles:
     - userac
     - base-system

@@ -29,6 +29,9 @@ PubkeyAuthentication yes
 # Only accept SSH keys signed by our CA keys on Deployer nodes
 TrustedUserCAKeys /etc/ssh/ca.pub
 
+# accept only certain principals
+# AuthorizedPrincipalsFile /etc/ssh/auth_principals/%u
+
 # do not accept other key files
 AuthorizedKeysFile /dev/null
 

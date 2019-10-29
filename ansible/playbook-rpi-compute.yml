@@ -13,6 +13,7 @@
 - name: Compute nodes main
   hosts: compute
   gather_facts: false
+  max_fail_percentage: 49
   roles:
     - userac
     - base-system

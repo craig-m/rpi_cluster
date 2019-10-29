@@ -28,9 +28,9 @@ killall ssh-agent
 mkdir -pv ~/.ssh/old-keys/
 
 cp -v -f -- ~/.ssh/id_rsa* ~/.ssh/old-keys/
-rm -rvf -- /home/pi/.ssh/id_rsa.pub /home/pi/.ssh/id_rsa
+rm -rvf -- /home/pi/.ssh/id_ecdsa.pub /home/pi/.ssh/id_ecdsa
 
-sshprvpass=$(pass ssh/id_rsa)
+sshprvpass=$(pass ssh/id_ecdsa)
 
 sshprvpass_leng=$(echo $sshprvpass | wc -c)
 if [ ${sshprvpass_leng} -lt 15 ]; then
@@ -41,18 +41,20 @@ else
 fi
 
 # create SSH key pair
-ssh-keygen -P "${sshprvpass}" -o -f ~/.ssh/id_rsa -t rsa
+ssh-keygen -P "${sshprvpass}" -o -f ~/.ssh/id_ecdsa -t ecdsa
 
 sshkeyid_redis=$(/usr/bin/redis-cli --raw incr /rpi/deployer/keys/ssh_key_id)
 
 # sign our SSH key with CA key
 thesshcapw=$(pass ssh/CA)
-ssh-keygen -s ~/.ssh/my-ssh-ca/ca -P ${thesshcapw} -I pi -n pi -V +1w -z ${sshkeyid_redis} ~/.ssh/id_rsa
+ssh-keygen -s ~/.ssh/my-ssh-ca/ca -P ${thesshcapw} -I pi -n pi -V +1w -z ${sshkeyid_redis} ~/.ssh/id_ecdsa.pub
 
 # clear vars
 sshprvpass="x"
 thesshcapw="x"
 
+chmod 600 ~/.ssh/authorized_keys
 bash -c 'cat /home/pi/.ssh/id_rsa.pub >> /home/pi/.ssh/authorized_keys'
+chmod 400 ~/.ssh/authorized_keys
 
 rpilogit "renew_ssh_priv_key.sh finished";

@@ -14,6 +14,7 @@
   hosts: lanservices
   gather_facts: false
   serial: 1
+  max_fail_percentage: 49
   roles:
     - upgrades
     - reboot
@@ -28,15 +29,16 @@
     - reboot
 
 
-- name: compute nodes upgrades
+- name: upgrades compute nodes two at a time
   hosts: compute
   gather_facts: false
   serial: 2
+  max_fail_percentage: 49
   roles:
     - upgrades
 
 
-- name: compute nodes reboot
+- name: reboot compute nodes one by one
   hosts: compute
   gather_facts: false
   serial: 1

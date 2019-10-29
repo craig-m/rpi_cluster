@@ -157,8 +157,8 @@ fi
 
 # --- create the CA certs ---
 mkdir -pv ~/.ssh/my-ssh-ca/ || exit 1
+chmod 700 -v ~/.ssh/my-ssh-ca/
 cd ~/.ssh/my-ssh-ca/ || exit 1
-mkdir -pv ~/.ssh/old-keys
 
 # generate a password for the SSH CA
 rpilogit "create a password for ssh CA";
@@ -173,19 +173,28 @@ if [ ${sshprvpass_leng} -lt 30 ]; then
 else
   rpilogit "pass length ok"
 fi
+
 # generate the CA key pair (with password)
-ssh-keygen -t rsa -b 4096 -C ~/.ssh/my-ssh-ca/CA -f ~/.ssh/my-ssh-ca/ca -P ${thesshcapw}
+rm -rfv -- ~/.ssh/my-ssh-ca/*
+ssh-keygen -C ~/.ssh/my-ssh-ca/CA -f ~/.ssh/my-ssh-ca/ca -P ${thesshcapw}
 if [ $? -eq 0 ]; then
   rpilogit "created CA key pair"
+  chmod 600 -v ~/.ssh/my-ssh-ca/ca ~/.ssh/my-ssh-ca/ca.pub
 else
   rpilogit "FAILED to create CA key pair"
 	exit 1;
 fi
 
+# add pub CA key to ssh known hosts
+the_pub_key=$(cat ~/.ssh/my-ssh-ca/ca.pub)
+sudo sh -c "echo '@cert-authority * $the_pub_key' > /etc/ssh/ssh_known_hosts"
+sh -c "echo '@cert-authority * $the_pub_key' > ~/.ssh/known_hosts"
+
+
 # --- SSH user keys ---
 # password for ssh pair
-pass generate --no-symbols ssh/id_rsa 30
-idrsapass=$(pass ssh/id_rsa)
+pass generate --no-symbols ssh/id_ecdsa 30
+idrsapass=$(pass ssh/id_ecdsa)
 # check password length
 sshprvpass_leng=$(echo $idrsapass | wc -c)
 if [ ${sshprvpass_leng} -lt 20 ]; then
@@ -194,14 +203,17 @@ if [ ${sshprvpass_leng} -lt 20 ]; then
 else
   rpilogit "pass length ok"
 fi
+
 # generate our pub+priv ssh rsa keys
-ssh-keygen -P "${idrsapass}" -o -f ~/.ssh/id_rsa -t rsa || exit 1;
-# --- sign our SSH key with CA key ---
+ssh-keygen -P "${idrsapass}" -o -f ~/.ssh/id_ecdsa -t ecdsa || exit 1;
+
+# --- sign our public SSH key with CA private key ---
 rpilogit "note: keys are valid for 1 week";
 # get key id
 sshkeyid_redis=$(/usr/bin/redis-cli --raw incr /rpi/deployer/keys/ssh_key_id)
-# make key
-ssh-keygen -s ~/.ssh/my-ssh-ca/ca -P ${thesshcapw} -I ${USER} -n pi -V +1w -z ${sshkeyid_redis} ~/.ssh/id_rsa || exit 1;
+# sign
+ssh-keygen -s ~/.ssh/my-ssh-ca/ca -P ${thesshcapw} -I ${USER} -n pi -V +1w -z ${sshkeyid_redis} ~/.ssh/id_ecdsa.pub || exit 1;
+
 # cleanup
 thesshkeypw="x";
 thesshcapw="x";

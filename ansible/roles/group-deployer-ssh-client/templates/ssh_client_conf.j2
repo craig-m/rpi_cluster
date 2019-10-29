@@ -8,16 +8,12 @@ host *
 	Compression yes
 	controlmaster auto
 
-#host *.local
-#	User pi
-
 # hosts ------------------------------------------------------------------------
 {% for host in groups['all'] %}
 
 # mac: {{ hostvars[host]['rpi_mac'] }} - rack position: {{ hostvars[host]['rpi_racked'] }}
 host {{ hostvars[host]['inventory_hostname'] }} {{ hostvars[host]['inventory_hostname'] }}.local
 	User pi
-	StrictHostKeyChecking no
 	HostName {{ hostvars[host]['rpi_ip'] }}
 {% endfor %}
 

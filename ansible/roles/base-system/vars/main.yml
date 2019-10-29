@@ -14,6 +14,7 @@ common_dir: [
   { dir: '/opt/cluster/bin/', mode: '0755', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
   { dir: '/home/{{ ansible_user_id }}/.config/htop/', mode: '0750', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
   { dir: '/home/{{ ansible_user_id }}/tmp/', mode: '0750', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
+  { dir: '/etc/ssh/auth_principals.d/', mode: '0755', owner: 'root', group: 'root' },
   { dir: '/etc/ansible/', mode: '0755', owner: 'root', group: 'root' },
   { dir: '/etc/ansible/facts.d/', mode: '0755', owner: 'root', group: 'root' },
   { dir: '/etc/rpicluster/', mode: '0700', owner: 'root', group: 'root' },

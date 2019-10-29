@@ -25,28 +25,7 @@
   run_once: true
 
 
-- name: empty known_hosts file
-  shell: echo "" > ~/.ssh/known_hosts
-  delegate_to: localhost
-  changed_when: False
-  ignore_errors: True
-  run_once: true
-
-
-- name: add host to known_hosts
-  shell: ssh-keyscan {{ rpi_ip }} >> ~/.ssh/known_hosts
-  delegate_to: localhost
-  changed_when: False
-  ignore_errors: True
-  run_once: true
-
-
-- name: add host hostname to known_hosts
-  shell: ssh-keyscan {{ inventory_hostname }} >> ~/.ssh/known_hosts
-  delegate_to: localhost
-  changed_when: False
-  ignore_errors: True
-  run_once: true
+# we will put the public CA key into /etc/ssh/ssh_known_hosts
 
 
 - name: /etc/ethers

@@ -1,5 +1,5 @@
 ---
-# run a single ansible role, on specified hosts.
+# Run a single ansible role.
 #
 # Note: if there are any other roles in the meta/main.yml dependencies they
 # will also be pulled in and run.

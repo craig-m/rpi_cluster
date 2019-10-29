@@ -12,6 +12,7 @@
 
 - name: containers
   hosts: docker
+  max_fail_percentage: 49
   gather_facts: false
   roles:
     - docker
