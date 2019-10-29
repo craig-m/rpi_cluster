@@ -11,7 +11,8 @@ host *
 # hosts ------------------------------------------------------------------------
 {% for host in groups['all'] %}
 
-# mac: {{ hostvars[host]['rpi_mac'] }} - rack position: {{ hostvars[host]['rpi_racked'] }}
+# {{ hostvars[host]['inventory_hostname'] }} rack position: {{ hostvars[host]['rpi_racked'] }}
+# mac: {{ hostvars[host]['rpi_mac'] }}
 host {{ hostvars[host]['inventory_hostname'] }} {{ hostvars[host]['inventory_hostname'] }}.local
 	User pi
 	HostName {{ hostvars[host]['rpi_ip'] }}

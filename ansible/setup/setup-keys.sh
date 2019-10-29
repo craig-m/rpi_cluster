@@ -187,8 +187,8 @@ fi
 
 # add pub CA key to ssh known hosts
 the_pub_key=$(cat ~/.ssh/my-ssh-ca/ca.pub)
-sudo sh -c "echo '@cert-authority * $the_pub_key' > /etc/ssh/ssh_known_hosts"
-sh -c "echo '@cert-authority * $the_pub_key' > ~/.ssh/known_hosts"
+sudo sh -c "echo '@cert-authority *.local $the_pub_key' > /etc/ssh/ssh_known_hosts"
+sh -c "echo '@cert-authority *.local $the_pub_key' > ~/.ssh/known_hosts"
 
 
 # --- SSH user keys ---
@@ -213,6 +213,8 @@ rpilogit "note: keys are valid for 1 week";
 sshkeyid_redis=$(/usr/bin/redis-cli --raw incr /rpi/deployer/keys/ssh_key_id)
 # sign
 ssh-keygen -s ~/.ssh/my-ssh-ca/ca -P ${thesshcapw} -I ${USER} -n pi -V +1w -z ${sshkeyid_redis} ~/.ssh/id_ecdsa.pub || exit 1;
+# show info on the public key
+ssh-keygen -L -f ~/.ssh/id_ecdsa-cert.pub
 
 # cleanup
 thesshkeypw="x";

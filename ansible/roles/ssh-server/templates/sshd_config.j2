@@ -30,10 +30,10 @@ PubkeyAuthentication yes
 TrustedUserCAKeys /etc/ssh/ca.pub
 
 # accept only certain principals
-# AuthorizedPrincipalsFile /etc/ssh/auth_principals/%u
+# AuthorizedPrincipalsFile /etc/ssh/auth_principals.d/%u
 
 # do not accept other key files
-AuthorizedKeysFile /dev/null
+# AuthorizedKeysFile /dev/null
 
 # allow anyone to connect to forwarded ports
 GatewayPorts clientspecified

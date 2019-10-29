@@ -34,7 +34,7 @@ source ~/.rvm/scripts/rvm
 rvm gemset use serverspec
 
 # get password from pass
-pass=$(pass ssh/id_rsa)
+pass=$(pass ssh/id_ecdsa)
 
 # check expect is installed
 which expect | exit 1;
@@ -51,8 +51,8 @@ fi
 
 # ssh add key with password
 expect << EOF
-  spawn ssh-add /home/pi/.ssh/id_rsa
-  expect "Enter passphrase for /home/pi/.ssh/id_rsa:"
+  spawn ssh-add /home/pi/.ssh/id_ecdsa
+  expect "Enter passphrase for /home/pi/.ssh/id_ecdsa:"
   send "$pass\r"
   expect eof
 EOF

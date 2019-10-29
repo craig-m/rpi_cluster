@@ -47,7 +47,7 @@ sshkeyid_redis=$(/usr/bin/redis-cli --raw incr /rpi/deployer/keys/ssh_key_id)
 
 # sign our SSH key with CA key
 thesshcapw=$(pass ssh/CA)
-ssh-keygen -s ~/.ssh/my-ssh-ca/ca -P ${thesshcapw} -I pi -n pi -V +1w -z ${sshkeyid_redis} ~/.ssh/id_ecdsa.pub
+ssh-keygen -s ~/.ssh/my-ssh-ca/ca -P ${thesshcapw} -I pi -n *.local -V +1w -z ${sshkeyid_redis} ~/.ssh/id_ecdsa.pub
 
 # clear vars
 sshprvpass="x"

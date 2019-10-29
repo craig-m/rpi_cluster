@@ -67,12 +67,12 @@
   tags: [ssh]
 
 
-- name: ssh principals file
-  template:
-    src: auth_principals/pi.j2
-    dest: /etc/ssh/auth_principals/pi
-    owner: root
-    group: root
-    mode: 0644
-  become: yes
-  tags: [ssh]
+#- name: ssh principals file
+#  template:
+#    src: auth_principals/pi.j2
+#    dest: /etc/ssh/auth_principals.d/pi
+#    owner: root
+#    group: root
+#    mode: 0644
+#  become: yes
+#  tags: [ssh]
