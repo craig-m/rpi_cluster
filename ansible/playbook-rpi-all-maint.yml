@@ -20,15 +20,6 @@
     - reboot
 
 
-- name: LanServices Misc (Omega)
-  hosts: misc
-  gather_facts: false
-  serial: 1
-  roles:
-    - upgrades
-    - reboot
-
-
 - name: upgrades compute nodes two at a time
   hosts: compute
   gather_facts: false

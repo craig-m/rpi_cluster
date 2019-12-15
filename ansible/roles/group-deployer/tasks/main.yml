@@ -20,6 +20,7 @@
     createhome: yes
     home: /home/deployops
   become: yes
+  tags: [deployer]
 
 
 # Download src/pacakges etc
@@ -36,6 +37,11 @@
     group: "{{ ansible_user_id }}"
     mode: 0755
   with_items: "{{ deployscript_binfile }}"
+  tags: [deployer]
+
+
+# custom systemd service "rpi-deployer"
+- import_tasks: systemd-cust.yml
 
 
 # log

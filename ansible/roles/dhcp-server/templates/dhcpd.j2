@@ -62,12 +62,19 @@ host router {
 
 ###### R-Pi ######
 
-{% for host in groups['all'] %}
+# lanservices group
+{% for host in groups['lanservices'] %}
 host {{ hostvars[host]['inventory_hostname'] }} {
   hardware ethernet {{ hostvars[host]['rpi_mac'] }};
   fixed-address {{ hostvars[host]['rpi_ip'] }};
 }
-
+{% endfor %}
+# Compute group
+{% for host in groups['compute'] %}
+host {{ hostvars[host]['inventory_hostname'] }} {
+  hardware ethernet {{ hostvars[host]['rpi_mac'] }};
+  fixed-address {{ hostvars[host]['rpi_ip'] }};
+}
 {% endfor %}
 
 # EOF ##########################################################################

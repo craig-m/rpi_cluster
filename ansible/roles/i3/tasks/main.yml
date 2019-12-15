@@ -1,0 +1,22 @@
+---
+# Install i3 window manager
+# https://i3wm.org/
+#
+# login on console and type 'startx' to open
+
+- name: install i3
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - i3
+    - dmenu
+    - suckless-tools
+    - xinit
+  become: yes
+
+- name: add i3 to xinit.rc
+  lineinfile:
+    path: ~/.xinit.rc
+    line: 'exec i3'
+    create: yes

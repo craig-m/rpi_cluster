@@ -2,7 +2,8 @@
 - debug: msg="altering /etc/hosts "
 
 
-# /etc/hosts file
+# /etc/hosts file 
+# add all hosts we have in our ansible inventory
 - name: etc hosts file
   template:
     src: etc-hosts.j2

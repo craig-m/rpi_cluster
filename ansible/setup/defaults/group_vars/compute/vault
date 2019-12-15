@@ -1,7 +1,6 @@
 # Compute group vault file
 
 # OS user password -------------------------------------------------------------
-# (there is no need to write these in .txt here, this is for convenience)
 
 # user: root    pass: dfaultPW.example_root
 # user: piclust pass: dfaultPW.example_123
@@ -14,8 +13,11 @@ vault_user_pw: [
   {user: 'pi', hash: '$6$rounds=656000$d6LtcYGCN1WShRJV$aRPBfdX/SC3v4Ttm64ZUyAUuNbLNYlhHWddldZAhFhW4hUAq8flQQNonUhLm7kV/Jz06ExFt40Yz5rnBUVU1y.'}
 ]
 
-## generating the hashes above, on an Admin machine (stretch or psi):
-# source ~/env/bin/activate
-# python -c "from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt(getpass.getpass())"
+# generating the hashes above, on an Admin machine (stretch or psi):
+#
+#   source ~/env/bin/activate
+#   set +o history
+#   ansible localhost -m debug -a "msg={{ 'mypassword' | password_hash('sha512', 'mysalt123') }}"
+#   set -o history
 
 #-------------------------------------------------------------------------------

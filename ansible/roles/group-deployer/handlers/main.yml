@@ -1,1 +1,12 @@
 ---
+
+- name: systemctl-daemon-reload
+  systemd:
+    daemon_reload: yes
+  become: yes
+
+- name: restart-rpideployer
+  service:
+    name: rpi-deployer.service
+    state: restarted
+  become: yes

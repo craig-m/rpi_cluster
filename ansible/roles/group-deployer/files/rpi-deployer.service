@@ -1,0 +1,11 @@
+[Unit]
+Description=rpi-deployer.service
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+User=root
+ExecStart=/root/bin/deployer-boot.sh
+
+[Install]
+WantedBy=multi-user.target

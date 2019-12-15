@@ -8,6 +8,7 @@
   roles:
     - ansible-pre-role
     - base-system
+    - i3
     - userac
     - ssh-server
     - ufw

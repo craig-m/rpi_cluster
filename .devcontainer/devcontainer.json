@@ -1,0 +1,19 @@
+{
+	"name": "rpi_cluster Ansible",
+	"dockerFile": "Dockerfile",
+	"runArgs": [
+		"-u", "vscode",
+		"-v", "/var/run/docker.sock:/var/run/docker.sock"
+	],
+	"settings": {
+		"terminal.integrated.shell.linux": "/bin/bash",
+        "remote.extensionKind": {
+            "ms-azuretools.vscode-docker": "workspace"
+		}
+	},
+	"postCreateCommand": "ansible --version",
+	"extensions": [
+		"vscoss.vscode-ansible",
+		"redhat.vscode-yaml"
+	]
+}

@@ -1,0 +1,35 @@
+---
+# vars for Beta (LanServices Main group)
+
+ansible_host: beta.local
+rpi_racked: "R2"
+rpi_ip: "192.168.6.10.8"
+rpi_mac: "b8:27:eb:91:XX:XX"
+
+# DHCP server:
+rpi_dhcpd_enabled: true
+rpi_dhcpd_status: "secondary"
+rpi_dhcpd_port: "648"
+rpi_dhcpd_port_peer: "647"
+
+# DNS config:
+rpi_dnsd_enabled: true
+rpi_dnsd_status: "secondary"
+rpi_dnsd_notify: "no"
+# set on secondary bind9 server only:
+rpi_dnsd_masters: "{{ hostvars['alpha']['rpi_ip'] }}"
+
+# /etc/resolv.conf:
+rpi_my_dns_server_1: "127.0.0.1"
+rpi_my_dns_server_2: "{{ hostvars['alpha']['rpi_ip'] }}"
+
+# Failover host (alpha):
+rpi_failover_hostname: "alpha"
+rpi_failover_ip: "{{ hostvars['alpha']['rpi_ip'] }}"
+rpi_failover_hwaddr: "{{ hostvars['alpha']['rpi_mac'] }}"
+
+# keepalived
+keepalived_priority: 101
+keepalived_state: "BACKUP"
+
+#-------------------------------------------------------------------------------

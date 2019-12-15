@@ -11,10 +11,29 @@ unset LD_PRELOAD
 
 #-------------------------------------------------------------------------------
 
+
 # set static arp if exists
 if [ -f /etc/ethers ]; then
   arp -f /etc/ethers;
 fi
+
+
+# disable USB devices
+#
+# "Set new devices connected to hostX to be deauthorized by default (ie: lock down)
+# Doc: https://www.kernel.org/doc/Documentation/usb/authorization.txt
+#
+echo 0 > /sys/bus/usb/devices/usb1/authorized_default
+
+
+# disable ctrl-alt-del
+rm /lib/systemd/system/ctrl-alt-del.target
+ln -s /dev/null /lib/systemd/system/ctrl-alt-del.target
+systemctl daemon-reload
+
+
+# disable tty login
+systemctl stop serial-getty@ttyAMA0.service
 
 
 # create a 2MB tmpfs
@@ -29,14 +48,25 @@ if [ ! -f /mnt/ramstore/data/test.txt ]; then
 fi
 
 
+# Flash the LED
+do_blinky_lights () {
+	modprobe ledtrig_heartbeat
+
+  # enable timer effect
+  echo timer | tee /sys/class/leds/led0/trigger
+  echo timer | tee /sys/class/leds/led1/trigger
+  
+  sleep 5;
+	# return R-Pi LED to default trigger
+	echo input | tee /sys/class/leds/led1/trigger
+  echo mmc0 | tee /sys/class/leds/led0/trigger
+}
+do_blinky_lights
+
+
 # check failover node
 pingresult=$(/usr/lib/nagios/plugins/check_host {{ rpi_failover_ip }});
 logger -t rpicluster "lanservices-boot.sh ping failover: $pingresult";
-
-
-# log remote
-logger --server {{ rpi_rsyslog_ip }} --udp --port {{ rpi_rsyslog_port }} -t rpicluster "running lanservices-boot.sh on $HOSTNAME"
-
 
 logger -t rpicluster "lanservices-boot.sh finished"
 

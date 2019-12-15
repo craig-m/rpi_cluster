@@ -10,6 +10,3 @@ galaxy_info:
   - name: Raspbian
     versions:
       - stretch
-dependencies:
-  - role: base-system
-  - role: dns-server

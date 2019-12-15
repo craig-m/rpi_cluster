@@ -8,71 +8,22 @@
     name: "{{ item }}"
     state: present
   loop:
-       - nmap
-       - telnet
-       - lynx
-       - redir
-       - proxychains
+    - nmap
+    - lynx
+    - redir
+    - proxychains
   become: yes
   retries: 2
   tags: [lanservices]
 
 
-# copy lanservices-boot.sh
-- name: lanservices-boot script
-  template:
-    src: lanservices-boot.j2
-    dest: /opt/cluster/bin/lanservices-boot.sh
-    mode: 0770
-    owner: root
-    group: root
-  become: yes
+# custom systemd service "rpi-lanservices"
+- import_tasks: systemd-cust.yml
   tags: [lanservices]
 
 
-# systemd script
-- name: copy rpi lanservices systemd script
-  copy:
-    src: rpi-lanservices.service
-    dest: /etc/systemd/system/rpi-lanservices.service
-    mode: 0644
-    owner: root
-    group: root
-  become: yes
-  notify:
-    - systemctl-daemon-reload
-    - restart-rpilansrv
-  tags: [lanservices]
-
-
-# static arp entries for admin nodes
-- name: /etc/ethers
-  template:
-    src: etc/ethers.j2
-    dest: /etc/ethers
-    mode: 0644
-  become: yes
-  notify: static-arp-ethers
-  tags: [lanservices]
-
-
-- name: /etc/security/limits.conf
-  template:
-    src: etc/security/limits_conf.j2
-    dest: /etc/security/limits.conf
-    mode: 0644
-  become: yes
-  tags: [lanservices]
-
-
-# rpi-lanservices.service enabled on boot
-- name: enable rpi-lanservices systemd script
-  systemd:
-    name: rpi-lanservices
-    enabled: yes
-    masked: no
-  become: yes
-  tags: [lanservices]
+# security tasks for this group
+- import_tasks: lanservices-security.yml
 
 
 # cron scripts

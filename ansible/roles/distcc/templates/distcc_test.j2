@@ -11,7 +11,7 @@ filehash=$(sha512sum $download_file | cut -d' ' -f1)
 if [ "$filehash" = "bb4519f06e278f271d08722b531e49d2e842cc3e0b02a6b3eee422e2efcb5b6226111af43f5e5eae56beb85ac8bfebcd6a4aacbabb8f609e529aa4d571890864" ] ; then
   echo "sha512 sum is OK";
 else
-  echi "BAD sha512 sum";
+  echo "BAD sha512 sum";
   exit 1;
 fi
 

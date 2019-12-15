@@ -1,0 +1,35 @@
+---
+
+# copy deployer-boot.sh
+- name: deployer-boot script
+  template:
+    src: deployer-boot.j2
+    dest: /root/bin/deployer-boot.sh
+    mode: 0770
+    owner: root
+    group: root
+  become: yes
+  tags: [deployer]
+
+# systemd script
+- name: copy rpi compute systemd script
+  copy:
+    src: rpi-deployer.service
+    dest: /etc/systemd/system/rpi-deployer.service
+    mode: 0644
+    owner: root
+    group: root
+  become: yes
+  changed_when: false
+  notify:
+    - systemctl-daemon-reload
+    - restart-rpideployer
+  tags: [deployer]
+
+- name: enable rpi-deployer systemd script
+  systemd:
+    name: rpi-deployer
+    enabled: yes
+    masked: no
+  become: yes
+  tags: [deployer]

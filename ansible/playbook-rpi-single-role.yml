@@ -1,0 +1,16 @@
+---
+# Run a single ansible role.
+#
+# Note: if there are any other roles in the meta/main.yml dependencies they
+# will also be pulled in and run.
+#
+# Examples:
+#
+# $ ansible-playbook -e "runtherole=maintenance" playbook-rpi-single-role.yml
+# $ ansible-playbook -e "runtherole=puppet-agent" --limit="compute" playbook-rpi-single-role.yml
+# $ ansible-playbook -e "runtherole=base-system" -i ~/temp.ini playbook-rpi-single-role.yml
+
+- name: single role
+  hosts: all
+  roles:
+    - "{{ runtherole }}"

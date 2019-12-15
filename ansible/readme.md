@@ -28,14 +28,14 @@ beta
 or three:
 
 ```
-(env) pi@psi:~ $ ssh -J pi@alpha.local,pi@beta.local,pi@omega.local pi@zeta.local hostname;
+(env) pi@psi:~ $ ssh -J pi@alpha.local,pi@beta.local,pi@delta.local pi@zeta.local hostname;
 zeta
 ```
 
 ssh port forwarding also works (the httpd on zeta is available on deployer at localhost:8888):
 
 ```
-(env) pi@psi:~ $ ssh -J pi@alpha.local,pi@beta.local,pi@omega.local pi@zeta.local -L 8888:127.0.0.1:80
+(env) pi@psi:~ $ ssh -J pi@alpha.local,pi@beta.local,pi@delta.local pi@zeta.local -L 8888:127.0.0.1:80
 ```
 
 
@@ -96,7 +96,7 @@ $ ansible all -a "uname -a" -f 10
 Ad hoc command on a single host:
 
 ```
-$ ansible omega -a "hostname"
+$ ansible beta -a "hostname"
 ```
 
 see all hosts in inventory

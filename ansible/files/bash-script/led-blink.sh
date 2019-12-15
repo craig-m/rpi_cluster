@@ -13,12 +13,15 @@ rpilogit () {
 
 rpilogit "starting";
 
-/usr/bin/sudo modprobe ledtrig_heartbeat
-/usr/bin/sudo sh -c "echo heartbeat >/sys/class/leds/led0/trigger"
 
-sleep 10;
+do_blinky_lights () {
+	/usr/bin/sudo modprobe ledtrig_heartbeat
+	/usr/bin/sudo sh -c "echo heartbeat >/sys/class/leds/led0/trigger"
+	sleep 10;
+	# return R-Pi LED to default trigger
+	/usr/bin/sudo sh -c "echo mmc0 >/sys/class/leds/led0/trigger"
+}
 
-# return R-Pi LED to default trigger
-/usr/bin/sudo sh -c "echo mmc0 >/sys/class/leds/led0/trigger"
+do_blinky_lights
 
 rpilogit "finished";

@@ -42,7 +42,7 @@
     state: present
     update_cache: yes
   loop:
-       - yarn
+    - yarn
   become: yes
   retries: 2
 

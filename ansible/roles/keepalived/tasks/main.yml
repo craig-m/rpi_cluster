@@ -16,7 +16,7 @@
     name: "{{ item }}"
     state: present
   loop:
-       - keepalived
+    - keepalived
   become: yes
   environment:
     # do not start Keepalived at the end of install

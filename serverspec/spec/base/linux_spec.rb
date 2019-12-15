@@ -2,18 +2,18 @@ require 'spec_helper'
 # common system tests
 
 describe file('/etc/debian_version') do
- it { should be_file }
- it { should be_owned_by 'root' }
- its(:content) { should contain('10') }
+  it { should be_file }
+  it { should be_owned_by 'root' }
+  its(:content) { should contain('10') }
 end
 
 describe file('/') do
-   # be_mounted
-   it { should be_mounted }
-   # be_mounted_with_type
-   it { should be_mounted.with( :type => 'ext4' ) }
-   # be_mounted_with_options RW
-   it { should be_mounted.with( :options => { :rw => true } ) }
+  # be_mounted
+  it { should be_mounted }
+  # be_mounted_with_type
+  it { should be_mounted.with( :type => 'ext4' ) }
+  # be_mounted_with_options RW
+  it { should be_mounted.with( :options => { :rw => true } ) }
 end
 
 

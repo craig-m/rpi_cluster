@@ -1,6 +1,6 @@
 # Hosts ini --------------------------------------------------------------------
 
 [deploy]
-psi ansible_host=psi.local rpi_racked="L1" rpi_ip=127.0.0.1 rpi_mac=b8:27:eb:ec:XX:XX ansible_connection=local
+psi ansible_connection=local
 
 #-------------------------------------------------------------------------------

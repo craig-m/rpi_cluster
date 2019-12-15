@@ -22,6 +22,9 @@ else
   echo "* Continuing.";
 fi
 
+# exit on use of uninitialized var
+set -u
+
 # do not run this script as root
 if [[ root = "$(whoami)" ]]; then
   echo "ERROR: do not run as root";

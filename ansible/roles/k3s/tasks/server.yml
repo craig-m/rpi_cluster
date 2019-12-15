@@ -1,0 +1,23 @@
+---
+
+# Server: run install script
+- name: run server install script
+  script: "install_k3s.sh"
+  args:
+    creates: /var/lib/rancher/k3s/server/node-token
+  become: true
+
+- name: get token from master
+  fetch:
+    src: /var/lib/rancher/k3s/server/node-token
+    dest: /opt/cluster/backup
+  become: true
+
+- name: Set facts
+  set_fact:
+    k3s_master_ip: "{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}"
+
+- name: Set facts
+  set_fact:
+    k3s_master_node: "{{ lookup('file', '/opt/cluster/backup/epsilon/var/lib/rancher/k3s/server/node-token') }}"
+  delegate_to: 127.0.0.1

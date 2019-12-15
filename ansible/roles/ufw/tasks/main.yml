@@ -12,7 +12,7 @@
     name: "{{ item }}"
     state: present
   loop:
-       - ufw
+    - ufw
   become: yes
 
 
@@ -31,7 +31,6 @@
     - { direction: 'incoming', policy: 'reject' }
     - { direction: 'outgoing', policy: 'allow' }
   notify: ufw_restart
-
 
 
 - debug: msg="deployer IP {{ hostvars['psi']['ansible_facts']['eth0']['ipv4']['address'] }} "
@@ -62,11 +61,6 @@
 - import_tasks: lanservice_main.yml
   when:
     - "'lanservices' in group_names"
-
-# Lan Services Misc group
-- import_tasks: lanservice_misc.yml
-  when:
-    - "'misc' in group_names"
 
 # Compute group
 - import_tasks: compute.yml

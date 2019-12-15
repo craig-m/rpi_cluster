@@ -1,0 +1,39 @@
+---
+
+
+# static arp entries for admin nodes
+- name: /etc/ethers
+  template:
+    src: etc/ethers.j2
+    dest: /etc/ethers
+    mode: 0644
+  become: yes
+  notify: static-arp-ethers
+  tags: [lanservices]
+
+
+# Disable USB Storage Devices
+- name: Blacklist usb storage kernel module
+  kernel_blacklist:
+    name: usb_storage
+    state: present
+  become: yes
+  tags: [lanservices]
+
+
+# Disable USB mouse and keyboard
+- name: Blacklist usbhid kernel moduel
+  kernel_blacklist:
+    name: usbhid
+    state: present
+  become: yes
+  tags: [lanservices]
+
+
+- name: /etc/security/limits.conf
+  template:
+    src: etc/security/limits_conf.j2
+    dest: /etc/security/limits.conf
+    mode: 0644
+  become: yes
+  tags: [lanservices]

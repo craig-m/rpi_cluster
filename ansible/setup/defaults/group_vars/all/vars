@@ -4,6 +4,33 @@
 # create this user on all hosts
 rpi_clust_user: "piclust"
 
+# Network settings -------------------------------------------------------------
+
+# R-Pi LAN settings
+rpi_net_id: "192.168.10.0"
+rpi_net_range: "192.168.10.1-254"
+rpi_net_bcast: "192.168.10.255"
+rpi_net_snet: "255.255.255.0"
+rpi_net_maskbit: "24"
+
+# reverse DNS
+rpi_domain_arpa: "10.168.192"
+
+# LanServices: dhcp server settings
+rpi_dhcp_range_start: "192.168.10.200"
+rpi_dhcp_range_stop: "192.168.10.240"
+
+# LanServices: dhcp server advertise these DNS servers
+rpi_dhcp_dns1: "{{ hostvars['alpha']['rpi_ip'] }}"
+rpi_dhcp_dns2: "{{ hostvars['beta']['rpi_ip'] }}"
+
+# LAN default gateway
+rpi_net_default_gw: "192.168.10.1"
+rpi_net_default_gw_mac: "00:0d:b9:XX:XX:XX"
+
+# This IP will float between alpha and beta. Managed by keepalived
+rpi_loadbal_float_ip: "192.168.10.111"
+
 # DNS --------------------------------------------------------------------------
 
 # Domain name
@@ -16,8 +43,6 @@ rpi_cust_tld: "clust0r"
 rpi_cust_domain_loc: "dc1"
 
 #-------------------------------------------------------------------------------
-
-rpi_rsyslog_enable: "true"
 
 # raspian apt repo
 apt_mirror_rasp: "http://raspbian.raspberrypi.org/raspbian/"

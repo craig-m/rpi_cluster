@@ -4,7 +4,7 @@
 # desc: add password to ssh keyfile automatically and then connect to the host.
 #
 # use:
-#     ./ssh_agent_load.sh omega
+#     ./ssh_agent_load.sh alpha
 #     echo uptime | ./ssh_to_host.sh alpha
 
 

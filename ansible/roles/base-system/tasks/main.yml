@@ -31,7 +31,7 @@
 # file structure
 - import_tasks: filesfolders.yml
 
-# blacklist kernel modules on R-Pi Hardware
+# blacklist/load kernel modules on R-Pi Hardware
 - import_tasks: kernelmod.yml
 
 # /etc/sysctl.conf tuning

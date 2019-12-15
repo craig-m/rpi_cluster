@@ -13,7 +13,7 @@
 
 
 # The services we provide for our local subnet
-- name: Allow access these ports from local subnet
+- name: Allow access these ports from our local subnet
   ufw:
     rule: allow
     port: '{{ item }}'

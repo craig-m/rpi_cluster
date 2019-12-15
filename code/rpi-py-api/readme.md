@@ -5,13 +5,6 @@ A small Python Flask app, with redis database backend, and nginx webserver front
 All setup with Docker-Compose.
 
 
-On the R-Pi nodes:
-
-```
-/opt/cluster/docker/scripts/install_compose.sh
-source /opt/cluster/docker/compose/venv/bin/activate
-```
-
 Build and run (anywhere that has docker-compose + docker):
 
 ```

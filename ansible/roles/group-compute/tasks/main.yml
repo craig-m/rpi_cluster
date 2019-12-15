@@ -10,54 +10,18 @@
     name: "{{ item }}"
     state: present
   loop:
-       - ca-certificates-java
-       - openjdk-8-jdk
+    - ca-certificates-java
+    - openjdk-8-jdk
   become: yes
   retries: 2
   tags: [computenode]
 
 
-#-------------------------------------------------------------------------------
+# hardening tasks for this group
+- import_tasks: compute-security.yml
 
-
-# copy compute-boot.sh
-- name: compute-boot script
-  template:
-    src: compute-boot.j2
-    dest: /opt/cluster/bin/compute-boot.sh
-    mode: 0770
-    owner: root
-    group: root
-  become: yes
-  tags: [lanservices]
-
-
-# systemd script
-- name: copy rpi compute systemd script
-  copy:
-    src: rpi-compute.service
-    dest: /etc/systemd/system/rpi-compute.service
-    mode: 0644
-    owner: root
-    group: root
-  become: yes
-  changed_when: false
-  notify:
-    - systemctl-daemon-reload
-    - restart-rpicompute
-  tags: [computenode]
-
-
-- name: enable rpi-compute systemd script
-  systemd:
-    name: rpi-compute
-    enabled: yes
-    masked: no
-  become: yes
-  tags: [computenode]
-
-
-#-------------------------------------------------------------------------------
+# custom systemd service "rpi-compute"
+- import_tasks: systemd-cust.yml
 
 
 - name: output to rpicluster log

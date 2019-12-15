@@ -2,12 +2,12 @@ require 'spec_helper'
 
 
 describe file('/opt/cluster/data/info_roles.txt') do
- it { should be_file }
- it { should be_owned_by 'root' }
- it { should be_mode 444 }
- its(:content) { should match /group-deployer-ssh-client/ }
- its(:content) { should match /group-deployer/ }
- its(:content) { should match /redis/ }
+  it { should be_file }
+  it { should be_owned_by 'root' }
+  it { should be_mode 444 }
+  its(:content) { should match /group-deployer-ssh-client/ }
+  its(:content) { should match /group-deployer/ }
+  its(:content) { should match /redis/ }
 end
 
 
@@ -22,7 +22,17 @@ end
 
 
 describe file('/etc/ssh/sshd_config') do
- its(:content) { should match /AuthorizedKeysFile \/home\/pi\/.ssh\/authorized_keys/ }
+  its(:content) { should match /AuthorizedKeysFile \/home\/pi\/.ssh\/authorized_keys/ }
+end
+
+
+describe service('rpi-deployer.service') do
+  it { should be_enabled }
+end
+
+describe file('/mnt/ramstore/data/test.txt') do
+  it { should be_file }
+  it { should be_owned_by 'root' }
 end
 
 

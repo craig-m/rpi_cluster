@@ -55,13 +55,17 @@ some hardening tips
 
 
 Hide all processes from other users:
+
 ```
 $ sudo mount -o remount,rw,hidepid=2 /proc
 ```
+
 in /etc/fstab to make it permanent:
+
 ```
 proc  /proc proc  efaults,hidepid=2,gid=1001  0 0
 ```
+
 Notes: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=0499680a42141d86417a8fbaa8c8db806bea1201
 
 
@@ -80,6 +84,20 @@ Fix homedir perms
 $ chmod 700 /home/pi/
 ```
 Most files on Raspbian by default are world readable.
+
+
+#### usb devices
+
+Disable new USB devices from being added:
+
+Set new devices connected to hostX to be deauthorized by default (ie:
+lock down):
+
+```
+echo 0 > /sys/bus/usb/devices/usbX/authorized_default
+```
+
+https://www.kernel.org/doc/Documentation/usb/authorization.txt
 
 
 Tools
@@ -101,3 +119,18 @@ The 'to do' list
 docker run -it --rm --privileged -v /:/mnt ubuntu bash
 echo 'ALL=(ALL) NOPASSWD:ALL' >> /mnt/etc/sudoers
 ```
+
+* use something like SmallStep for SSH CA auth - https://github.com/smallstep/certificates
+
+
+---
+
+# Tech docs
+
+
+"Detecting ATT&CK techniques & tactics for Linux"
+https://github.com/Kirtar22/Litmus_Test
+
+
+"Linux Atomic Tests by ATT&CK Tactic & Technique"
+https://github.com/redcanaryco/atomic-red-team/blob/master/atomics/linux-index.md

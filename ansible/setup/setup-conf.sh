@@ -12,6 +12,9 @@ if [[ root = "$(whoami)" ]]; then
   exit 1;
 fi
 
+# exit on use of uninitialized var
+set -u
+
 echo "* check install-deploy-tools.sh ran";
 /etc/ansible/facts.d/deploytool.fact || exit 1;
 

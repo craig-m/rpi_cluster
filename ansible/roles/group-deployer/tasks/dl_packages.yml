@@ -8,21 +8,20 @@
     name: "{{ item }}"
     state: present
   loop:
-       - pass
-       - dh-make
-       - devscripts
-       - socat
-       - lynx
-       - nmap
-       - telnet
-       - toilet
-       - emacs
-       - ranger
-       - mpich
-       - maven
-       - neofetch
-       - proxychains
-       - autossh
+    - pass
+    - dh-make
+    - devscripts
+    - socat
+    - lynx
+    - nmap
+    - toilet
+    - emacs
+    - ranger
+    - mpich
+    - maven
+    - neofetch
+    - proxychains
+    - autossh
   become: yes
   retries: 2
 

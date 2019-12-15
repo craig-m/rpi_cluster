@@ -45,7 +45,7 @@
 
 # actually check all packages are current
 - name: check apt packages are current
-  command: /usr/lib/nagios/plugins/check_apt
+  command: /usr/lib/nagios/plugins/check_apt --timeout=30 --list
   register: checkapt_nag
   become: yes
   changed_when: False

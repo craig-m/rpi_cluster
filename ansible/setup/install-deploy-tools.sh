@@ -5,6 +5,14 @@
 # desc: install tools in requirements.txt (ansible etc), and packages from apt.
 # This is only run on the deployer R-Pi.
 
+# functions ---------------------------------------------------------------------
+
+# log
+rpilogit () {
+	echo -e "rpicluster: $1 \\n";
+	logger -t rpicluster "$1";
+}
+
 # pre-run sanity checks --------------------------------------------------------
 
 # do not run this script as root
@@ -13,8 +21,11 @@ if [[ root = "$(whoami)" ]]; then
   exit 1;
 fi
 
+# exit on use of uninitialized var
+set -u
+
 # test /usr/bin/sudo <cmd> works OK
-/usr/bin/sudo id | grep "uid=0(root)" > /dev/null 2>&1 || exit 1;
+/usr/bin/sudo id | grep --quiet "uid=0(root)" || { rpilogit "ERROR can not sudo"; exit 1; }
 
 # only allow one copy of this script to execute at a time
 pidof -o %PPID -x "$0" >/dev/null && echo "ERROR: $0 already running." && exit 1;
@@ -24,17 +35,11 @@ pidof -o %PPID -x "$0" >/dev/null && echo "ERROR: $0 already running." && exit 1
 
 # output/log function
 
-# log
-rpilogit () {
-	echo -e "rpicluster: $1 \\n";
-	logger -t rpicluster "$1";
-}
-
 # get the name of this script
 script_name=$(readlink -f "${BASH_SOURCE[0]}")
 
 # get line count of this script
-scriptlines=$(cat "${script_name}" | wc -l)
+scriptlines=$(wc -l "${script_name}" | awk '{print $1}')
 
 # output/log info
 rpilogit "**** install deploy tools - in only ${scriptlines} lines of bash! PID $BASHPID ****";
@@ -54,8 +59,9 @@ fi
 
 # test if R-Pi Hardware
 if [ "pi" = "$(whoami)" ] && [ "arm" = "$(uname -m | cut -c 1-3)" ]; then
-  rpi_mac=$(ip addr show eth0 | grep 'b8:27:eb:' | awk '{print $2'} | wc -c);
-  if [ $rpi_mac -eq "18" ]; then
+  # The "b8:27:eb" prefix belongs to the Raspberry Pi Foundation.
+  rpi_mac=$(ip addr show | grep 'b8:27:eb:' | awk '{print $2'} | wc -c);
+  if [ "$rpi_mac" -eq "18" ]; then
     rpilogit "running on R-Pi Hardware";
   else
     rpilogit "unsupported environment!";
@@ -138,31 +144,22 @@ if [ ! -f ~/.rpibs/rpibs_packages ]; then
   monitoring-plugins-common monitoring-plugins-basic inotify-tools unzip pass \
   python-pip python-dev python3-pip python3-dev \
   uuid-runtime uuid reptyr secure-delete mpich alpine shellcheck \
-  telnet lynx socat dirmngr mc software-properties-common;
+  lynx socat dirmngr mc tftp \
+  software-properties-common || { rpilogit "ERROR with apt-get install"; exit 1; }
   sleep 2s;
   # upgrade
   rpilogit "upgrade apt packages";
-  /usr/bin/sudo apt-get -q -y upgrade || rpilogit "ERROR with apt upgrade";
+  /usr/bin/sudo apt-get -q -y upgrade || { rpilogit "ERROR with apt upgrade"; exit 1; }
+  # apt cleanup
+  /usr/bin/sudo apt clean
+  /usr/bin/sudo apt autoremove --purge -y
   # ok
   touch ~/.rpibs/rpibs_packages;
   sleep 2s;
 fi
 
-# upgrade firmware in /boot/
-if [ ! -f ~/.rpibs/rpibs_firm ]; then
-  if [ -f /usr/bin/rpi-update ]; then
-    rpilogit "updating rpi firmware";
-    export SKIP_WARNING=1;
-    /usr/bin/sudo /usr/bin/rpi-update || rpilogit "ERROR rpi-update failed";
-    # ok
-    touch ~/.rpibs/rpibs_firm;
-  fi
-  sleep 2s;
-fi
-
 # check all packages current
-/usr/lib/nagios/plugins/check_apt --timeout=45 --list
-if [ $? -eq 0 ]; then
+if /usr/lib/nagios/plugins/check_apt --timeout=45 --list; then
   rpilogit "packages are current"
 else
   rpilogit "apt packages need upgrade ERROR"
@@ -200,8 +197,8 @@ if [ ! -f ~/.rpibs/rpibs_redis ]; then
   sleep 2s;
   # test
   rpilogit "test redis \\n"
-  redis-cli -h localhost -p 6379 ping || echo "ERROR redis down";
-  redis-cli set /rpi/deployer/test test || echo "ERROR redis down";
+  redis-cli -h localhost -p 6379 ping || { rpilogit "ERROR redis ping failed"; exit 1; }
+  redis-cli set /rpi/deployer/test test || { rpilogit "ERROR redis test failed"; exit 1; }
   # ok
   touch ~/.rpibs/rpibs_redis;
   redis-server -v >> ~/.rpibs/rpibs_redis;
@@ -234,7 +231,7 @@ if [ ! -d ~/env/ ]; then
 fi
 
 # activate venv
-source ~/env/bin/activate;
+source ~/env/bin/activate || { rpilogit "ERROR activating virtual env"; exit 1; }
 
 # install python packages
 stat -t requirements.txt || exit 1;
@@ -243,7 +240,7 @@ sleep 1s;
 
 # Check programs were installed and are now in our path
 # (ref: http://wiki.bash-hackers.org/scripting/style)
-my_needed_commands="ansible invoke diceware http py.test nmap screen tmux scanssh vim sshpass"
+my_needed_commands="ansible ansible-lint invoke diceware http py.test nmap screen tmux scanssh vim sshpass"
 missing_counter=0
 for needed_command in $my_needed_commands; do
   if ! hash "$needed_command" >/dev/null 2>&1; then
@@ -279,7 +276,7 @@ if [ ! -d /etc/ansible/ ]; then
   mkdir -pv /etc/ansible/facts.d/;
   mkdir -pv /etc/ansible/inventory/;
   mkdir -pv /etc/ansible/group_vars/{all,compute,lanservices}/;
-  mkdir -pv /etc/ansible/host_vars/{alpha,beta,omega,psi}/;
+  mkdir -pv /etc/ansible/host_vars/{alpha,beta,psi}/;
 fi
 
 # check ansible .cfg
@@ -288,13 +285,16 @@ export ANSIBLE_CONFIG="$PWD"
 
 # Load environment variables that inform Ansible to use ARA
 # regardless of its location or python version
-source <(python3 -m ara.setup.env)
+#source <(python3 -m ara.setup.env)
 
 # check ansible version
-ansible --version || exit 1;
-rpilogit "ansible installed";
-sleep 1s;
-
+if ansible --version; then
+  rpilogit "ansible installed";
+  sleep 1s;
+else
+  rpilogit "ERROR installing ansible";
+  exit 1;
+fi
 
 # Finished ---------------------------------------------------------------------
 
@@ -306,10 +306,6 @@ EOF
 # -- file stop --
 
 chmod 755 /etc/ansible/facts.d/deploytool.fact;
-
-# apt cleanup
-/usr/bin/sudo apt clean
-/usr/bin/sudo apt autoremove --purge -y
 
 # done
 touch ~/.rpibs/completed;

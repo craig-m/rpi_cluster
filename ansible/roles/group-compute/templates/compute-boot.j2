@@ -13,6 +13,15 @@ unset LD_PRELOAD
 
 #-------------------------------------------------------------------------------
 
+
+# disable USB devices
+#
+# "Set new devices connected to hostX to be deauthorized by default (ie: lock down)
+# Doc: https://www.kernel.org/doc/Documentation/usb/authorization.txt
+#
+echo 0 > /sys/bus/usb/devices/usb1/authorized_default
+
+
 # create a 1MB tmpfs
 if [ ! -f /mnt/ramstore/data/test.txt ]; then
   mkdir -p /mnt/ramstore/;
@@ -20,9 +29,25 @@ if [ ! -f /mnt/ramstore/data/test.txt ]; then
   # these files exist in Volatile memory!
   mkdir -p /mnt/ramstore/data;
   touch -f /mnt/ramstore/data/test.txt;
-  echo "test" > /mnt/ramstore/data/test.txt;
+  echo "compute" > /mnt/ramstore/data/test.txt;
   chmod 700 /mnt/ramstore/data;
 fi
+
+
+# Flash the LED
+do_blinky_lights () {
+	modprobe ledtrig_heartbeat
+
+  # enable timer effect
+  echo timer | tee /sys/class/leds/led0/trigger
+  echo timer | tee /sys/class/leds/led1/trigger
+  
+  sleep 5;
+	# return R-Pi LED to default trigger
+	echo input | tee /sys/class/leds/led1/trigger
+  echo mmc0 | tee /sys/class/leds/led0/trigger
+}
+do_blinky_lights
 
 
 # Remount /proc with hidepid option to hide processes from other users

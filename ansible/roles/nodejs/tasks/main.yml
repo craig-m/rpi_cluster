@@ -50,11 +50,10 @@
     name: "{{ item }}"
     state: present
   loop:
-       - nodejs
+    - nodejs
   become: yes
   retries: 2
   tags: [nodejs]
-
 
 
 - name: get nodejs version

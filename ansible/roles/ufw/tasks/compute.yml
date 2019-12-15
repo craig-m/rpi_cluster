@@ -4,7 +4,7 @@
 
 # for Docker network addons - allow all inernal subnets
 
-- name: Allow internal subnets
+- name: Allow internal subnets any ports
   ufw:
     rule: allow
     src: '{{ item }}'

@@ -21,13 +21,13 @@ def deployer_ansible(c):
 def deployer_ssh_config(c):
     """ Generate ~/.ssh/config file from Ansible inventory. """
     print("Creating new ssh config file")
-    c.run('ansible-playbook --connection=local -e "runtherole=group-deployer-ssh-client" -v playbook-single-role.yml')
+    c.run('ansible-playbook --connection=local -e "runtherole=group-deployer-ssh-client" -v playbook-rpi-single-role.yml')
 
 @task
 def deployer_upgrade(c):
     """ Run upgrade maint role on Deployer """
     print("Updating")
-    c.run('ansible-playbook --connection=local -i /etc/ansible/inventory/deploy -e "runtherole=upgrades" -v playbook-single-role.yml')
+    c.run('ansible-playbook --connection=local -i /etc/ansible/inventory/deploy -e "runtherole=upgrades" -v playbook-rpi-single-role.yml')
 
 
 
@@ -44,7 +44,7 @@ def ansible_ping(c, hostname):
 def ansible_sshd(c, hostname):
     """ Change default SSH login on new R-Pi. example: invoke ansible_sshd beta """
     print("Running ssh-server role")
-    c.run('ansible-playbook --limit "%s" -e "ansible_user=pi ansible_ssh_pass=raspberry host_key_checking=False runtherole=ssh-server" -v playbook-single-role.yml' % hostname)
+    c.run('ansible-playbook --limit "%s" -e "ansible_user=pi ansible_ssh_pass=raspberry host_key_checking=False runtherole=ssh-server" -v playbook-rpi-single-role.yml' % hostname)
 
 # serverspec test a host
 @task
@@ -58,14 +58,8 @@ def serverspec_host(c, hostname):
 @task
 def lanservices_main_ansible(c):
     """ ansible services-main playbook on Alpha and Beta. """
-    print("Running playbook-rpi-services-main.yml")
-    c.run('ansible-playbook -v playbook-rpi-services-main.yml')
-
-@task
-def lanservices_misc_ansible(c):
-    """ ansible services-misc playbook on Omega. """
-    print("Running playbook-rpi-services-misc.yml")
-    c.run('ansible-playbook -v playbook-rpi-services-misc.yml')
+    print("Running playbook-rpi-lanservices.yml")
+    c.run('ansible-playbook -v playbook-rpi-lanservices.yml')
 
 
 # compute cluster (x4 rpi) -----------------------------------------------------
@@ -77,16 +71,10 @@ def compute_ansible_base(c):
     c.run('ansible-playbook -v playbook-rpi-compute.yml')
 
 @task
-def compute_ansible_container(c):
-    """ Setup Docker k8 cluster. """
-    print("Running playbook-rpi-compute-containers.yml")
-    c.run('ansible-playbook -v playbook-rpi-compute-containers.yml')
-
-@task
-def compute_ansible_container_rm(c):
-    """ shutdown and remove docker and k8 cluster. """
-    print("Removing docker and kubernetes cluster on compute nodes")
-    c.run('ansible docker -i /etc/ansible/inventory/compute -m shell -a "/bin/bash -c /opt/cluster/docker/scripts/remove-kube.sh"')
+def compute_ansible_k3s(c):
+    """ Setup Lightweight Kubernetes cluster. """
+    print("Running playbook-rpi-compute-k3s.yml")
+    c.run('ansible-playbook -v playbook-rpi-compute-k3s.yml')
 
 
 # tasks for all hosts  ----------------------------------------------------------

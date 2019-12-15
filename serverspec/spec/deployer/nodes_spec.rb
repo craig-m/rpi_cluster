@@ -12,11 +12,6 @@ describe host("beta") do
   it { should be_reachable.with( :port => 22, :proto => 'tcp' ) }
 end
 
-describe host("omega") do
-  it { should be_reachable }
-  it { should be_reachable.with( :port => 22, :proto => 'tcp' ) }
-end
-
 describe host("gamma") do
   it { should be_reachable }
   it { should be_reachable.with( :port => 22, :proto => 'tcp' ) }

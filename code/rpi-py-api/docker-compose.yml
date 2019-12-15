@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile-pyapp
     environment:
-     - RPIPYAPI_VER=development
+      - RPIPYAPI_VER=development
     depends_on:
       - redis
     volumes:

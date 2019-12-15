@@ -1,0 +1,35 @@
+---
+
+# copy lanservices-boot.sh
+- name: lanservices-boot script
+  template:
+    src: lanservices-boot.j2
+    dest: /root/bin/lanservices-boot.sh
+    mode: 0770
+    owner: root
+    group: root
+  become: yes
+  tags: [lanservices]
+
+# systemd script
+- name: copy rpi lanservices systemd script
+  copy:
+    src: rpi-lanservices.service
+    dest: /etc/systemd/system/rpi-lanservices.service
+    mode: 0644
+    owner: root
+    group: root
+  become: yes
+  notify:
+    - systemctl-daemon-reload
+    - restart-rpilansrv
+  tags: [lanservices]
+
+# rpi-lanservices.service enabled on boot
+- name: enable rpi-lanservices systemd script
+  systemd:
+    name: rpi-lanservices
+    enabled: yes
+    masked: no
+  become: yes
+  tags: [lanservices]

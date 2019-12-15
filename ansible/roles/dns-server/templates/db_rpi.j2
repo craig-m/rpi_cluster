@@ -25,7 +25,6 @@ dns2.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.  IN  A 
 ; TXT records
 alpha.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "alpha rpi_cluster_test"
 beta.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "beta rpi_cluster_test"
-omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "omega rpi_cluster_test"
 ;
 ; do not change for spec testing
 txttest.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "txttest rpi_cluster_test"
@@ -45,12 +44,6 @@ psi.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A {{
 ; Default Gateway
 dgw.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A {{ rpi_net_default_gw }}
 dgw.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "{{ rpi_net_default_gw }}"
-
-; LanService - misc - Omega
-omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A {{ hostvars['omega']['ansible_default_ipv4']['address'] }}
-mail.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A {{ hostvars['omega']['ansible_default_ipv4']['address'] }}
-status.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.  IN  CNAME omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
-git.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.   IN  CNAME omega.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
 
 
 ; Floating IP

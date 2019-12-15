@@ -1,0 +1,16 @@
+---
+# K3s - 5 less than K8s
+#
+# https://github.com/rancher/k3s
+# https://rancher.com/docs/k3s/latest/en/
+
+
+# server/admin/master nodes
+- import_tasks: server.yml
+  when:
+    - "'docker_master' in group_names"
+
+# worker nodes
+- import_tasks: worker.yml
+  when:
+    - "'docker_worker' in group_names"

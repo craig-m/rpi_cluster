@@ -7,8 +7,10 @@ MAC:        {{ ansible_eth0.macaddress }}
 Addresses:  {{ ansible_all_ipv4_addresses }}
 
 connection: {{ ansible_connection }}
+{% if ansible_env.SSH_CLIENT is defined %}
 SSH client: {{ ansible_env.SSH_CLIENT }}
 SSH Con:    {{ ansible_env.SSH_CONNECTION }}
+{% endif %}
 PWD env:    {{ ansible_env.PWD }}
 User ID:    {{ ansible_user_id }}
 

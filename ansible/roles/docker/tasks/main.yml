@@ -1,12 +1,14 @@
 ---
 - debug: msg="Installing Docker container engine "
-- debug: msg="enabled and started {{ rpi_docker_enabled }} "
 
-# For now all K8 and Docker setup is largely handled by bash scripts
-# Docker installation is stable, nothing much changes.
+# Docs on Docker:
+#
+# https://github.com/OWASP/Docker-Security
+# https://github.com/AonCyberLabs/Docker-Secure-Deployment-Guidelines
 
-# folder structure
-- name: Create docker folders
+
+# Docker folder structure
+- name: 'Create docker folders'
   file:
     path: "{{ item.dir }}"
     state: directory
@@ -19,35 +21,43 @@
   tags: [docker]
 
 
-- name: copy key
+- name: 'add entry to docker.list'
   copy:
-    src: "docker.asc"
-    dest: "/opt/cluster/docker/"
-    owner: "{{ ansible_user_id }}"
-    group: "{{ ansible_user_id }}"
-    mode: 0644
+    content: |
+      # this file is ansible managed
+      deb [arch=armhf] https://download.docker.com/linux/raspbian stretch test
+    dest: "/etc/apt/sources.list.d/docker.list"
+    mode: "0644"
+    owner: "root"
+    group: "root"
+  become: true
   tags: [docker]
 
 
-# copy docker scripts to /opt/cluster/docker/scripts/
-- name: copy bash scripts
-  copy:
-    src: "{{ item.file }}"
-    dest: "/opt/cluster/docker/scripts/{{ item.file }}"
-    owner: "{{ ansible_user_id }}"
-    group: "{{ ansible_user_id }}"
-    mode: 0755
-  with_items: "{{ docker_script }}"
+- name: "add docker key"
+  apt_key:
+    data: "{{ lookup('file', 'docker.asc') }}"
+    state: present
+  become: true
   tags: [docker]
 
 
-# install script
-- name: run docker install script
-  script: install_docker.sh
-  args:
-    creates: /opt/cluster/docker/docker-installed.txt
-    chdir: /opt/cluster/docker/scripts/
-  become: yes
+- name: "update apt cache"
+  apt:
+    update_cache: true
+  become: true
+  changed_when: false
+  tags: [docker]
+
+
+- name: 'install docker from apt'
+  apt:
+    state: present
+    pkg:
+      - docker-ce
+      - docker-ce-cli
+    install_recommends: no
+  become: true
   tags: [docker]
 
 
@@ -78,7 +88,6 @@
     state: started
   become: yes
   tags: [docker]
-  when: rpi_docker_enabled == true
 
 
 # add user to docker group.
@@ -97,6 +106,7 @@
   tags: [docker]
 
 
+# test docker - run hello world
 - import_tasks: docker_hello_world.yml
   tags: [docker]
 

@@ -1,11 +1,11 @@
 #!/bin/bash
 
 # to test this fact is loaded:
-# ansible -m setup omega | grep -A 4 ansible_local
+# ansible -m setup beta | grep -A 4 ansible_local
 
 # this MAC prefix belongs to the raspberry pi foundation
 # see https://hwaddress.com/?q=B827EB000000
-mymac=$(ip addr show eth0 | grep 'b8:27:eb:' | awk '{print $2'} | wc -c);
+mymac=$(ip addr show | grep 'b8:27:eb:' | awk '{print $2'} | wc -c);
 
 if [ $mymac -eq "18" ]; then
   rpihwstate="True";

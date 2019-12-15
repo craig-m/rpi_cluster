@@ -11,7 +11,3 @@ end
 describe package('lynx') do
   it { should be_installed }
 end
-
-describe package('telnet') do
-  it { should be_installed }
-end

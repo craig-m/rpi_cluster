@@ -81,9 +81,6 @@ USER_UPDATE_RULES="y"
 {% if 'compute' in group_names %}
 USER_AGENT_SERVER_IP="{{ hostvars['omega']['ansible_default_ipv4']['address'] }}"
 {% endif %}
-{% if 'lanservices' in group_names %}
-USER_AGENT_SERVER_IP="{{ hostvars['omega']['ansible_default_ipv4']['address'] }}"
-{% endif %}
 
 
 # USER_AGENT_CONFIG_PROFILE specifies the agent's config profile

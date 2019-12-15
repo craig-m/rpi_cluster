@@ -4,7 +4,7 @@
 
 
 - name: check for ssl cert
-  stat: 
+  stat:
     path: /var/log/rpicluster.log
   register: rpiclustlog_exist
   tags: [rpilog]

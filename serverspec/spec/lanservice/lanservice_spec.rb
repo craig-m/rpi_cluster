@@ -25,7 +25,7 @@ describe file('/home/mpiuser/') do
   it { should_not exist }
 end
 
-describe file('/opt/cluster/bin/lanservices-boot.sh') do
+describe file('/roor/bin/lanservices-boot.sh') do
  it { should be_file }
  it { should be_owned_by 'root' }
  its(:content) { should match /R-Pi Cluster Ansible managed file/ }

@@ -6,22 +6,19 @@
 {{ rpi_net_default_gw }} {{ rpi_net_default_gw_mac }}
 #
 # compute
+{% if groups['compute'] is defined %}
 {% for host in groups['compute'] %}
 {% if host != inventory_hostname %}
 {{ hostvars[host]['rpi_ip'] }} {{ hostvars[host]['rpi_mac'] }}
 {% endif %}
 {% endfor %}
+{% endif %}
 #
 # lanservices
+{% if groups['compute'] is defined %}
 {% for host in groups['lanservices'] %}
 {% if host != inventory_hostname %}
 {{ hostvars[host]['rpi_ip'] }} {{ hostvars[host]['rpi_mac'] }}
 {% endif %}
 {% endfor %}
-#
-# misc
-{% for host in groups['misc'] %}
-{% if host != inventory_hostname %}
-{{ hostvars[host]['rpi_ip'] }} {{ hostvars[host]['rpi_mac'] }}
 {% endif %}
-{% endfor %}

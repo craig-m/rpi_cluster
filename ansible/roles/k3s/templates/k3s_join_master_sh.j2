@@ -1,0 +1,30 @@
+#!/bin/bash
+# {{ ansible_managed }}
+
+set -u
+
+# check installer exists
+if [ -f /opt/cluster/docker/scripts/install_k3s.sh ]; then
+    echo "OK have installer";
+else
+    echo "missing installer";
+    exit 1;
+fi
+
+export K3S_TOKEN="{{ hostvars['epsilon']['k3s_master_node'] }}"
+export K3S_URL="{{ hostvars['epsilon']['k3s_master_ip'] }}:6443"
+
+# run installer
+cat /opt/cluster/docker/scripts/install_k3s.sh | K3S_URL=${K3S_URL} K3S_TOKEN=${K3S_TOKEN} sh -
+
+# join a node to master:
+#   k3s agent --server ${K3S_URL} --token ${K3S_TOKEN}
+
+if [ $? -eq 0 ]; then
+    echo "k3s seemed to install OK";
+else
+    echo "error joining master node"
+    exit 1;
+fi
+
+# eof

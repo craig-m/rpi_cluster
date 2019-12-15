@@ -1,0 +1,21 @@
+---
+
+# upload install script
+
+- name: upload install script
+  copy:
+    src: "install_k3s.sh"
+    dest: "/opt/cluster/docker/scripts/install_k3s.sh"
+    mode: 0755
+  become: yes
+
+- name: upload wrapper script for installer
+  template:
+    src: k3s_join_master_sh.j2
+    dest: /opt/cluster/docker/scripts/k3s_join_master.sh
+    mode: 0755
+
+- name: run installer script
+  shell: /opt/cluster/docker/scripts/k3s_join_master.sh
+  args:
+    creates: /usr/local/bin/kubectl

@@ -1,5 +1,4 @@
 ---
-# blacklist wifi and bluetooth kernel modules
 - debug: msg="Base System kernelmod"
 
 
@@ -11,4 +10,12 @@
   with_items: "{{ kern_blacklist_mod }}"
   become: yes
   ignore_errors: yes
+  tags: [kernelmod]
+
+
+- name: enable watchdog timer module
+  modprobe:
+    name: bcm2835_wdt
+    state: present
+  become: yes
   tags: [kernelmod]

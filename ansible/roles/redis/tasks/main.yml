@@ -8,8 +8,8 @@
     name: "{{ item }}"
     state: present
   loop:
-       - redis-tools
-       - redis-server
+    - redis-tools
+    - redis-server
   become: yes
   tags: [redis]
 

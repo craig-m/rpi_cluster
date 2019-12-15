@@ -8,8 +8,8 @@
     name: "{{ item }}"
     state: present
   loop:
-       - tftp-hpa
-       - tftpd-hpa
+    - tftp-hpa
+    - tftpd-hpa
   become: yes
   retries: 1
   tags: [ftpd]

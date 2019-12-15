@@ -2,7 +2,7 @@
 
 An 8 node, Raspberry Pi powered, proof of concept beowulf cluster project.
 
-See doc/readme.md for the detailed cluster setup process.
+See [doc/readme.md](https://github.com/craig-m/rpi_cluster/tree/master/doc) for the detailed cluster setup process.
 
 <p align="center">
   <img width="515" height="538" src="https://github.com/craig-m/rpi_cluster/raw/master/doc/pictures/pi_towers1.jpg">
@@ -33,7 +33,7 @@ The x8 R-Pi that I ended up with are of various models, I divided them into thes
 <tr>
   <td>Ansible Group</td>
   <td>LAN main</td>
-  <td>LAN misc</td>
+  <td>OpenWRT</td>
   <td>Deployer</td>
   <td>Compute</td>
   <td>Total</td>
@@ -47,7 +47,7 @@ The x8 R-Pi that I ended up with are of various models, I divided them into thes
   <td>&nbsp;</td>
 </tr>
 <tr>
-  <td>count:</td>
+  <td>quantity:</td>
   <td>2</td>
   <td>1</td>
   <td>1</td>
@@ -80,6 +80,8 @@ The other bits and pieces in this cluster:
 
 The Deployer runs from x1 R-Pi. This configures all of the other hosts. It also acts as a Certificate Authority, for TLS and SSH. Infrastructure for system admins.
 
+And LEDs since it's equipped with a [Sense Hat](https://www.raspberrypi.org/products/sense-hat/)
+
 * [Ansible](https://www.ansible.com/) - configuration management
 * [ARA](https://ara.readthedocs.io/en/stable/) - web interface to analyze Ansible results
 * [Redis](https://redis.io/) - for the Ansible fact cache
@@ -90,7 +92,7 @@ The Deployer runs from x1 R-Pi. This configures all of the other hosts. It also 
 
 Redundancy: can fail and the cluster will continue to operate, but it cannot be altered. Small amounts of downtime for this host can be tolerated while it gets restored from backup.
 
-This SD card can be cloned onto a spare one as a backup option. This is the only node that is not immutable.
+This SD card can be cloned onto a spare one as a backup option, a USB key can also be used for regular backups of data. This is the only node that is not immutable.
 
 
 ### LanServices - Main
@@ -98,27 +100,20 @@ This SD card can be cloned onto a spare one as a backup option. This is the only
 To provide redundant essential services for the LAN. Longer running infrastructure to handle services for the more ephemeral nodes.
 
 * isc.org [DHCP Server](https://www.isc.org/downloads/dhcp/) (in high availability)
-* isc.org [DNS Server](https://www.isc.org/downloads/bind/) (Bind with zone replication between master/secondary)
+* isc.org [DNS Server](https://www.isc.org/downloads/bind/) (Bind with zone replication between primary and secondary)
 * NTP Server
 * FTP Daemon (for BOOTP clients)
 * BusyBox httpd (running in chroot)
 * [Keepalived](https://github.com/acassen/keepalived) - a floating IP address, over x2 nodes, that will be present in *at least* one place at any given time (no fencing).
 
-Redundancy: any 1 of the 2 nodes can fail.
+Redundancy: any 1 of the 2 nodes can fail. Immutable - no data to backup from these nodes.
 
 
-### LanServices - Misc
+### OpenWRT
 
-For miscellaneous, non-essential, net services. Used for dev, reporting, building, monitoring etc. And LEDs since it's equipped with a [Sense Hat](https://www.raspberrypi.org/products/sense-hat/).
+[OpenWRT](https://openwrt.org/toh/raspberry_pi_foundation/raspberry_pi) is installed on this node for DHCP and DNS during the inital setup.
 
-* [Redis](https://redis.io/)
-* Nginx + PHP-FPM
-* [HAproxy](https://www.haproxy.org/)
-* [Hugo](https://github.com/gohugoio/hugo) - static website generator
-* [Yarn](https://github.com/yarnpkg/yarn/)
-* [Docker](https://www.docker.com)
-
-Redundancy: not redundant, does not provide services for the LAN. Immutable - no data to backup from this node.
+This is used only to bootstrap the Psi, Alpha and Beta nodes. Before ansible can configure them with static addresses, and bring up DHCP and DNS in HA.
 
 
 ### Compute / Worker
@@ -127,8 +122,8 @@ To play with services, and things like Kubernetes. These nodes run services for 
 
 * [DistCC](https://github.com/distcc/distcc) - for distributed compiling
 * [C mpich](https://www.mpich.org/) - distributed code with the C Message Passing Interface
-* [Docker](https://www.docker.com) + [kubernetes](https://kubernetes.io) + [Weave](https://www.weave.works/docs/net/latest/overview/) network addon
+* [K3s](https://k3s.io/) - The certified Kubernetes distribution built for IoT & Edge computing
 
-Redundancy: the herd. Immutable infrastructure.
+Redundancy: the herd. Immutable - no data to backup from these nodes.
 
 ---

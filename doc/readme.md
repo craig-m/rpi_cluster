@@ -11,13 +11,11 @@ Tested on `2019-09-26-raspbian-buster-lite`
 Preparation
 -----------
 
-* Download Raspbian lite, flash the image on to each SD card with DD or Etcher etc.
+* Download [Raspbian](https://www.raspberrypi.org/downloads/raspbian/) lite, flash the image on to each SD card with DD or [etcher](https://github.com/balena-io/etcher) etc.
 
-* Create the empty file /boot/ssh on each SDcard to enable SSH access. Read https://www.raspberrypi.org/blog/a-security-update-for-raspbian-pixel/ for info.
+* Create the empty file /boot/ssh on each SDcard to enable SSH access. Read [this post](https://www.raspberrypi.org/blog/a-security-update-for-raspbian-pixel/) for info.
 
-* Join The R-Pi to a switch. Setup a DHCP server and make sure it is configured to only give out IP addresses to known hosts. You need to set static IPs for the Alpha, Beta, Omega and Psi hosts.
-
-  The R-Pi in the Compute group (zeta, epsilon, gamma, delta) will get IP addresses from the Alpha and Beta R-Pi, once they have been configured. After the setup process the Alpha and Beta nodes will have static IP addresses, DHCP is needed for initial setup/bootstrap only (the cluster is not reliant on the DHCP server anymore).
+* Join The R-Pi to a switch. Setup the DHCP server and make sure it is configured to only give out static IP addresses for Alpha, Beta, and Psi (the deployer) - the compute nodes should NOT get IPs.
 
 * Place the SD cards into the R-Pi and power them on. The four admin hosts should respond to PING and SSH should be available (the default username is pi, with a default password of 'raspberry').
 
@@ -34,17 +32,17 @@ Copy the code (this repo) to the R-Pi that will become the deployer, it **needs*
 note: no data/files/logs will be created in this dir - it does not need to be backed up.
 
 ```
-$ rsync -avr --exclude='.git' --exclude='ignore_me' rpi_cluster/ pi@20.20.20.20:~/rpi_cluster
+$ rsync -avr --exclude='.git' --exclude='ignore_me' rpi_cluster/ pi@192.168.20.10:~/rpi_cluster
 ```
 
 Connect to the deployer R-Pi:
 
 ```
-$ ssh pi@20.20.20.20
+$ ssh pi@192.168.20.10
 ```
 
 
-Install our tools (ansible, ARA, invoke etc) and setup the deployer:
+Install our tools (ansible + invoke etc) and setup the deployer:
 
 ```
 pi@raspberrypi:~ $ cd rpi_cluster/ansible/setup/
@@ -86,7 +84,6 @@ Available tasks:
   deployer-ansible               ansible deployer role on Psi (localhost).
   deployer-ssh-config            Generate ~/.ssh/config file from Ansible inventory.
   lanservices-main-ansible       ansible services-main playbook on Alpha and Beta.
-  lanservices-misc-ansible       ansible services-misc playbook on Omega.
   serverspec-cluster             ServerSpec tests.
   serverspec-host                ServerSpec test a specific host.
 
@@ -112,15 +109,15 @@ The deployer is all setup now, you can reboot it (optional but recommended).
 ---
 
 
+Setup the cluster hosts
+-----------------------
+
+
 ```
 (env) pi@psi:~/rpi_cluster/ansible $ eval `ssh-agent`
 (env) pi@psi:~/rpi_cluster/ansible $ pass ssh/id_rsa
 (env) pi@psi:~/rpi_cluster/ansible $ ssh-add
 ```
-
-
-Setup the cluster hosts
------------------------
 
 
 ## LanServices group
@@ -146,15 +143,6 @@ Test them:
 ```
 (env) pi@psi:~/rpi_cluster/ansible $ invoke serverspec-host alpha
 (env) pi@psi:~/rpi_cluster/ansible $ invoke serverspec-host beta
-```
-
-
-Configure Omega node:
-
-```
-(env) pi@psi:~/rpi_cluster/ansible $ invoke ansible-sshd omega
-(env) pi@psi:~/rpi_cluster/ansible $ invoke lanservices-misc-ansible
-(env) pi@psi:~/rpi_cluster/ansible $ invoke serverspec-host omega
 ```
 
 

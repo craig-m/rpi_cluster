@@ -1,0 +1,55 @@
+#!/bin/bash
+# {{ ansible_managed }}
+# setup by role: {{role_path|basename}}
+#
+# this script is run on boot by systemd, rpi-deployer.service
+
+logger -t rpicluster "deployer-boot.sh started"
+
+# pre-run checks ---------------------------------------------------------------
+
+# no LD_PRELOAD
+unset LD_PRELOAD
+
+#-------------------------------------------------------------------------------
+
+
+# create a 1MB tmpfs
+if [ ! -f /mnt/ramstore/data/test.txt ]; then
+  mkdir -p /mnt/ramstore/;
+  mount -t tmpfs -o size=1m tmpfs /mnt/ramstore;
+
+  # these files exist in Volatile memory!
+
+  mkdir -p /mnt/ramstore/data;
+  touch -f /mnt/ramstore/data/test.txt;
+  echo "deployer" > /mnt/ramstore/data/test.txt;
+  chmod 700 /mnt/ramstore/data;
+
+  mkdir -p /mnt/ramstore/pi;
+
+  ssh-keygen -q -N "" -o -f /mnt/ramstore/pi/id_ecdsa_temp -t ecdsa
+  chown pi:pi -R /mnt/ramstore/pi/*
+  chmod 700 /mnt/ramstore/pi/
+fi
+
+
+# Flash the LED
+do_blinky_lights () {
+	modprobe ledtrig_heartbeat
+
+  # enable timer effect
+  echo timer | tee /sys/class/leds/led0/trigger
+  echo timer | tee /sys/class/leds/led1/trigger
+  
+  sleep 5;
+	# return R-Pi LED to default trigger
+	echo input | tee /sys/class/leds/led1/trigger
+  echo mmc0 | tee /sys/class/leds/led0/trigger
+}
+do_blinky_lights
+
+
+logger -t rpicluster "deployer-boot.sh finished"
+
+#-------------------------------------------------------------------------------

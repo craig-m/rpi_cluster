@@ -7,6 +7,5 @@ invoke
 httpie
 testinfra
 diceware
-ara
 docker
 molecule
