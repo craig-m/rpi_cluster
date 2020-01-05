@@ -2,10 +2,8 @@
 - debug: msg="setup and install uncomplicatd firewall "
 - debug: msg="Our local subnet for whitelist is {{ rpi_net_id }}/{{ rpi_net_maskbit }}"
 
-
 # Note: Remember we are also setting static ARP entries in /etc/ethers too!
 # this is done in each of the group-< group name> roles.
-
 
 - name: install uncomplicatd firewall
   apt:
@@ -13,13 +11,14 @@
     state: present
   loop:
     - ufw
-  become: yes
+  become: true
 
 
 - name: enable logging
   ufw:
-    logging: on
-  become: yes
+    logging: "on"
+  become: true
+# value of logging must be one of: full, high, low, medium, off, on.
 
 
 - name: set ufw defaults
@@ -31,23 +30,6 @@
     - { direction: 'incoming', policy: 'reject' }
     - { direction: 'outgoing', policy: 'allow' }
   notify: ufw_restart
-
-
-- debug: msg="deployer IP {{ hostvars['psi']['ansible_facts']['eth0']['ipv4']['address'] }} "
-
-
-# Firewall Rule: SSH access from deployer
-- name: ssh access from deployer host psi IP
-  ufw:
-    rule: allow
-    from_ip: "{{ hostvars['psi']['ansible_facts']['eth0']['ipv4']['address'] }}"
-    port: "22"
-    proto: tcp
-    comment: ssh from deployer node
-  notify: ufw_restart
-  become: yes
-  when:
-    - "'deploy' not in group_names"
 
 
 # Group specific FW rules ------------------------------------------------------
@@ -78,5 +60,5 @@
 
 
 - name: output to rpicluster log
-  command: logger -t rpicluster ufw role ran
+  command: logger -t rpicluster ansible ufw role ran
   changed_when: false

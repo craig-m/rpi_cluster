@@ -7,7 +7,7 @@
     src: "install_k3s.sh"
     dest: "/opt/cluster/docker/scripts/install_k3s.sh"
     mode: 0755
-  become: yes
+  become: true
 
 - name: upload wrapper script for installer
   template:

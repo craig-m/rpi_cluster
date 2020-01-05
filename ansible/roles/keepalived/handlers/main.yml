@@ -4,5 +4,5 @@
   service:
     name: keepalived
     state: reloaded
-  become: yes
+  become: true
   tags: [keepalived]

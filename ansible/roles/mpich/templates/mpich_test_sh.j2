@@ -1,11 +1,7 @@
 #!/bin/bash
 #
 # name: mpich_test.sh
-# desc: run from omega to execute the mpi_sample.c program on the compute group
-
-# run on omega
-hostname | grep omega || exit 1;
-whoami | grep mpiuser || exit 1;
+# desc: run to execute the mpi_sample.c program on the compute group
 
 echo "starting mpich_test.sh"
 
@@ -30,6 +26,6 @@ done
 # man page:
 # https://www.open-mpi.org/doc/v2.0/man1/mpirun.1.php
 
-mpirun -l -np 32 --hostfile ${mpihostsfile} /home/mpiuser/bin/mpi_sample
+mpirun -l -np 32 --hostfile ${mpihostsfile} ~/mpi_sample
 
 echo "finished mpich_test.sh"

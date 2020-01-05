@@ -15,5 +15,5 @@ Attach to the app container and test:
 
 ```
 docker exec -it $(docker ps | grep "rpi-py-api_app" | awk '{print $1}') /bin/bash 
-curl -X GET --unix-socket /app/omegapyapi.socket http/hello/curltest
+curl -X GET --unix-socket /app/rpyapi.socket http/hello/curltest
 ```

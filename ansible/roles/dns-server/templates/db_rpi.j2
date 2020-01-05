@@ -5,7 +5,7 @@
 ;
 $TTL  604800
 @     IN  SOA   dns1.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. admin.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. (
-      2019102200    ; Serial
+      2020010500    ; Serial
           604800    ; Refresh
           86400     ; Retry
           2419200   ; Expire
@@ -48,11 +48,9 @@ dgw.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "{{ 
 
 ; Floating IP
 float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. IN  A {{ rpi_loadbal_float_ip }}
-float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "delta and epsilon."
+float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}. TXT "alpha and beta."
 
 ; floating IP web services
-www.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.   IN  CNAME float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
-api.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.   IN  CNAME float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
-
+lansrv.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.   IN  CNAME float.{{ rpi_cust_domain_loc }}.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}.
 
 ; eof

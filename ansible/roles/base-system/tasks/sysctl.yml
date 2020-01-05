@@ -10,6 +10,6 @@
     value: "{{ item.value }}"
     sysctl_set:  "{{ item.set }}"
     state: "{{ item.state }}"
-    reload: yes
+    reload: true
   with_items: "{{ sysctl_settings }}"
-  become: yes
+  become: true

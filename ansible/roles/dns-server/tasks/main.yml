@@ -25,9 +25,9 @@
     name: "{{ item }}"
     state: present
   loop:
-       - bind9
-       - bind9utils
-  become: yes
+    - bind9
+    - bind9utils
+  become: true
   retries: 1
   notify: bind-restart
   tags: [bind]
@@ -38,12 +38,12 @@
   file:
     path: "{{ item.dir }}"
     state: directory
-    recurse: yes
+    recurse: false
     mode: "{{ item.mode }}"
     owner: "{{ item.owner }}"
     group: "{{ item.group }}"
   with_items: "{{ bind_dir }}"
-  become: yes
+  become: true
   tags: [bind]
 
 
@@ -55,7 +55,7 @@
     owner: bind
     group: bind
     mode: 0775
-  become: yes
+  become: true
   tags: [bind]
 
 #-------------------------------------------------------------------------------
@@ -70,9 +70,9 @@
 - name: bind9 enabled on boot
   service:
     name: bind9
-    enabled: yes
+    enabled: true
     state: started
-  become: yes
+  become: true
   when:
     - rpi_dnsd_enabled == true
   tags: [bind]
@@ -84,7 +84,7 @@
     name: bind9
     enabled: no
     state: stopped
-  become: yes
+  become: true
   when:
     - rpi_dnsd_enabled == false
   tags: [bind]
@@ -100,7 +100,7 @@
     owner: root
     group: bind
     mode: 0664
-  become: yes
+  become: true
   tags: [bind]
   when:
     - rpi_dnsd_enabled == true
@@ -113,7 +113,7 @@
     owner: root
     group: root
     mode: 0755
-  become: yes
+  become: true
 
 
 # log
@@ -132,7 +132,7 @@
     owner: root
     group: root
     mode: 0444
-  become: yes
+  become: true
   tags: [bind]
   when:
     - rpi_dnsd_enabled == true

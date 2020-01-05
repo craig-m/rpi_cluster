@@ -3,6 +3,6 @@
 - name: sysstat_restart
   service:
     name: sysstat
-    state: reloaded
-  become: yes
+    state: restarted
+  become: true
   tags: [sysstat]

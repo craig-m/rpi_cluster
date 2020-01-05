@@ -10,7 +10,7 @@
   loop:
     - redis-tools
     - redis-server
-  become: yes
+  become: true
   tags: [redis]
 
 
@@ -18,15 +18,16 @@
   service:
     name: redis-server
     state: started
-    enabled: yes
-  become: yes
+    enabled: true
+  become: true
   tags: [redis]
 
 
 - name: install python redis module
   pip:
     name: redis
-  become: yes
+    executable: pip3
+  become: true
   tags: [redis]
 
 
@@ -48,7 +49,7 @@
   redis:
     command: config
     name: maxclients
-    value: 500
+    value: "500"
   tags: [redis]
 
 
@@ -59,5 +60,5 @@
     owner: root
     group: root
     mode: 0444
-  become: yes
+  become: true
   tags: [redis]

@@ -5,5 +5,5 @@
   service:
     name: distcc
     state: restarted
-  become: yes
+  become: true
   become_user: root

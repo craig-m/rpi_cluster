@@ -8,6 +8,7 @@ Raspberry Pi Cluster Admin tasks.
 # arguments are easier with Invoke.
 
 from invoke import task, run
+import ansible_runner
 
 # tasks run on deployer ------------------------------------------------------
 
@@ -15,7 +16,12 @@ from invoke import task, run
 def deployer_ansible(c):
     """ ansible deployer role on Psi (localhost). """
     print("Running playbook-rpi-deployer.yml")
-    c.run('ansible-playbook --connection=local -i /etc/ansible/inventory/deploy -v playbook-rpi-deployer.yml')
+    r = ansible_runner.run(private_data_dir='/home/pi/rpi_cluster/ansible', 
+                           inventory='/etc/ansible/inventory/deploy', 
+                           playbook='playbook-rpi-deployer.yml')
+    print("{}: {}".format(r.status, r.rc))
+    print("Final status:")
+    print(r.stats)
 
 @task
 def deployer_ssh_config(c):
@@ -25,7 +31,7 @@ def deployer_ssh_config(c):
 
 @task
 def deployer_upgrade(c):
-    """ Run upgrade maint role on Deployer """
+    """ Run upgrade maint role on Deployer. """
     print("Updating")
     c.run('ansible-playbook --connection=local -i /etc/ansible/inventory/deploy -e "runtherole=upgrades" -v playbook-rpi-single-role.yml')
 
@@ -68,13 +74,21 @@ def lanservices_main_ansible(c):
 def compute_ansible_base(c):
     """ ansible base playbook on compute group. """
     print("Running playbook-rpi-compute.yml")
-    c.run('ansible-playbook -v playbook-rpi-compute.yml')
+    r = ansible_runner.run(private_data_dir='/home/pi/rpi_cluster/ansible', 
+                           playbook='playbook-rpi-compute.yml')
+    print("{}: {}".format(r.status, r.rc))
+    print("Final status:")
+    print(r.stats) 
 
 @task
 def compute_ansible_k3s(c):
     """ Setup Lightweight Kubernetes cluster. """
     print("Running playbook-rpi-compute-k3s.yml")
-    c.run('ansible-playbook -v playbook-rpi-compute-k3s.yml')
+    r = ansible_runner.run(private_data_dir='/home/pi/rpi_cluster/ansible', 
+                           playbook='playbook-rpi-compute-k3s.yml')
+    print("{}: {}".format(r.status, r.rc))
+    print("Final status:")
+    print(r.stats) 
 
 
 # tasks for all hosts  ----------------------------------------------------------
@@ -90,7 +104,11 @@ def ansible_gather_facts(c):
 def ansible_maint(c):
     """ upgrade all R-Pi server hosts (includes rolling reboots). """
     print("Running playbook-rpi-all-maint.yml")
-    c.run('ansible-playbook -v playbook-rpi-all-maint.yml')
+    r = ansible_runner.run(private_data_dir='/home/pi/rpi_cluster/ansible', 
+                           playbook='playbook-rpi-all-maint.yml')
+    print("{}: {}".format(r.status, r.rc))
+    print("Final status:")
+    print(r.stats) 
 
 # test all nodes in the clsuter with ServerSpec
 @task

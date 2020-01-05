@@ -11,7 +11,7 @@
     owner: root
     group: root
     mode: 0644
-  become: yes
+  become: true
   tags: [hostsfile]
 
 
@@ -26,5 +26,5 @@
   lineinfile:
     path: /opt/cluster/data/info_roles.txt
     line: "{{ role_path|basename }}"
-  become: yes
+  become: true
   tags: [hostsfile]

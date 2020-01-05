@@ -159,9 +159,12 @@ fi
 
 
 # --- create the CA certs ---
-mkdir -pv ~/.ssh/my-ssh-ca/ || exit 1
-chmod 700 -v ~/.ssh/my-ssh-ca/
-cd ~/.ssh/my-ssh-ca/ || exit 1
+if [ ! -d ~/.ssh/my-ssh-ca/ ]; then
+  mkdir -pv ~/.ssh/my-ssh-ca/ || exit 1
+  chmod 700 -v ~/.ssh/my-ssh-ca/
+fi
+
+cd ~/.ssh/my-ssh-ca/ || { rpilogit "error changing dir to my-ssh-ca/"; exit 1; }
 
 # generate a password for the SSH CA
 rpilogit "create a password for ssh CA";
@@ -218,6 +221,7 @@ sshkeyid_redis=$(/usr/bin/redis-cli --raw incr /rpi/deployer/keys/ssh_key_id)
 ssh-keygen -s ~/.ssh/my-ssh-ca/ca -P ${thesshcapw} -I ${USER} -n pi -V +1w -z ${sshkeyid_redis} ~/.ssh/id_ecdsa.pub || exit 1;
 # show info on the public key
 ssh-keygen -L -f ~/.ssh/id_ecdsa-cert.pub
+
 
 # cleanup
 thesshkeypw="x";

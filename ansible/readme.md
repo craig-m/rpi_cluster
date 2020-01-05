@@ -6,10 +6,10 @@ After following the setup procedure described in `doc/readme.md` the usual workf
 ```
 pi@psi:~ $ source ~/env/bin/activate
 (env) pi@psi:~ $ cd rpi_cluster/ansible/
-(env) pi@psi:~/rpi_cluster/ansible $ pass ssh/id_rsa
+(env) pi@psi:~/rpi_cluster/ansible $ pass ssh/id_ecdsa
 (env) pi@psi:~/rpi_cluster/ansible $ eval `ssh-agent`
 (env) pi@psi:~/rpi_cluster/ansible $ ssh-add
-Enter passphrase for /home/pi/.ssh/id_rsa:
+Enter passphrase for /home/pi/.ssh/id_ecdsa:
 (env) pi@psi:~/rpi_cluster/ansible $ invoke -l
 ```
 

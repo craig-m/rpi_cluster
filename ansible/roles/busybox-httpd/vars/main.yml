@@ -1,6 +1,6 @@
 # busybox httpd chroot vars
 
-bbhttpd_src_tmp: "/opt/cluster/temp/bbhttpd_src/"
+bbhttpd_src_tmp: "/opt/cluster/lanservice/bbhttpd_src/"
 
 files: [
   {src: 'bbhttpd.service'},

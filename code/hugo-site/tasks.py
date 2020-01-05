@@ -1,5 +1,5 @@
 """
-omega hugo website
+hugo website
 """
 
 from invoke import task, run

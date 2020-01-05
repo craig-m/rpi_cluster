@@ -58,7 +58,7 @@
     path: /boot/config.txt
     regexp: '^gpu_mem='
     line: 'gpu_mem=16'
-  become: yes
+  become: true
 
 
 # log
@@ -76,5 +76,5 @@
     group: root
     mode: 0444
   changed_when: False
-  become: yes
+  become: true
   tags: [common]

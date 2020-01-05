@@ -7,7 +7,7 @@
     src: etc/ethers.j2
     dest: /etc/ethers
     mode: 0644
-  become: yes
+  become: true
   notify: static-arp-ethers
   tags: [lanservices]
 
@@ -17,7 +17,7 @@
   kernel_blacklist:
     name: usb_storage
     state: present
-  become: yes
+  become: true
   tags: [lanservices]
 
 
@@ -26,7 +26,7 @@
   kernel_blacklist:
     name: usbhid
     state: present
-  become: yes
+  become: true
   tags: [lanservices]
 
 
@@ -35,5 +35,5 @@
     src: etc/security/limits_conf.j2
     dest: /etc/security/limits.conf
     mode: 0644
-  become: yes
+  become: true
   tags: [lanservices]

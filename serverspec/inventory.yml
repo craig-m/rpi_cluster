@@ -1,6 +1,10 @@
 #
 # ServerSpec Inventory.
-# These hosts are defined in ~/.ssh/config
+#
+# These hosts are defined in ~/.ssh/config 
+# ( which is controlled by the role group-deployer-ssh-client )
+#
+# ToDo: Auto-generate this file from Ansible (it could be a template)
 #
 # deployer ---------------------------------------------------------------------
 psi.local:

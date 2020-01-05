@@ -17,7 +17,7 @@ fi
 
 file $download_file | grep "gzip compressed data" || exit 1;
 
-tar xf $download_file || exit 1;
+tar xf $download_file || { echo "ERROR extracting source"; exit 1; }
 
 cd bash-5.0 || exit 1;
 

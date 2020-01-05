@@ -14,7 +14,7 @@
 # reboot host
 - name: reboot host
   shell: sleep 2 && reboot now
-  become: yes
+  become: true
   retries: 2
   async: 45
   poll: 0

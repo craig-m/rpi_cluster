@@ -6,5 +6,5 @@
   service:
     name: ntp
     state: restarted
-  become: yes
+  become: true
   tags: [ntp]

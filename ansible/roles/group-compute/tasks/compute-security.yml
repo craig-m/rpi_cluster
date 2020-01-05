@@ -4,19 +4,19 @@
   kernel_blacklist:
     name: usb_storage
     state: present
-  become: yes
+  become: true
   tags: [computenode]
 
 - name: Blacklist usbhid kernel moduel
   kernel_blacklist:
     name: usbhid
     state: present
-  become: yes
+  become: true
   tags: [computenode]
 
 - name: Blacklist joydev kernel moduel
   kernel_blacklist:
     name: joydev
     state: present
-  become: yes
+  become: true
   tags: [computenode]

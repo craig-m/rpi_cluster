@@ -6,7 +6,7 @@
     name: rsyslog
     state: restarted
   notify: test the role is working
-  become: yes
+  become: true
 
 
 - name: test the role is working

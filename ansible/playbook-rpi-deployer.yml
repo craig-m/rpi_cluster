@@ -8,12 +8,13 @@
   roles:
     - ansible-pre-role
     - base-system
-    - i3
+    - i3-wm
     - userac
     - ssh-server
     - ufw
     - rpilog
     - haveged
+    - sysstat
     - uptimed
     - ntp-server
     - redis

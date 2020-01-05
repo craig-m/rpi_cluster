@@ -1,7 +1,6 @@
 #!/bin/bash
 # {{ ansible_managed }}
 
-/usr/bin/logger -t rpicluster "lansrv-cron-daily.sh started"
 
 # pre-run checks ---------------------------------------------------------------
 
@@ -18,6 +17,6 @@ touch -f /mnt/ramstore/data/cron-daily.txt;
 
 #-------------------------------------------------------------------------------
 
-/usr/bin/logger -t rpicluster "lansrv-cron-daily.sh finished"
+/usr/bin/logger -t rpicluster "lansrv-cron-daily.sh ran"
 
 #-------------------------------------------------------------------------------

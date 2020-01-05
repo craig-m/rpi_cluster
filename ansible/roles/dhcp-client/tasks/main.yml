@@ -16,8 +16,8 @@
     mode: 0644
     owner: root
     group: root
-    backup: yes
-  become: yes
+    backup: true
+  become: true
   tags: [dhcpclient]
 
 
@@ -35,5 +35,5 @@
     owner: root
     group: root
     mode: 0444
-  become: yes
+  become: true
   tags: [dhcpclient]

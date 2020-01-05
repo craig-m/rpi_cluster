@@ -22,6 +22,8 @@ end
 
 
 describe file('/etc/ssh/sshd_config') do
+  it { should be_file }
+  it { should be_owned_by 'root' }
   its(:content) { should match /AuthorizedKeysFile \/home\/pi\/.ssh\/authorized_keys/ }
 end
 
@@ -55,7 +57,7 @@ end
 describe user('bind') do
   it { should_not exist }
 end
-describe user('omegapyapi') do
+describe user('rpyapi') do
   it { should_not exist }
 end
 describe user('tftp') do

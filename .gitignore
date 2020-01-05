@@ -10,7 +10,7 @@ ansible/host_vars/*
 #
 serverspec/reports/*
 ansible/.pytest_cache/
-code/omegapyapi/flask/
+code/rpyapi/flask/
 code/hugo-site/public/*
 yarn-error.log
 node_modules/

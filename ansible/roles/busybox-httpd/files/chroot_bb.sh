@@ -9,7 +9,7 @@ chroot_dir="/opt/chroot_bb"
 chroot_user="bbweb"
 
 # cd into the dir this script is located in
-cd "$(dirname "$0")" | exit 1;
+cd "$(dirname "$0")" | { echo "ERROR changing dir"; exit 1; }
 pwd
 
 #-------------------------------------------------------------------------------
@@ -25,19 +25,20 @@ rpilogit "starting busybox httpd chroot install"
 
 systemctl stop bbhttpd
 
-test_user_exist=$(id -u ${chroot_user})
-if [ $? -eq 0 ]; then
-  echo "user exists";
+if id -u ${chroot_user}; then
+  rpilogit "user exists";
 else
   adduser $chroot_user --disabled-password --gecos "" --no-create-home --shell /bin/false || exit 1;
+  rpilogit "added ${chroot_user}";
 fi
 
 # file and folders -------------------------------------------------------------
 
 if [ -d /${chroot_dir}/ ]; then
-	echo "/${chroot_dir}/ exists"
+	rpilogit "/${chroot_dir}/ exists"
 else
   mkdir -v /${chroot_dir}/
+  rpilogit "/${chroot_dir}/ created"
 fi
 
 mkdir -pv \
@@ -102,6 +103,7 @@ pwd
 ln -sf busybox ash
 ls -la
 
+cp -v /lib/arm-linux-gnueabihf/libresolv.so.2 /${chroot_dir}/lib/
 cp -v /usr/lib/arm-linux-gnueabihf/libarmmem-v6l.so /${chroot_dir}/usr/lib/
 cp -v /lib/ld-linux-armhf.so.3 /${chroot_dir}/lib/
 cp -v /lib/arm-linux-gnueabihf/libc.so.6 /${chroot_dir}/lib/

@@ -24,7 +24,7 @@ describe package('monitoring-plugins-basic') do
   it { should be_installed }
 end
 
-describe package('python-pip') do
+describe package('curl') do
   it { should be_installed }
 end
 
@@ -32,7 +32,7 @@ describe package('wget') do
   it { should be_installed }
 end
 
-describe package('screen') do
+describe package('tmux') do
   it { should be_installed }
 end
 

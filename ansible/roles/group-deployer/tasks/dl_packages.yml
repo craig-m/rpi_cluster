@@ -22,14 +22,14 @@
     - neofetch
     - proxychains
     - autossh
-  become: yes
+  become: true
   retries: 2
 
 
 # R -  https://packages.debian.org/sid/r-recommended
 #- name: install R language tools
 #  apt: name={{ item }} state=present
-#  become: yes
+#  become: true
 #  loop:
 #       - r-recommended
 #       - r-cran-gplots

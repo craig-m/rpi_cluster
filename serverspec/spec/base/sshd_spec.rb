@@ -25,13 +25,26 @@ describe user('sshd') do
   it { should exist }
 end
 
+describe file('/etc/ssh/ssh_config') do
+  its(:content) { should match /R-Pi Cluster Ansible managed file/ }
+  it { should be_mode 644 }
+  it { should be_owned_by 'root' }
+end
+
 describe file('/etc/ssh/sshd_config') do
   its(:content) { should match /R-Pi Cluster Ansible managed file/ }
   its(:content) { should match /PermitRootLogin No/ }
   its(:content) { should match /PasswordAuthentication no/ }
   its(:content) { should match /AllowGroups sshusers/ }
   it { should be_mode 600 }
+  it { should be_owned_by 'root' }
 end
+
+describe file('/etc/ssh/ca.pub') do
+  it { should be_mode 644 }
+  it { should be_owned_by 'root' }
+end
+
 
 describe command('/usr/sbin/sshd -t') do
   its(:stdout) { should match // }
@@ -40,6 +53,7 @@ end
 describe file('/etc/motd') do
   its(:content) { should match /Raspberry Pi Cluster/ }
   it { should be_mode 644 }
+  it { should be_owned_by 'root' }
 end
 
 describe host('127.0.0.1') do

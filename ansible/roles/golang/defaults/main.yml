@@ -1,3 +1,3 @@
 
-golang_shasum: "sha256:9f15d6aa4098cd53ec5cb48d1a1e554d062b2263a03985d50c2568757d966dc6"
-goland_targz: "go1.13.3.linux-armv6l.tar.gz"
+golang_shasum: "sha256:26259f61d52ee2297b1e8feef3a0fc82144b666a2b95512402c31cc49713c133"
+goland_targz: "go1.13.5.linux-armv6l.tar.gz"

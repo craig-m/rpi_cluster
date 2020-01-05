@@ -8,7 +8,7 @@
 #  #
 
 
-/usr/bin/sudo id | grep --quiet "uid=0(root)" || { rpilogit "ERROR can not sudo"; exit 1; }
+/usr/bin/sudo id | grep --quiet "uid=0(root)" || { echo "ERROR can not sudo"; exit 1; }
 
 where_gcc=$(which gcc || exit 1)
 

@@ -1,5 +1,6 @@
 ---
-# Runs on LanServices main group - Alpha and Beta
+# Role for nodes in the LanServices group (Alpha and Beta)
+
 - debug: msg="Lan Services role running "
 
 
@@ -12,7 +13,7 @@
     - lynx
     - redir
     - proxychains
-  become: yes
+  become: true
   retries: 2
   tags: [lanservices]
 
@@ -41,5 +42,5 @@
   lineinfile:
     path: /opt/cluster/data/info_roles.txt
     line: "{{ role_path|basename }}"
-  become: yes
+  become: true
   tags: [lanservices]

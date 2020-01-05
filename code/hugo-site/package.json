@@ -12,12 +12,12 @@
   "author": "crgm",
   "license": "ISC",
   "dependencies": {
-    "bootstrap": ">=4.1.2",
-    "font-awesome": "^4.7.0"
+    "bootstrap": ">=4.3.1",
+    "font-awesome": "^=5.0.0"
   },
   "devDependencies": {
-    "jquery": "^3.3.1",
-    "node-sass": "^4.5.3",
+    "jquery": "^3=.4.1",
+    "node-sass": "^=4.5.3",
     "onchange": "^3.2.1",
     "pm2": "^2.5.0"
   }

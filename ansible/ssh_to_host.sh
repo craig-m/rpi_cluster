@@ -19,10 +19,10 @@ rpilogit () {
 }
 
 # get ssh key password from pass
-pass=$(pass ssh/id_rsa)
+pass=$(pass ssh/id_ecdsa)
 
 # check expect is installed
-which expect | exit 1;
+which expect | { echo "ERROR missing Expect"; exit 1; }
 
 # check we have a password
 pass_leng=$(echo $pass | wc -c)
@@ -38,8 +38,8 @@ rpilogit "ssh_to_host.sh on: $1";
 
 # enter ssh-key password into agent
 expect << EOF
-  spawn ssh-add /home/pi/.ssh/id_rsa
-  expect "Enter passphrase for /home/pi/.ssh/id_rsa:"
+  spawn ssh-add /home/pi/.ssh/id_ecdsa
+  expect "Enter passphrase for /home/pi/.ssh/id_ecdsa:"
   send "$pass\r"
   expect eof
 EOF

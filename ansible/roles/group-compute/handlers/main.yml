@@ -2,11 +2,11 @@
 
 - name: systemctl-daemon-reload
   systemd:
-    daemon_reload: yes
-  become: yes
+    daemon_reload: true
+  become: true
 
 - name: restart-rpicompute
   service:
     name: rpi-compute.service
     state: restarted
-  become: yes
+  become: true

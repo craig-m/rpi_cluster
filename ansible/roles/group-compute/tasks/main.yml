@@ -1,5 +1,6 @@
 ---
-# Nodes in the deploy group
+# Role for nodes in the Compute group.
+
 - debug: msg="compute node tasks "
   tags: [computenode]
 
@@ -12,7 +13,7 @@
   loop:
     - ca-certificates-java
     - openjdk-8-jdk
-  become: yes
+  become: true
   retries: 2
   tags: [computenode]
 
@@ -37,5 +38,5 @@
     owner: root
     group: root
     mode: 0444
-  become: yes
+  become: true
   tags: [computenode]

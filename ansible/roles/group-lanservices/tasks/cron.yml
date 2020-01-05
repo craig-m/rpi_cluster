@@ -1,53 +1,48 @@
 ---
-- debug: msg="Lan Services main cron jobs "
+- debug: msg="LanServices main cron jobs "
 
 
 - name: add pathing to cron
   cron:
     name: PATH
-    env: yes
+    env: true
     value: /root/bin/
-  become: yes
+  become: true
 
 
-- name: copy cron daily script
+- name: create cron daily script from template
   template:
     src: lansrvmain-cron-daily.j2
-    dest: /root/crontab/lansrvmain-cron-daily
+    dest: /root/crontab/lansrvmain-cron-daily.sh
     mode: 0755
     owner: root
     group: root
-  become: yes
-
+  become: true
 
 - name: install daily cron script
   cron:
-    name: "lansrv main daily"
-    minute: "30"
-    hour: "01"
-    weekday: "7"
-    job: "/root/crontab/lansrvmain-cron-daily"
+    name: "lansrvmain-cron-daily"
+    special_time: "daily"
+    job: "/root/crontab/lansrvmain-cron-daily.sh"
+    state: "present"
     user: root
-  become: yes
+  become: true
 
 
-- name: copy cron hourly script
+- name: create cron hourly script from template
   template:
     src: lansrvmain-cron-hourly.j2
-    dest: /root/crontab/lansrvmain-cron-hourly
+    dest: /root/crontab/lansrvmain-cron-hourly.sh
     mode: 0755
     owner: root
     group: root
-  become: yes
-
+  become: true
 
 - name: install hourly cron script
   cron:
-    name: "lansrv main hourly"
-    minute: "30"
-    weekday: 7
-    cron_file: "lansrvmain-cron-hourly"
-    job: "/root/crontab/lansrvmain-cron-hourly"
+    name: "lansrvmain-cron-hourly"
+    special_time: "hourly"
+    job: "/root/crontab/lansrvmain-cron-hourly.sh"
     state: "present"
     user: root
-  become: yes
+  become: true

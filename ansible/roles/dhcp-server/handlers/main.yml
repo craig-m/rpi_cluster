@@ -6,5 +6,5 @@
   service:
     name: isc-dhcp-server
     state: restarted
-  become: yes
+  become: true
   when: rpi_dhcpd_enabled == true

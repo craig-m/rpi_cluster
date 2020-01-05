@@ -6,7 +6,7 @@
   apt:
     state: present
     name: sysstat
-  become: yes
+  become: true
   register: aptinstsystat
   tags: [sysstat]
 
@@ -14,8 +14,8 @@
 - name: systat enabled on boot
   service:
     name: sysstat
-    enabled: yes
-  become: yes
+    enabled: true
+  become: true
   tags: [sysstat]
 
 
@@ -26,9 +26,9 @@
     owner: root
     group: root
     mode: 0664
-    backup: yes
+    backup: true
   notify: sysstat_restart
-  become: yes
+  become: true
   tags: [sysstat]
 
 
@@ -39,9 +39,9 @@
     owner: root
     group: root
     mode: 0664
-    backup: yes
+    backup: true
   notify: sysstat_restart
-  become: yes
+  become: true
   tags: [sysstat]
 
 
@@ -49,7 +49,7 @@
   service:
     name: sysstat
     state: started
-  become: yes
+  become: true
   tags: [sysstat]
 
 
@@ -60,5 +60,5 @@
     owner: root
     group: root
     mode: 0444
-  become: yes
+  become: true
   tags: [sysstat]

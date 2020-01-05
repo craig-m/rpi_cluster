@@ -2,6 +2,7 @@
 # {{ ansible_managed }}
 # this script is run on boot by systemd, rpi-lanservices.service
 
+
 logger -t rpicluster "lanservices-boot.sh started"
 
 # pre-run checks ---------------------------------------------------------------
@@ -18,7 +19,7 @@ if [ -f /etc/ethers ]; then
 fi
 
 
-# disable USB devices
+# disable new USB devices
 #
 # "Set new devices connected to hostX to be deauthorized by default (ie: lock down)
 # Doc: https://www.kernel.org/doc/Documentation/usb/authorization.txt
@@ -26,14 +27,20 @@ fi
 echo 0 > /sys/bus/usb/devices/usb1/authorized_default
 
 
-# disable ctrl-alt-del
-rm /lib/systemd/system/ctrl-alt-del.target
-ln -s /dev/null /lib/systemd/system/ctrl-alt-del.target
-systemctl daemon-reload
-
-
 # disable tty login
 systemctl stop serial-getty@ttyAMA0.service
+
+
+# If ctrl-alt-del is enabled then turn it off
+#
+if readlink /lib/systemd/system/ctrl-alt-del.target | grep reboot.target; then
+  echo "reboot currently enabled - will turn off"
+  rm -rfv /lib/systemd/system/ctrl-alt-del.target 
+  ln -s /dev/null /lib/systemd/system/ctrl-alt-del.target 
+  systemctl daemon-reload
+else
+  echo "reboot currently disabled"
+fi
 
 
 # create a 2MB tmpfs
@@ -45,28 +52,24 @@ if [ ! -f /mnt/ramstore/data/test.txt ]; then
   touch -f /mnt/ramstore/data/test.txt;
   touch -f /mnt/ramstore/data/hour_check.txt;
   chmod 700 /mnt/ramstore/data;
+
+  mkdir -p /mnt/ramstore/pi;
+
+  # temp SSH key in ram
+  ssh-keygen -q -N "" -o -f /mnt/ramstore/pi/id_ecdsa_temp -t ecdsa
+  chown pi:pi -R /mnt/ramstore/pi/*
+  chmod 700 /mnt/ramstore/pi/
 fi
-
-
-# Flash the LED
-do_blinky_lights () {
-	modprobe ledtrig_heartbeat
-
-  # enable timer effect
-  echo timer | tee /sys/class/leds/led0/trigger
-  echo timer | tee /sys/class/leds/led1/trigger
-  
-  sleep 5;
-	# return R-Pi LED to default trigger
-	echo input | tee /sys/class/leds/led1/trigger
-  echo mmc0 | tee /sys/class/leds/led0/trigger
-}
-do_blinky_lights
 
 
 # check failover node
 pingresult=$(/usr/lib/nagios/plugins/check_host {{ rpi_failover_ip }});
 logger -t rpicluster "lanservices-boot.sh ping failover: $pingresult";
+
+
+# turn off red power LED
+echo 1 | tee /sys/class/leds/led1/brightness
+echo 0 | tee /sys/class/leds/led1/brightness
 
 logger -t rpicluster "lanservices-boot.sh finished"
 

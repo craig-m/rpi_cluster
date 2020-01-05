@@ -6,9 +6,9 @@ FROM python:3
 
 ENV DEBIAN_FRONTEND noninteractive
 
-# create the user "omegapyapi" for the app to run as
-RUN groupadd -r omegapyapi && \
-    useradd -r -g omegapyapi -d /app -s /sbin/nologin -c "omegapyapi" omegapyapi
+# create the user "rpyapi" for the app to run as
+RUN groupadd -r rpyapi && \
+    useradd -r -g rpyapi -d /app -s /sbin/nologin -c "rpyapi" rpyapi
 
 ENV HOME=/app
 
@@ -20,12 +20,12 @@ WORKDIR /app
 
 RUN mkdir /logs/
 
-RUN chown -R omegapyapi:omegapyapi /app/ /logs/
+RUN chown -R rpyapi:rpyapi /app/ /logs/
 
 # install app requirements
 RUN pip install -r /app/requirements.txt
 
-USER omegapyapi
+USER rpyapi
 
 # entry point - launch gunicorn
 CMD ["bash", "/app/start.sh"]

@@ -17,7 +17,7 @@
     state: present
   loop:
     - keepalived
-  become: yes
+  become: true
   environment:
     # do not start Keepalived at the end of install
     RUNLEVEL: 1
@@ -32,7 +32,7 @@
     owner: root
     group: root
   notify: keepalived_reload
-  become: yes
+  become: true
   tags: [keepalived]
 
 
@@ -40,9 +40,9 @@
 - name: keepalived enabled on boot
   service:
     name: keepalived
-    enabled: yes
+    enabled: true
     state: started
-  become: yes
+  become: true
   register: keepalived_changed
   tags: [keepalived]
 
@@ -67,7 +67,7 @@
 
 # log
 - name: notify rpicluster log
-  command: logger -t rpicluster running Keepalived with floating IP {{ rpi_loadbal_float_ip }}
+  command: logger -t rpicluster ansible Keepalived has floating IP {{ rpi_loadbal_float_ip }}
   changed_when: false
   tags: [keepalived]
 
@@ -76,5 +76,5 @@
   lineinfile:
     path: /opt/cluster/data/info_roles.txt
     line: "{{ role_path|basename }}"
-  become: yes
+  become: true
   tags: [keepalived]

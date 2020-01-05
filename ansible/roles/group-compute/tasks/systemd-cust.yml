@@ -5,10 +5,11 @@
   template:
     src: compute-boot.j2
     dest: /root/bin/compute-boot.sh
+    validate: /bin/bash -n %s
     mode: 0770
     owner: root
     group: root
-  become: yes
+  become: true
   tags: [computenode]
 
 # systemd script
@@ -19,7 +20,7 @@
     mode: 0644
     owner: root
     group: root
-  become: yes
+  become: true
   changed_when: false
   notify:
     - systemctl-daemon-reload
@@ -29,7 +30,7 @@
 - name: enable rpi-compute systemd script
   systemd:
     name: rpi-compute
-    enabled: yes
+    enabled: true
     masked: no
-  become: yes
+  become: true
   tags: [computenode]

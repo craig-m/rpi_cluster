@@ -6,5 +6,5 @@
 - name: set timezone to UTC
   timezone:
     name: UTC
-  become: yes
+  become: true
   tags: [common]

@@ -1,0 +1,44 @@
+---
+# Install i3 window manager
+# https://i3wm.org/
+#
+# login on console and type 'startx' to start desktop
+#
+# config is stored in:
+#   ~/.config/i3/config
+#   
+
+- name: install i3
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - i3
+    - i3blocks
+    - dmenu
+    - suckless-tools
+    - xinit
+    - tty-clock
+  become: true
+
+- name: add i3 to xinit.rc
+  lineinfile:
+    path: ~/.xinit.rc
+    line: 'exec i3'
+    create: true
+
+- name: create i3 config dir
+  file:
+    path: ~/.config/i3
+    state: directory
+    mode: 0755
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"
+
+- name: create i3 status config dir
+  file:
+    path: ~/.config/i3status
+    state: directory
+    mode: 0755
+    owner: "{{ ansible_user_id }}"
+    group: "{{ ansible_user_id }}"

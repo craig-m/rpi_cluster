@@ -25,11 +25,16 @@ describe file('/home/mpiuser/') do
   it { should_not exist }
 end
 
-describe file('/roor/bin/lanservices-boot.sh') do
+describe file('/root/bin/lanservices-boot.sh') do
  it { should be_file }
  it { should be_owned_by 'root' }
  its(:content) { should match /R-Pi Cluster Ansible managed file/ }
  it { should be_mode 770 }
+end
+
+describe file('/mnt/ramstore/data/hour_check.txt') do
+  it { should be_file }
+  it { should be_owned_by 'root' }
 end
 
 describe file('/mnt/ramstore/data/test.txt') do
@@ -39,7 +44,7 @@ end
 
 # lanservices cron
 describe cron do
-  it { should have_entry('30 01 * * 7 /root/crontab/lansrvmain-cron-daily').with_user('root') }
+  it { should have_entry('@daily /root/crontab/lansrvmain-cron-daily.sh').with_user('root') }
 end
 
 # should not exist here

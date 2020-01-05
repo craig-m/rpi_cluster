@@ -21,9 +21,9 @@
     name: "{{ item }}"
     state: present
   loop:
-       - isc-dhcp-server
-       - dhcpdump
-  become: yes
+    - isc-dhcp-server
+    - dhcpdump
+  become: true
   retries: 2
   register: dhcpd_new
   tags: [dhcpserver]
@@ -36,8 +36,8 @@
     owner: root
     group: root
     mode: 0644
-    backup: yes
-  become: yes
+    backup: true
+  become: true
   notify: isc-dhcp-server-reload
   tags: [dhcpserver]
 
@@ -49,9 +49,9 @@
     owner: root
     group: root
     mode: 0644
-    backup: yes
+    backup: true
     validate: /usr/sbin/dhcpd -t -cf %s
-  become: yes
+  become: true
   notify: isc-dhcp-server-reload
   tags: [dhcpserver]
 
@@ -62,8 +62,8 @@
 - name: isc-dhcp-server enabled on boot
   service:
     name: isc-dhcp-server
-    enabled: yes
-  become: yes
+    enabled: true
+  become: true
   tags: [dhcpserver]
   when: rpi_dhcpd_enabled == true
 
@@ -74,7 +74,7 @@
     name: isc-dhcp-server
     state: stopped
     enabled: no
-  become: yes
+  become: true
   tags: [dhcpserver]
   when: rpi_dhcpd_enabled == false
 
@@ -112,5 +112,5 @@
     owner: root
     group: root
     mode: 0444
-  become: yes
+  become: true
   tags: [dhcpserver]

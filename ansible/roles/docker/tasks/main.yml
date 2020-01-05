@@ -12,12 +12,12 @@
   file:
     path: "{{ item.dir }}"
     state: directory
-    recurse: yes
+    recurse: true
     mode: "{{ item.mode }}"
     owner: "{{ item.owner }}"
     group: "{{ item.group }}"
   with_items: "{{ docker_dir }}"
-  become: yes
+  become: true
   tags: [docker]
 
 
@@ -65,7 +65,7 @@
 - name: get docker version
   command: /usr/bin/docker --version
   register: docker_apt_version
-  become: yes
+  become: true
   changed_when: false
   failed_when:
     - docker_apt_version.rc != 0
@@ -76,7 +76,8 @@
 #  pip:
 #    name: docker-py
 #    state: present
-#  become: yes
+#    executable: pip3
+#  become: true
 #  tags: [docker]
 
 
@@ -84,20 +85,20 @@
 - name: docker enabled on boot
   service:
     name: docker
-    enabled: yes
+    enabled: true
     state: started
-  become: yes
+  become: true
   tags: [docker]
 
 
 # add user to docker group.
 # Note: this gives them root on the host.
 - name: add user to docker group
-  become: yes
+  become: true
   user:
     name: "{{ ansible_user_id }}"
     groups: docker
-    append: yes
+    append: true
   tags: [docker]
 
 
@@ -125,5 +126,5 @@
     owner: root
     group: root
     mode: 0444
-  become: yes
+  become: true
   tags: [docker]

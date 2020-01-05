@@ -10,7 +10,7 @@
   apt:
     state: present
     name: haveged
-  become: yes
+  become: true
   register: aptinsthaveged
   tags: haveged
 
@@ -18,9 +18,9 @@
 - name: haveged enabled on boot and started
   service:
     name: haveged
-    enabled: yes
+    enabled: true
     state: started
-  become: yes
+  become: true
   tags: haveged
 
 
@@ -38,5 +38,5 @@
     owner: root
     group: root
     mode: 0444
-  become: yes
+  become: true
   tags: haveged

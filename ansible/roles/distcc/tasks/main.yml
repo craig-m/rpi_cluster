@@ -16,10 +16,10 @@
     name: "{{ item }}"
     state: present
   loop:
-       - distcc
-       - distcc-pump
+    - distcc
+    - distcc-pump
   retries: 2
-  become: yes
+  become: true
   tags: [distcc]
 
 
@@ -30,7 +30,7 @@
     mode: 0644
     owner: root
     group: root
-  become: yes
+  become: true
   notify: distcc-restart
   tags: [distcc]
 
@@ -42,7 +42,7 @@
     mode: 0644
     owner: root
     group: root
-  become: yes
+  become: true
   notify: distcc-restart
   tags: [distcc]
 
@@ -65,13 +65,13 @@
 
 - name: distcc enabled on boot
   service: name=distcc enabled=yes
-  become: yes
+  become: true
   tags: [distcc]
 
 
 - name: distcc started
   service: name=distcc state=started
-  become: yes
+  become: true
   tags: [distcc]
 
 
@@ -82,5 +82,5 @@
     owner: root
     group: root
     mode: 0444
-  become: yes
+  become: true
   tags: [distcc]

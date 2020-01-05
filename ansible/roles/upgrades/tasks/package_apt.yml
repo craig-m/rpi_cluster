@@ -11,8 +11,8 @@
 # update Apt cache
 - name: update apt cache
   apt:
-    update_cache: yes
-  become: yes
+    update_cache: true
+  become: true
   retries: 2
   check_mode: no
   changed_when: False
@@ -31,7 +31,7 @@
     name: "*"
     state: latest
   retries: 2
-  become: yes
+  become: true
   register: apt_upgraded
   tags: [maintenance]
 
@@ -47,7 +47,7 @@
 - name: check apt packages are current
   command: /usr/lib/nagios/plugins/check_apt --timeout=30 --list
   register: checkapt_nag
-  become: yes
+  become: true
   changed_when: False
   failed_when:
     - "'APT OK: 0 packages available for upgrade (0 critical updates)' not in checkapt_nag.stdout"

@@ -14,20 +14,20 @@
 
 - name: set-hostname with hostnamectl
   command: hostnamectl set-hostname {{ inventory_hostname }}
-  become: yes
+  become: true
   changed_when: False
 
 
 - name: set-locations with hostnamectl
   command: hostnamectl set-location {{ rpi_racked }}
-  become: yes
+  become: true
   changed_when: False
   when: "'delploy' not in group_names"
 
 
 - name: set-chassis with hostnamectl
   command: hostnamectl set-chassis embedded
-  become: yes
+  become: true
   changed_when: False
   when: "'delploy' not in group_names"
 
@@ -35,7 +35,7 @@
 # Reboot if hostname is default "raspberrypi"
 - name: reboot if hostname was default
   shell: sleep 2 && reboot now
-  become: yes
+  become: true
   async: 30
   poll: 0
   ignore_errors: true

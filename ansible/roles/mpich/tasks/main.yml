@@ -12,101 +12,17 @@
       - mpich
       - mpich-doc
       - gfortran
-  become: yes
+  become: true
   retries: 2
-  tags: [mpich]
-
-
-# create user
-- name: create user for mpich
-  user:
-    name: "mpiuser"
-    shell: /bin/bash
-  become: yes
-  tags: [mpich]
-
-
-# user homedir perm
-- name: fix homedir perms
-  file:
-    path: /home/mpiuser/
-    state: directory
-    mode: 0700
-  become: yes
-  tags: [mpich]
-
-
-# bin folder
-- name: bin dir
-  file:
-    path: /home/mpiuser/bin/
-    state: directory
-    mode: 0755
-    owner: "mpiuser"
-    group: "mpiuser"
-  become: yes
-  tags: [mpich]
-
-
-# user ssh key pair
-- name: create keypair
-  user:
-    name: mpiuser
-    generate_ssh_key: yes
-    ssh_key_bits: 2048
-    ssh_key_file: .ssh/id_rsa
-  become: yes
-  tags: [mpich]
-
-
-# saves to /opt/cluster/backup/<host>/home/mpiuser/.ssh/ (on the deployer node)
-- name: fetch the ssh public key
-  fetch:
-    src: /home/mpiuser/.ssh/id_rsa.pub
-    dest: /opt/cluster/backup
-  become: yes
-  tags: [mpich]
-
-
-- name: Add mpiuser to sshd users group
-  user:
-    name: mpiuser
-    groups: sshusers
-    append: yes
-  become: yes
   tags: [mpich]
 
 
 - import_tasks: mpi-test-code.yml
 
 
-# deployer group: script to setup keys
-- name: mpich_keygen_sh
-  template:
-    src: mpich_keygen_sh.j2
-    dest: /opt/cluster/deploy-script/mpich_keygen.sh
-    mode: 0755
-    owner: "pi"
-    group: "pi"
-  become: true
-  delegate_to: localhost
-
-
-# lanservice misc group: script to run and test mpi_sample.c
-- name: mpich_test_sh
-  template:
-    src: mpich_test_sh.j2
-    dest: /home/mpiuser/mpich_test.sh
-    mode: 0755
-    owner: "mpiuser"
-    group: "mpiuser"
-  become: true
-  delegate_to: omega
-
-
 - name: roles info txt
   lineinfile:
     path: /opt/cluster/data/info_roles.txt
     line: "{{ role_path|basename }}"
-  become: yes
+  become: true
   tags: [mpich]

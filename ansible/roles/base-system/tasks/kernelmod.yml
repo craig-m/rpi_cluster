@@ -8,14 +8,6 @@
     name: "{{ item.name }}"
     state: present
   with_items: "{{ kern_blacklist_mod }}"
-  become: yes
-  ignore_errors: yes
-  tags: [kernelmod]
-
-
-- name: enable watchdog timer module
-  modprobe:
-    name: bcm2835_wdt
-    state: present
-  become: yes
+  become: true
+  ignore_errors: true
   tags: [kernelmod]

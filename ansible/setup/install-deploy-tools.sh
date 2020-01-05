@@ -299,13 +299,14 @@ fi
 # Finished ---------------------------------------------------------------------
 
 # -- file start --
-cat > /etc/ansible/facts.d/deploytool.fact << EOF
+cat > ${bs_dep_temp}/deploytool.fact << EOF
 #!/bin/bash
 echo '{ "deploytool" : "installed" }';
 EOF
 # -- file stop --
 
-chmod 755 /etc/ansible/facts.d/deploytool.fact;
+/usr/bin/sudo cp -v ${bs_dep_temp}/deploytool.fact /etc/ansible/facts.d/deploytool.fact 
+/usr/bin/sudo chmod 755 /etc/ansible/facts.d/deploytool.fact;
 
 # done
 touch ~/.rpibs/completed;

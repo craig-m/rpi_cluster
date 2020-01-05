@@ -10,7 +10,7 @@
     group: bind
     mode: 0664
     validate: '/usr/sbin/named-checkzone {{ rpi_dnsd_status }}.{{ rpi_cust_tld }} %s'
-  become: yes
+  become: true
   notify: bind-restart
   when:
     - rpi_dnsd_status == "master"
@@ -33,6 +33,6 @@
     key: rpi-cluster.file
     value: validate
     namespace: trusted
-  become: yes
+  become: true
   when:
     - rpi_dnsd_status == "master"

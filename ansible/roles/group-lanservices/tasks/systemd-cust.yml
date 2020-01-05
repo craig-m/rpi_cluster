@@ -5,10 +5,11 @@
   template:
     src: lanservices-boot.j2
     dest: /root/bin/lanservices-boot.sh
+    validate: /bin/bash -n %s
     mode: 0770
     owner: root
     group: root
-  become: yes
+  become: true
   tags: [lanservices]
 
 # systemd script
@@ -19,7 +20,7 @@
     mode: 0644
     owner: root
     group: root
-  become: yes
+  become: true
   notify:
     - systemctl-daemon-reload
     - restart-rpilansrv
@@ -29,7 +30,7 @@
 - name: enable rpi-lanservices systemd script
   systemd:
     name: rpi-lanservices
-    enabled: yes
+    enabled: true
     masked: no
-  become: yes
+  become: true
   tags: [lanservices]

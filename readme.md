@@ -108,6 +108,8 @@ To provide redundant essential services for the LAN. Longer running infrastructu
 
 Redundancy: any 1 of the 2 nodes can fail. Immutable - no data to backup from these nodes.
 
+Scalability: load during regular operation is low. If load gets too high some serivces can be moved off this group.
+
 
 ### OpenWRT
 
@@ -125,5 +127,7 @@ To play with services, and things like Kubernetes. These nodes run services for 
 * [K3s](https://k3s.io/) - The certified Kubernetes distribution built for IoT & Edge computing
 
 Redundancy: the herd. Immutable - no data to backup from these nodes.
+
+Scalability: try to write code that scales, so more nodes can easily be added.
 
 ---

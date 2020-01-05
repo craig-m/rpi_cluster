@@ -9,7 +9,8 @@
   file:
     path: "{{ bbhttpd_src_tmp }}"
     state: directory
-    mode: 0760
+    mode: 0755
+    recurse: false
   tags: [bbhttpd]
 
 
@@ -19,6 +20,7 @@
     src: "{{ item.src }}"
     dest: "{{ bbhttpd_src_tmp }}/"
     mode: 0644
+    force: false
   with_items: "{{ files }}"
   tags: [bbhttpd]
 
@@ -28,12 +30,13 @@
   script: "chroot_bb.sh"
   args:
     creates: /opt/chroot_bb/etc/tested
-  become: yes
+    chdir: "{{ bbhttpd_src_tmp }}"
+  become: true
   when:
     - "rpi_bb_httpd_enabled == true"
   tags:
-   - bbhttpd
-   - skip_ansible_lint
+    - bbhttpd
+    - skip_ansible_lint
 
 
 # index.html
@@ -44,7 +47,7 @@
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_id }}"
     mode: 0644
-  become: yes
+  become: true
   changed_when: false
   when: rpi_bb_httpd_enabled == true
   tags: [bbhttpd]
@@ -55,7 +58,7 @@
   service:
     name: bbhttpd
     state: stopped
-  become: yes
+  become: true
   when: rpi_bb_httpd_enabled == false
   tags: [bbhttpd]
 
@@ -64,9 +67,9 @@
 - name: get index.html content
   uri:
     url: http://127.0.0.1:1080/index.html
-    return_content: yes
+    return_content: true
   register: bbhttpd_index
-  ignore_errors: yes
+  ignore_errors: true
   tags: [bbhttpd]
 
 
@@ -74,7 +77,7 @@
 - name: test bbhttpd index.html content
   fail:
   when: "'R-Pi BB httpd' not in bbhttpd_index.content"
-  ignore_errors: yes
+  ignore_errors: true
   tags:
     - bbhttpd
     - skip_ansible_lint
@@ -84,5 +87,5 @@
   lineinfile:
     path: /opt/cluster/data/info_roles.txt
     line: "{{ role_path|basename }}"
-  become: yes
+  become: true
   tags: [bbhttpd]

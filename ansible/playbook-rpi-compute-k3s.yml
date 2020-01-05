@@ -10,7 +10,7 @@
     - ansible-pre-role
 
 
-- name: containers
+- name: setup container system
   hosts: docker
   max_fail_percentage: 49
   gather_facts: false

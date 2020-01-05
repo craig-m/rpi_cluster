@@ -1,38 +1,23 @@
 ---
 
-# i don't recall where I found this PoC script
-
-
 # mpi_sample.c
 - name: copy mpi_sample.c
   copy:
     src: mpi_sample.c
-    dest: /home/mpiuser/bin/mpi_sample.c
+    dest: "/home/{{ rpi_clust_user }}/mpi_sample.c"
     owner:
     group:
     mode: 0644
-  become: yes
-  tags: [mpich]
-
-
-# Check mpi_sample.c
-- name: check mpi_sample
-  stat:
-    path: /home/mpiuser/bin/mpi_sample.c
-  register: mpi_sample_c
-  changed_when: False
-  become: yes
+  become: true
   tags: [mpich]
 
 
 # make mpi_sample.c
 - name: compile mpi_sample
-  shell: mpic++ -o /home/mpiuser/bin/mpi_sample /home/mpiuser/bin/mpi_sample.c
+  shell: mpic++ -o ~/mpi_sample ~/mpi_sample.c
   args:
-    chdir: /home/mpiuser/bin/
-    creates: /home/mpiuser/bin/mpi_sample
-  when: mpi_sample_c.stat.exists == False
-  become: yes
-  become_user: mpiuser
+    chdir: "/home/{{ rpi_clust_user }}/"
+    creates: "/home/{{ rpi_clust_user }/mpi_sample"
+  become: true
+  become_user: "{{ rpi_clust_user }}"
   tags: [mpich]
-

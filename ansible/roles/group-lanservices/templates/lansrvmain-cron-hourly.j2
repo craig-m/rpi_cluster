@@ -1,8 +1,6 @@
 #!/bin/bash
 # {{ ansible_managed }}
 
-/usr/bin/logger -t rpicluster "lansrv-cron-hourly.sh started"
-
 # pre-run checks ---------------------------------------------------------------
 
 # no LD_PRELOAD
@@ -12,6 +10,22 @@ unset LD_PRELOAD
 
 /bin/date > /mnt/ramstore/data/hour_check.txt
 
+
+# LED Blink
+#
+echo timer > /sys/class/leds/led0/trigger
+echo timer > /sys/class/leds/led1/trigger
+#
+# wait
+sleep 20s
+#
+# turn off red power LED
+echo 1 > /sys/class/leds/led1/brightness
+echo 0 > /sys/class/leds/led1/brightness
+# put back to default
+echo mmc0 > /sys/class/leds/led0/trigger
+
+
 #-------------------------------------------------------------------------------
 
 # check process count
@@ -20,6 +34,6 @@ unset LD_PRELOAD
 # check user count
 /usr/lib/nagios/plugins/check_users -w 5 -c 10;
 
-/usr/bin/logger -t rpicluster "lansrv-cron-hourly.sh finished"
+/usr/bin/logger -t rpicluster "lansrv-cron-hourly.sh ran"
 
 #-------------------------------------------------------------------------------

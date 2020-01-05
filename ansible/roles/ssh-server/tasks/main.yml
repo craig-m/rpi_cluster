@@ -19,7 +19,7 @@
   template:
     src: motd.j2
     dest: /etc/motd
-  become: yes
+  become: true
   tags: [ssh]
 
 
@@ -31,8 +31,8 @@
     owner: root
     group: root
     mode: 0644
-    backup: yes
-  become: yes
+    backup: true
+  become: true
   tags: [ssh]
 
 
@@ -47,8 +47,8 @@
     owner: root
     group: root
     mode: 0644
-    backup: yes
-  become: yes
+    backup: true
+  become: true
   tags: [ssh]
 
 
@@ -61,9 +61,9 @@
     group: root
     mode: '0600'
     validate: /usr/sbin/sshd -t -f %s
-    backup: yes
+    backup: true
   notify: sshd_restart
-  become: yes
+  become: true
   tags: [ssh]
 
 
@@ -74,5 +74,5 @@
 #    owner: root
 #    group: root
 #    mode: 0644
-#  become: yes
+#  become: true
 #  tags: [ssh]

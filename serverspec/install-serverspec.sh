@@ -32,7 +32,7 @@ fi
 # activate RVM env
 source ~/.rvm/scripts/rvm || echo -e "[*] ERROR: install RVM first "
 rvm install ruby --latest || echo -e "[*] ERROR: installing RVM "
-rvm use 2.6.0 || echo -e "[*] ERROR: using rvm "
+rvm use current || echo -e "[*] ERROR: using rvm "
 
 # install ServerSpec
 rvm gemset create serverspec

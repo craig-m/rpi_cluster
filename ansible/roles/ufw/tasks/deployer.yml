@@ -9,7 +9,7 @@
     proto: tcp
     port: '22'
     comment: SSH to deployer from private networks
-  become: yes
+  become: true
   notify: ufw_restart
   with_items:
     - 10.0.0.0/8
@@ -34,4 +34,4 @@
     src: '{{ rpi_net_id }}/{{ rpi_net_maskbit }}'
     comment: spare port to catch shells
   notify: ufw_restart
-  become: yes
+  become: true

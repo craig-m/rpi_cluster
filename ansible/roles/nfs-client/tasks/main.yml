@@ -12,7 +12,7 @@
   loop:
        - nfs-common
        - rpcbind
-  become: yes
+  become: true
   retries: 1
   tags: [nfs]
 
@@ -25,7 +25,7 @@
     mode: 0775
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_id }}"
-  become: yes
+  become: true
   tags: [nfs]
 
 
@@ -37,7 +37,7 @@
     fstype: nfs
     opts: defaults,rw
     state: mounted
-  become: yes
+  become: true
   tags: [nfs]
 
 
@@ -45,5 +45,5 @@
   lineinfile:
     path: /opt/cluster/data/info_roles.txt
     line: "{{ role_path|basename }}"
-  become: yes
+  become: true
   tags: [nfs]

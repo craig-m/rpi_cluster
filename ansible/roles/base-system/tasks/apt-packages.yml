@@ -9,98 +9,79 @@
       state: present
     retries: 3
     loop:
-        - arping
-        - hping3
-        - wget
-        - curl
-        - dnsutils
-        - socat
-        - libnss3-tools
+      - arping
+      - hping3
+      - wget
+      - curl
+      - dnsutils
+      - socat
+      - libnss3-tools
+
   - name: System misc util
     apt:
       name: "{{ item }}"
       state: present
     retries: 3
     loop:
-        - aptitude
-        - linuxlogo
-        - vim
-        - nano
-        - htop
-        - multitail
-        - yara
-        - exiftool
-        - zip
-        - unzip
-        - jq
-        - expect
-        - reptyr
-        - screen
-        - tmux
-        - bats
-        - attr
-        - xattr
+      - aptitude
+      - linuxlogo
+      - vim
+      - nano
+      - htop
+      - multitail
+      - yara
+      - exiftool
+      - zip
+      - unzip
+      - jq
+      - expect
+      - reptyr
+      - screen
+      - tmux
+      - bats
+      - attr
+      - xattr
+
   - name: System base
     apt:
       name: "{{ item }}"
       state: present
     retries: 3
     loop:
-        - apt-transport-https
-        - apt-show-versions
-        - lsof
-        - busybox
-        - ntpstat
-        - monitoring-plugins-common
-        - monitoring-plugins-basic
-        - libnss-myhostname
-        - libssl-dev
-        - gfortran
-        - libffi-dev
-        - xsltproc
-        - gawk
-        - bc
-        - git-core
-        - moreutils
-        - pass
-        - dos2unix
-        - inotify-tools
-        - uuid
-        - uuid-runtime
+      - apt-transport-https
+      - apt-show-versions
+      - lsof
+      - busybox
+      - ntpstat
+      - monitoring-plugins-common
+      - monitoring-plugins-basic
+      - libnss-myhostname
+      - libssl-dev
+      - gfortran
+      - libffi-dev
+      - xsltproc
+      - gawk
+      - bc
+      - git-core
+      - moreutils
+      - pass
+      - dos2unix
+      - inotify-tools
+      - uuid
+      - uuid-runtime
+
   - name: python pip and dev packages
     apt:
       name: "{{ item }}"
       state: present
     retries: 3
     loop:
-        - libpython-all-dev
-        - python-pip
-        - python3
-        - python3-pip
-        - python3-dev
-        - python3-pkg-resources
-        - python3-setuptools
-        - python3-openssl
-  become: yes
+      - libpython-all-dev
+      - python3
+      - python3-pip
+      - python3-dev
+      - python3-pkg-resources
+      - python3-setuptools
+      - python3-openssl
+  become: true
 
-
-#- name: install setuptools with pip
-#  pip:
-#    name: setuptools
-#    state: present
-#  become: yes
-
-
-#- name: install virtualenv with pip
-#  pip:
-#    name: virtualenv
-#    state: present
-#  become: yes
-
-
-#- name: install pyOpenSSL
-#  pip:
-#    name: pyOpenSSL
-#    state: present
-#    executable: pip3
-#  become: yes

@@ -20,7 +20,7 @@
     owner: "{{ item.owner }}"
     group: "{{ item.group }}"
   with_items: "{{ common_dir }}"
-  become: yes
+  become: true
 
 
 # specific folders for this host
@@ -28,12 +28,13 @@
   file:
     path: "{{ item.dir }}"
     state: directory
-    recurse: yes
+    recurse: true
     mode: "{{ item.mode }}"
     owner: "{{ item.owner }}"
     group: "{{ item.group }}"
+    recurse: no
   with_items: "{{ host_dir }}"
-  become: yes
+  become: true
 
 
 # copy ~/. dot files
@@ -64,7 +65,7 @@
     mode: 0775
     owner: root
     group: root
-  become: yes
+  become: true
   changed_when: False
 
 
@@ -82,7 +83,7 @@
     mode: 0750
     owner: root
     group: root
-  become: yes
+  become: true
 
 
 # /etc/issue
@@ -93,7 +94,7 @@
     mode: 0644
     owner: root
     group: root
-  become: yes
+  become: true
 
 
 # create info_roles.txt
@@ -105,7 +106,7 @@
     mode: 0444
     owner: root
     group: root
-  become: yes
+  become: true
 
 
 # info_host.txt
@@ -116,8 +117,8 @@
     mode: 0444
     owner: root
     group: root
-  become: yes
-  changed_when: False
+  become: true
+  changed_when: false
 
 
 # fetch

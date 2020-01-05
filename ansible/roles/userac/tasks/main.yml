@@ -12,7 +12,7 @@
   group:
     name: sshusers
     state: present
-  become: yes
+  become: true
   tags: userac
 
 
@@ -29,10 +29,10 @@
   user:
     name: "{{ rpi_clust_user }}"
     groups: sshusers,sudo,staff,backup
-    append: yes
-    createhome: yes
+    append: true
+    createhome: true
     home: "/home/{{ rpi_clust_user }}"
-  become: yes
+  become: true
   tags: userac
 
 
@@ -42,7 +42,7 @@
     path: "/home/{{ rpi_clust_user }}"
     state: directory
     mode: 0700
-  become: yes
+  become: true
   tags: userac
 
 
@@ -53,7 +53,7 @@
     update_password: always
     password: "{{ item.hash }}"
   with_items: "{{ vault_user_pw }}"
-  become: yes
+  become: true
   no_log: True
   tags: userac
 

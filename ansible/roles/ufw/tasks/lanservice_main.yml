@@ -2,13 +2,26 @@
 - debug: msg="ufw rules for lanservice MAIN "
 
 
+# SSH access
+- name: Allow SSH from our local subnet
+  ufw:
+    rule: allow
+    port: '{{ item }}'
+    src: "{{ rpi_net_id }}/{{ rpi_net_maskbit }}"
+    comment: SSH access
+  become: true
+  notify: ufw_restart
+  with_items:
+    - '22'
+
+
 # Alpha and Beta have full access between each other
 - name: Allow all access from my failover
   ufw:
     rule: allow
     src: "{{ rpi_failover_ip }}/32"
     comment: my lanservice_main failover
-  become: yes
+  become: true
   notify: ufw_restart
 
 
@@ -19,7 +32,7 @@
     port: '{{ item }}'
     src: "{{ rpi_net_id }}/{{ rpi_net_maskbit }}"
     comment: services for local lan
-  become: yes
+  become: true
   notify: ufw_restart
   with_items:
     - '53'

@@ -21,7 +21,7 @@
     src: etc/hosts.j2
     dest: /etc/hosts
   delegate_to: localhost
-  become: yes
+  become: true
   run_once: true
 
 
@@ -33,7 +33,7 @@
     src: etc/ethers.j2
     dest: /etc/ethers
     mode: 0644
-  become: yes
+  become: true
   delegate_to: localhost
   register: static_arp_update
   run_once: true
@@ -41,7 +41,7 @@
 
 - name: update state arp entries
   shell: /usr/sbin/arp -f /etc/ethers
-  become: yes
+  become: true
   delegate_to: localhost
   when: static_arp_update.changed
   run_once: true
@@ -54,6 +54,6 @@
     owner: root
     group: root
     mode: 0444
-  become: yes
+  become: true
   delegate_to: localhost
   run_once: true

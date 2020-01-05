@@ -1,6 +1,7 @@
 ---
-# Playbook for the Deployer group.
-- debug: msg="deployer role "
+# Role for nodes in the Deployer group.
+
+- debug: msg="deployer group role "
 
 
 - name: check test password was set
@@ -12,14 +13,14 @@
   user:
     name: deployops
     groups: sshusers,staff,backup
-    append: yes
+    append: true
     shell: /bin/bash
-    generate_ssh_key: yes
+    generate_ssh_key: true
     ssh_key_bits: 2048
     ssh_key_file: .ssh/deployops_id_rsa
-    createhome: yes
+    createhome: true
     home: /home/deployops
-  become: yes
+  become: true
   tags: [deployer]
 
 
@@ -36,6 +37,7 @@
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_id }}"
     mode: 0755
+    force: no
   with_items: "{{ deployscript_binfile }}"
   tags: [deployer]
 
@@ -58,6 +60,6 @@
     owner: root
     group: root
     mode: 0444
-  become: yes
+  become: true
   changed_when: False
   tags: [deployer]

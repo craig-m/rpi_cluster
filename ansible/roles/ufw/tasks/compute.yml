@@ -2,15 +2,54 @@
 - debug: msg="ufw rules for Compute group "
 
 
-# for Docker network addons - allow all inernal subnets
+# SSH access
+- name: Allow SSH from our local subnet
+  ufw:
+    rule: allow
+    port: '{{ item }}'
+    src: "{{ rpi_net_id }}/{{ rpi_net_maskbit }}"
+    comment: SSH access
+  become: true
+  notify: ufw_restart
+  with_items:
+    - '22'
 
+
+# for Docker network addons - allow all inernal subnets
 - name: Allow internal subnets any ports
   ufw:
     rule: allow
     src: '{{ item }}'
   notify: ufw_restart
-  become: yes
+  become: true
   with_items:
     - 10.0.0.0/8
     - 172.16.0.0/12
     - 192.168.0.0/16
+
+
+- name: Allow incoming access to cni0
+  ufw:
+    rule: allow
+    interface: cni0
+    direction: in
+  become: true
+- name: Allow out access to cni0
+  ufw:
+    rule: allow
+    interface: cni0
+    direction: out
+  become: true
+
+- name: Allow incoming access to docker0
+  ufw:
+    rule: allow
+    interface: docker0
+    direction: in
+  become: true
+- name: Allow out access to docker0
+  ufw:
+    rule: allow
+    interface: docker0
+    direction: out
+  become: true

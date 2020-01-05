@@ -11,23 +11,25 @@
   tags: [golang]
 
 
-- name: download go binary
+- name: download go binary if missing
   get_url:
     url: https://dl.google.com/go/{{ goland_targz }}
     dest: /opt/cluster/mysrc/
     checksum: "{{ golang_shasum }}"
+  register: go_src_download
   when:
     - "go_src_current.stat.exists == False"
   tags: [golang]
 
 
 - name: unarchive go
-  become: yes
   unarchive:
     src: /opt/cluster/mysrc/{{ goland_targz }}
     dest: /usr/local/
-    creates: /usr/local/go/
     remote_src: True
+  when:
+    - "go_src_download.changed == True"
+  become: true
   tags: [golang]
 
 
@@ -43,7 +45,7 @@
   copy:
     dest: /etc/profile.d/golang-path.sh
     content: 'export PATH=$PATH:/usr/local/go/bin'
-  become: yes
+  become: true
   tags: [golang]
 
 
@@ -57,8 +59,13 @@
 
 - name: run build_go_hello
   script: /opt/cluster/bin/build_go_hello.sh
-  args:
-    creates: /home/pi/go/src/hello/hello
+  when: go_src_download.changed == True
+  tags: [golang]
+
+
+- name: test go bin
+  command: /usr/local/go/bin/go version
+  changed_when: false
   tags: [golang]
 
 
@@ -66,5 +73,5 @@
   lineinfile:
     path: /opt/cluster/data/info_roles.txt
     line: "{{ role_path|basename }}"
-  become: yes
+  become: true
   tags: [golang]

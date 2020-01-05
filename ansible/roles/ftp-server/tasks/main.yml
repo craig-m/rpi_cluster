@@ -10,7 +10,7 @@
   loop:
     - tftp-hpa
     - tftpd-hpa
-  become: yes
+  become: true
   retries: 1
   tags: [ftpd]
 
@@ -23,7 +23,7 @@
     owner: "{{ item.owner }}"
     group: "{{ item.group }}"
   with_items: "{{ common_ftp_dir }}"
-  become: yes
+  become: true
   tags: [ftpd]
 
 
@@ -34,20 +34,20 @@
     owner: root
     group: root
     mode: 0664
-    backup: yes
-  become: yes
+    backup: true
+  become: true
   notify: ftpd-restart
   tags: [ftpd]
 
 
-- name: tftp welcome
+- name: tftp welcome.txt
   template:
     src: welcome.j2
-    dest: /srv/tftp/welcome
+    dest: /srv/tftp/welcome.txt
     owner: root
     group: root
     mode: 0664
-  become: yes
+  become: true
   notify: ftpd-restart
   tags: [ftpd]
 
@@ -55,10 +55,17 @@
 - name: tftpd hpa enabled on boot
   service:
     name: tftpd-hpa
-    enabled: yes
+    enabled: true
     state: started
-  become: yes
+  become: true
   tags: [ftpd]
+
+
+- name: test ftp file download
+  command: 
+    cmd: "tftp -m binary  'localhost'  -c get 'welcome.txt'"
+    chdir: "/tmp/"
+  changed_when: false
 
 
 # log
@@ -75,5 +82,5 @@
     owner: root
     group: root
     mode: 0444
-  become: yes
+  become: true
   tags: [ftpd]

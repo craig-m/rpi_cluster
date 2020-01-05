@@ -10,7 +10,7 @@
   apt:
     name: ntp
     state: present
-  become: yes
+  become: true
   tags: [ntp]
 
 
@@ -22,7 +22,7 @@
     mode: 0644
     owner: root
     group: root
-  become: yes
+  become: true
   notify: ntp_restart
   tags: [ntp]
 
@@ -32,8 +32,8 @@
   service:
     name: ntp
     state: started
-    enabled: yes
-  become: yes
+    enabled: true
+  become: true
   tags: [ntp]
 
 
@@ -41,5 +41,5 @@
   lineinfile:
     path: /opt/cluster/data/info_roles.txt
     line: "{{ role_path|basename }}"
-  become: yes
+  become: true
   tags: [ntp]

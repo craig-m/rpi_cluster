@@ -18,7 +18,7 @@
     owner: root
     group: adm
     mode: 0664
-  become: yes
+  become: true
   when: rpiclustlog_exist.stat.exists == false
   register: rpiclustlog_created
   tags: [rpilog]
@@ -40,7 +40,7 @@
 - name: log test
   shell: echo "first log line!" > /var/log/rpicluster.log
   when: rpiclustlog_created.changed == True
-  become: yes
+  become: true
   tags: [rpilog]
 
 
@@ -52,7 +52,7 @@
     mode: 0644
     owner: root
     group: root
-  become: yes
+  become: true
   notify: syslog-restart
   tags: [rpilog]
 
@@ -65,7 +65,7 @@
     mode: 0644
     owner: root
     group: root
-  become: yes
+  become: true
   notify: syslog-restart
   tags: [rpilog]
 
@@ -74,5 +74,5 @@
   lineinfile:
     path: /opt/cluster/data/info_roles.txt
     line: "{{ role_path|basename }}"
-  become: yes
+  become: true
   tags: [rpilog]

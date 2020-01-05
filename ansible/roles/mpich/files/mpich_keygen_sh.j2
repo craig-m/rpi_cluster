@@ -4,10 +4,6 @@
 # desc: from deploy node this will sign the SSH keys for the mpiuser
 
 
-# Run on psi:
-hostname | grep psi || exit 1;
-whoami | grep pi || exit 1;
-
 echo "starting mpich_keygen.sh"
 
 mpikeytemp=$(mktemp -d)

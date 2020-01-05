@@ -24,7 +24,7 @@
 # (I've found that, on occasion, this will prevent the Pi from booting)
 #- name: update kernel
 #  shell: SKIP_WARNING=1 /usr/bin/rpi-update
-#  become: yes
+#  become: true
 #  tags: [maintenance]
 #  when: "'deployer' not in group_names"
 
@@ -32,8 +32,8 @@
 # systemctl daemon-reload
 - name: force systemd to reread all configs
   systemd:
-    daemon_reload: yes
-  become: yes
+    daemon_reload: true
+  become: true
   tags: [maintenance]
   when: apt_upgraded.changed
   changed_when: False
@@ -42,7 +42,7 @@
 # check system units OK
 - name: check for failed system services
   command: /bin/systemctl list-units --all --state=failed
-  become: yes
+  become: true
   changed_when: False
   register: systemctl_failed_units
   failed_when: "'0 loaded units listed.' not in systemctl_failed_units.stdout"
@@ -62,5 +62,5 @@
     owner: root
     group: root
     mode: 0444
-  become: yes
+  become: true
   tags: [maintenance]

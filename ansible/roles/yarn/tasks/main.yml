@@ -11,39 +11,36 @@
     mode: 0755
 
 
-# copy yarn gpg key to server also
-- name: copy yarnpubkey
+- name: copy yarn gpg key to server also
   copy:
     src: yarnkey.asc
     dest: /opt/cluster/mysrc/yarn/yarnkey.asc
     mode: 0644
 
 
-# add apt gpg key
 - name: Add yarn apt key
   apt_key:
     data: "{{ lookup('file', '/opt/cluster/mysrc/yarn/yarnkey.asc') }}"
     state: present
-  become: yes
+  become: true
 
 
 - name: add yarn apt repo
   apt_repository:
     repo: deb https://dl.yarnpkg.com/debian/ stable main
     state: present
-  become: yes
+  become: true
   register: yarnaddapt
 
 
-# check package installed
 - name: yarn packages installed
   apt:
     name: "{{ item }}"
     state: present
-    update_cache: yes
+    update_cache: true
   loop:
     - yarn
-  become: yes
+  become: true
   retries: 2
 
 

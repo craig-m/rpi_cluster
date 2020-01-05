@@ -6,9 +6,13 @@ Host:       {{ ansible_hostname }}
 MAC:        {{ ansible_eth0.macaddress }}
 Addresses:  {{ ansible_all_ipv4_addresses }}
 
+Groups:     {{ group_names }}
+
 connection: {{ ansible_connection }}
 {% if ansible_env.SSH_CLIENT is defined %}
 SSH client: {{ ansible_env.SSH_CLIENT }}
+{% endif %}
+{% if ansible_env.SSH_CONNECTION is defined %}
 SSH Con:    {{ ansible_env.SSH_CONNECTION }}
 {% endif %}
 PWD env:    {{ ansible_env.PWD }}
@@ -25,5 +29,6 @@ Python V:   {{ ansible_python_version }}
 Devices:    {{ ansible_device_links.ids }}
 
 --------------------------------------------------------------------------------
-Created by role: {{role_path|basename}}
+role: {{role_path|basename}}
+play: {{ ansible_play_name }}
 --------------------------------------------------------------------------------

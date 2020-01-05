@@ -4,14 +4,14 @@ echo "start.sh: starting gunicorn";
 
 # do some sanity checks before starting gunicorn
 
-if [[ omegapyapi = "$(whoami)" ]]; then
-  echo "running as omegapyapi - good";
+if [[ rpyapi = "$(whoami)" ]]; then
+  echo "running as rpyapi - good";
 else
-  echo "ERROR: not running as omegapyapi";
+  echo "ERROR: not running as rpyapi";
   exit 1;
 fi
 
-if [ ! -f /app/omegapyapi.py ]; then
+if [ ! -f /app/rpyapi.py ]; then
   echo "ERROR: missing app";
   exit 1;
 fi
@@ -26,9 +26,9 @@ fi
 python --version | awk '{print $2}' | cut -c1-1 | grep 3 || exit 1
 
 
-gunicorn omegapyapi:app \
+gunicorn rpyapi:app \
   --pid /app/pyapi-gunicorn.pid \
-  --bind unix:/app/omegapyapi.socket \
+  --bind unix:/app/rpyapi.socket \
   --bind 0.0.0.0:8382 \
   --workers 2 \
   --preload \

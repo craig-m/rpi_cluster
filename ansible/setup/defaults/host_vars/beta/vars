@@ -29,7 +29,7 @@ rpi_failover_ip: "{{ hostvars['alpha']['rpi_ip'] }}"
 rpi_failover_hwaddr: "{{ hostvars['alpha']['rpi_mac'] }}"
 
 # keepalived
-keepalived_priority: 101
+keepalived_priority: "101"
 keepalived_state: "BACKUP"
 
 #-------------------------------------------------------------------------------

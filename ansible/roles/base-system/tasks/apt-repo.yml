@@ -6,12 +6,12 @@
   apt_repository:
     repo: deb http://raspbian.raspberrypi.org/raspbian/ stretch main contrib non-free rpi
     state: absent
-  become: yes
+  become: true
 
 
 - name: apt-repo add raspbian mirror
   apt_repository:
     repo: "deb {{ apt_local_mirror }} stretch main contrib non-free rpi"
     state: present
-    update_cache: yes
-  become: yes
+    update_cache: true
+  become: true

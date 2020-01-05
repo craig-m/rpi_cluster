@@ -23,15 +23,15 @@
 - name: Install a hugo deb package
   apt:
     deb: "/opt/cluster/mysrc/{{ hugo_bin }}"
-  become: yes
+  become: true
   when: hugo_bin_dl.changed
   tags: [hugo]
 
 
 - name: get hugo version
-  command: /usr/local/bin/hugo version
+  command: /usr/bin/hugo version
   register: hugo_version
-  become: yes
+  become: true
   changed_when: false
   tags: [hugo]
 
@@ -49,5 +49,5 @@
     owner: root
     group: root
     mode: 0444
-  become: yes
+  become: true
   tags: [hugo]

@@ -1,5 +1,7 @@
 ---
-# Trackuptime - use "uprecords" command to view.
+# uptimed - an uptime record daemon 
+# https://github.com/rpodgorny/uptimed
+# use "uprecords" command to view.
 - debug: msg="uptimed "
 
 
@@ -7,7 +9,7 @@
   apt:
     state: present
     name: uptimed
-  become: yes
+  become: true
   tags: uptimed
 
 
@@ -15,8 +17,8 @@
   service:
     name: uptimed
     state: started
-    enabled: yes
-  become: yes
+    enabled: true
+  become: true
   tags: uptimed
 
 
@@ -27,5 +29,5 @@
     owner: root
     group: root
     mode: 0444
-  become: yes
+  become: true
   tags: uptimed

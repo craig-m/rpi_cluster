@@ -8,4 +8,5 @@
   pip:
     name: "*"
     state: latest
-  become: yes
+    executable: pip3
+  become: true

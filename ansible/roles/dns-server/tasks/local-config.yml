@@ -9,7 +9,7 @@
     owner: root
     group: root
     mode: 0644
-  become: yes
+  become: true
   notify: bind-restart
   tags: [bind]
 
@@ -21,7 +21,7 @@
     owner: root
     group: root
     mode: 0644
-  become: yes
+  become: true
   notify: bind-restart
   tags: [bind]
 
@@ -33,7 +33,7 @@
     owner: root
     group: root
     mode: 0644
-  become: yes
+  become: true
   notify: bind-restart
   tags: [bind]
 
@@ -45,32 +45,32 @@
     owner: root
     group: root
     mode: 0644
-  become: yes
+  become: true
   notify: bind-restart
   tags: [bind]
 
 
 - name: bind conf consul
   template:
-   src: consul_conf.j2
-   dest: /etc/bind/consul.conf
-   owner: root
-   group: root
-   mode: 0644
-  become: yes
+    src: consul_conf.j2
+    dest: /etc/bind/consul.conf
+    owner: root
+    group: root
+    mode: 0644
+  become: true
   notify: bind-restart
   tags: [bind]
 
 
 - name: Bind keys
   template:
-   src: bind_keys.j2
-   dest: /etc/bind/bind.keys
-   owner: root
-   group: root
-   mode: 0644
-   backup: yes
-  become: yes
+    src: bind_keys.j2
+    dest: /etc/bind/bind.keys
+    owner: root
+    group: root
+    mode: 0644
+    backup: false
+  become: true
   notify: bind-restart
   tags: [bind]
 
@@ -88,8 +88,8 @@
     owner: root
     group: bind
     mode: 0664
-    backup: yes
-  become: yes
+    backup: false
+  become: true
   notify: bind-restart
   tags:
     - bind
@@ -98,6 +98,6 @@
 
 - name: check named conf
   command: /usr/sbin/named-checkconf /etc/bind/named.conf
-  become: yes
+  become: true
   changed_when: False
   tags: [bind]

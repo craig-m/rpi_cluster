@@ -10,11 +10,11 @@
     name: "{{ item }}"
     state: present
   loop:
-       - nfs-server
-       - nfs-kernel-server
-       - nfs-common
-       - rpcbind
-  become: yes
+    - nfs-server
+    - nfs-kernel-server
+    - nfs-common
+    - rpcbind
+  become: true
   retries: 2
   tags: [nfs]
 
@@ -27,7 +27,7 @@
     mode: 0775
     owner: "{{ ansible_user_id }}"
     group: "{{ ansible_user_id }}"
-  become: yes
+  become: true
   tags: [nfs]
 
 
@@ -40,7 +40,7 @@
     owner: root
     group: root
   changed_when: False
-  become: yes
+  become: true
   tags: [nfs]
 
 
@@ -48,9 +48,9 @@
 - name: nfs-idmapd enabled and started on boot
   service:
     name: nfs-idmapd
-    enabled: yes
+    enabled: true
     state: started
-  become: yes
+  become: true
   tags: [nfs]
 
 
@@ -59,8 +59,8 @@
   service:
     name: rpcbind.service
     state: started
-    enabled: yes
-  become: yes
+    enabled: true
+  become: true
   tags: [nfs]
 
 
@@ -69,8 +69,8 @@
   service:
     name: nfs-kernel-server.service
     state: started
-    enabled: yes
-  become: yes
+    enabled: true
+  become: true
   tags: [nfs]
 
 
@@ -82,15 +82,15 @@
     owner: root
     group: root
     mode: 0644
-    backup: yes
-  become: yes
+    backup: true
+  become: true
   register: nfs_exports_file
   tags: [nfs]
 
 
 # update exports
 - name: run exportfs
-  become: yes
+  become: true
   action: command exportfs -a
   when: nfs_exports_file.changed
   tags: [nfs]
@@ -100,5 +100,5 @@
   lineinfile:
     path: /opt/cluster/data/info_roles.txt
     line: "{{ role_path|basename }}"
-  become: yes
+  become: true
   tags: [nfs]

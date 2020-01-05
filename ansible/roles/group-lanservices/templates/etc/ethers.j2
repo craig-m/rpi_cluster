@@ -5,8 +5,10 @@
 # default gw
 {{ rpi_net_default_gw }} {{ rpi_net_default_gw_mac }}
 #
-# deployer
-{{ hostvars['psi']['rpi_ip'] }} {{ hostvars['psi']['rpi_mac'] }}
+# deployer/s
+{% for host in groups['deploy'] %}
+{{ hostvars[host]['ansible_eth0']['ipv4']['address'] }} {{ hostvars[host]['rpi_mac'] }}
+{% endfor %}
 #
 # Other admin node
 {{ rpi_failover_ip }} {{ rpi_failover_hwaddr }}

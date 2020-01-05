@@ -23,11 +23,11 @@ describe command('systemctl list-units --all --state=failed | head -n1') do
 end
 
 
+# check users
 describe command('whoami') do
   let(:disable_sudo) { true }
   its(:stdout) { should match 'pi' }
 end
-
 describe command('whoami') do
   its(:stdout) { should match 'root' }
 end
@@ -37,11 +37,21 @@ describe user('pi') do
   it { should have_login_shell '/bin/bash' }
   it { should have_home_directory '/home/pi' }
 end
+describe file('/home/pi/.bash_history') do
+  it { should be_file }
+  it { should be_owned_by 'pi' }
+  it { should be_mode 600 }
+end
 
 describe user('root') do
   it { should have_uid 0 }
   it { should have_login_shell '/bin/bash' }
   it { should have_home_directory '/root' }
+end
+describe file('/root/.bash_history') do
+  it { should be_file }
+  it { should be_owned_by 'root' }
+  it { should be_mode 600 }
 end
 
 
@@ -67,6 +77,9 @@ end
 
 describe process("cron") do
   its(:user) { should eq "root" }
+end
+describe service('cron') do
+  it { should be_running.under('systemd') }
 end
 
 describe process("rsyslogd") do

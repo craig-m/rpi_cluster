@@ -13,7 +13,7 @@
 - name: Generate id_rsa for this user if missing
   user:
     name: "{{ ansible_user_id }}"
-    generate_ssh_key: yes
+    generate_ssh_key: true
     ssh_key_bits: 2048
     ssh_key_file: ~/.ssh/id_rsa
   tags: [common,commonssh,ssh]
@@ -25,7 +25,7 @@
 - name: check ssh backup
   stat: path="/opt/cluster/data/{{ inventory_hostname }}_ssh_bu.tgz"
   register: sshpribackup
-  become: yes
+  become: true
 
 
 # backup generated key and ~/.ssh/
@@ -34,7 +34,7 @@
     path: /home/{{ ansible_user_id }}/.ssh/
     dest: "/home/pi/.{{ inventory_hostname }}_ssh_bu.tgz"
     mode: 0440
-  become: yes
+  become: true
   when: sshpribackup.stat.exists == false
 
 

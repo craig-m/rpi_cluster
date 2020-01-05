@@ -1,5 +1,14 @@
 require 'spec_helper'
 
+describe default_gateway do
+  its(:interface) { should eq 'eth0' }
+end
+
+describe interface('eth0') do
+  it { should be_up }
+  its(:speed) { should eq 100 }
+end
+
 describe host('raspbian.raspberrypi.org') do
   let(:disable_sudo) { true }
   it { should be_resolvable }
