@@ -10,7 +10,7 @@
   changed_when: False
 
 
-- name: download Hugo bin
+- name: download Hugo bin if missing
   get_url:
     url: "{{ hugo_bin_url }}"
     dest: /opt/cluster/mysrc/
@@ -29,17 +29,18 @@
 
 
 - name: get hugo version
-  command: /usr/bin/hugo version
-  register: hugo_version
-  become: true
+  command: /usr/local/bin/hugo version
+  register: hugoversion
+  become: false
   changed_when: false
+  ignore_errors: true
   tags: [hugo]
 
 
 - name: check hugo ok
   assert:
     that:
-      - "'Hugo Static Site Generator' in hugo_version.stdout"
+      - "'Hugo Static Site Generator' in hugoversion.stdout"
 
 
 - name: roles info txt

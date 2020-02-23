@@ -1,0 +1,5 @@
+# R-Pi Cluster Ansible managed file
+Dpkg::Options {
+   "--force-confdef";
+   "--force-confold";
+}

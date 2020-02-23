@@ -22,7 +22,7 @@ rpilogit () {
 pass=$(pass ssh/id_ecdsa)
 
 # check expect is installed
-which expect | { echo "ERROR missing Expect"; exit 1; }
+which expect || { echo "ERROR missing Expect"; exit 1; }
 
 # check we have a password
 pass_leng=$(echo $pass | wc -c)

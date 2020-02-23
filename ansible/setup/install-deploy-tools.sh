@@ -136,7 +136,7 @@ if [ ! -f ~/.rpibs/rpibs_packages ]; then
   # install packages
   rpilogit "install some apt packages";
   /usr/bin/sudo apt-get -q install -y \
-  build-essential autoconf automake aptitude libtool bison flex dos2unix htop jq \
+  build-essential autoconf automake aptitude apt-clone libtool bison flex dos2unix htop jq \
   sshpass scanssh wget curl git rsync vim nano lsof screen tmux pgpgpg bc gawk \
   sshfs tcpdump nmap socat netdiscover sqlite3 pwgen \
   libssl-dev libyaml-dev libgmp-dev libgdbm-dev libffi-dev libpython-all-dev \
@@ -144,7 +144,7 @@ if [ ! -f ~/.rpibs/rpibs_packages ]; then
   monitoring-plugins-common monitoring-plugins-basic inotify-tools unzip pass \
   python-pip python-dev python3-pip python3-dev \
   uuid-runtime uuid reptyr secure-delete mpich alpine shellcheck \
-  lynx socat dirmngr mc tftp \
+  lynx socat dirmngr mc tftp cryptmount cryptsetup \
   software-properties-common || { rpilogit "ERROR with apt-get install"; exit 1; }
   sleep 2s;
   # upgrade

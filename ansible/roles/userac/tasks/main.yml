@@ -61,3 +61,11 @@
 # ssh keys
 - import_tasks: keys.yml
   tags: userac
+
+
+#- name: Remove default nopasswd sudo rule
+#  file:
+#    path: /etc/sudoers.d/010_pi-nopasswd
+#    state: absent
+#  become: true
+#  tags: userac

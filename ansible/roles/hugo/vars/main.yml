@@ -1,4 +1,4 @@
 
-hugo_bin: "hugo_0.55.5_Linux-ARM.deb"
-hugo_bin_url: "https://github.com/gohugoio/hugo/releases/download/v0.61.0/hugo_0.61.0_Linux-ARM.deb"
-hugo_bin_sha: "sha256:671fb35e148ab0f5f7607d6b8235314b3e72ae842bb4717b31ce9f38e3ab16e6"
+hugo_bin: "hugo_0.65.2_Linux-ARM.deb"
+hugo_bin_url: "https://github.com/gohugoio/hugo/releases/download/v0.65.2/hugo_0.65.2_Linux-ARM.deb"
+hugo_bin_sha: "sha256:adce7c32bd063e94860a7f69ccea9bcb574d8e980bc405a2ac12bf329a4b228b"

@@ -50,6 +50,7 @@
     loop:
       - apt-transport-https
       - apt-show-versions
+      - apt-clone
       - lsof
       - busybox
       - ntpstat

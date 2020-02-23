@@ -17,7 +17,7 @@
 # message of the day (ssh login banner)
 - name: MOTD
   template:
-    src: motd.j2
+    src: etc/motd.j2
     dest: /etc/motd
   become: true
   tags: [ssh]
@@ -26,7 +26,7 @@
 # SSH system wide Client config
 - name: ssh client config file
   template:
-    src: ssh_config.j2
+    src: etc/ssh/ssh_config.j2
     dest: /etc/ssh/ssh_config
     owner: root
     group: root
@@ -40,7 +40,7 @@
 # SSH CA key setup described at:
 # https://code.facebook.com/posts/365787980419535/scalable-and-secure-access-with-ssh/
 
-- name: upload ca.pub
+- name: upload ca.pub from deployer
   copy:
     src: ~/.ssh/my-ssh-ca/ca.pub
     dest: /etc/ssh/ca.pub
@@ -55,7 +55,7 @@
 # SSHD Server config
 - name: sshd config file
   template:
-    src: sshd_config.j2
+    src: etc/ssh/sshd_config.j2
     dest: /etc/ssh/sshd_config
     owner: root
     group: root

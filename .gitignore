@@ -2,15 +2,16 @@
 #
 ignore_me/*
 nohup.out
+ansible/.pytest_cache/
 ansible/inventory/*
 ansible/group_vars/*
 ansible/host_vars/*
+ansible/artifacts/
+ansible/resources/_gen/
 #
 # ---- code ----
 #
 serverspec/reports/*
-ansible/.pytest_cache/
-code/rpyapi/flask/
 code/hugo-site/public/*
 yarn-error.log
 node_modules/
@@ -51,4 +52,3 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
-#

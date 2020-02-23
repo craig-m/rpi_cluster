@@ -72,6 +72,11 @@ describe 'Linux kernel parameters' do
   context linux_kernel_parameter('net.ipv6.conf.eth0.disable_ipv6') do
     its(:value) { should eq 1 }
   end
+
+  # alsr
+  context linux_kernel_parameter('kernel.randomize_va_space') do
+    its(:value) { should eq 2 }
+  end
 end
 
 

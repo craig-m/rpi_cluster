@@ -30,21 +30,3 @@ zone "{{ rpi_cust_tld }}" {
 {% endif %}
 
 
-// Reverse DNS
-zone "{{ rpi_domain_arpa }}.in-addr.arpa" {
-  {% if 'master' in rpi_dnsd_status %}
-  type master;
-  {% endif %}
-  {% if 'secondary' in rpi_dnsd_status %}
-  type slave;
-  {% endif %}
-
-  {% if rpi_dnsd_masters is defined %}
-    masters { {{ hostvars['alpha']['rpi_ip'] }}; };
-  {% endif %}
-
-    notify {{ rpi_dnsd_notify }};
-    file "/etc/bind/zones/{{ rpi_dnsd_status }}/reverse-{{ rpi_dnsd_status }}.db";
-    allow-transfer { {{ rpi_failover_ip }}; };
-    allow-query { rpinet; };
-};

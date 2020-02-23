@@ -8,8 +8,8 @@ apt_local_mirror: "http://mirror.aarnet.edu.au/pub/raspbian/raspbian"
 
 # create folders (on every R-Pi)
 common_dir: [
-  { dir: '/opt/cluster/', mode: '0770', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
-  { dir: '/opt/cluster/data/', mode: '0700', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
+  { dir: '/opt/cluster/', mode: '0755', owner: "root", group: "root" },
+  { dir: '/opt/cluster/data/', mode: '0755', owner: "root", group: "root" },
   { dir: '/opt/cluster/mysrc/', mode: '0700', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
   { dir: '/opt/cluster/bin/', mode: '0755', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
   { dir: '/home/{{ ansible_user_id }}/.config/htop/', mode: '0750', owner: "{{ ansible_user_id }}", group: "{{ ansible_user_id }}" },
@@ -60,6 +60,7 @@ package_remove: [
 sysctl_settings: [
   {name: 'net.ipv6.conf.all.disable_ipv6', value: '1', set: 'yes', state: 'present'},
   {name: 'net.ipv6.conf.default.disable_ipv6', value: '1', set: 'yes', state: 'present'},
+  {name: 'kernel.randomize_va_space', value: '2', set: 'yes', state: 'present'},
   {name: 'net.core.rmem_max', value: '16777216', set: 'yes', state: 'present'},
   {name: 'net.core.wmem_max', value: '4194304', set: 'yes', state: 'present'},
   {name: 'net.ipv4.ip_local_port_range', value: '1024 65535', set: 'yes', state: 'present'},

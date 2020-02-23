@@ -1,5 +1,5 @@
 
-This status website is hosted on the Omega R-Pi node.
+A website made with Hugo.
 
 Requires:
 * Hugo - https://gohugo.io/

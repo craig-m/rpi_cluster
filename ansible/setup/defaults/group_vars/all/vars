@@ -13,9 +13,6 @@ rpi_net_bcast: "192.168.10.255"
 rpi_net_snet: "255.255.255.0"
 rpi_net_maskbit: "24"
 
-# reverse DNS
-rpi_domain_arpa: "10.168.192"
-
 # LanServices: dhcp server settings
 rpi_dhcp_range_start: "192.168.10.200"
 rpi_dhcp_range_stop: "192.168.10.240"

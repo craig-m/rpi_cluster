@@ -2,11 +2,8 @@
 
 # create a privilege escalation backdoor bin
 #
-#  pi@psi:~ $ /usr/local/bin/beroot                                                                                 │·············
-#  # whoami                                                                                                         │·············
+#  pi@psi:~ $ echo whoami | /usr/local/bin/beroot
 #  root
-#  #
-
 
 /usr/bin/sudo id | grep --quiet "uid=0(root)" || { echo "ERROR can not sudo"; exit 1; }
 

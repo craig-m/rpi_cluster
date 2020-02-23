@@ -56,8 +56,8 @@ describe command('/usr/sbin/named-checkconf /etc/bind/named.conf') do
   its(:stdout) { should match // }
 end
 
-describe command("dig @localhost www.#{property[:rpi_cust_domain]}.#{property[:rpi_cust_tld]} | grep 'float.dc1' | wc -l") do
-  its(:stdout) { should match /2/ }
+describe command("dig @localhost www.#{property[:rpi_cust_domain]}.#{property[:rpi_cust_tld]} | grep 'www.#{property[:rpi_cust_domain]}.#{property[:rpi_cust_tld]}.'") do
+  its(:exit_status) { should eq 0 }
   let(:disable_sudo) { true }
 end
 

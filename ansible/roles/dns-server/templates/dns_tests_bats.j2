@@ -42,4 +42,3 @@
 @test "check_host icmp beta.{{ rpi_cust_domain }}.{{ rpi_cust_tld }}" {
   run bash -c "/usr/lib/nagios/plugins/check_host {{ hostvars['beta']['rpi_ip'] }}"
 }
-

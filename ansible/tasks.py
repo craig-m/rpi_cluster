@@ -1,20 +1,33 @@
 """
 Raspberry Pi Cluster Admin tasks.
 """
-#
+
 # This file is used with Invoke - http://www.pyinvoke.org/
 #
 # Ansible is not a good task runner, repetitive actions with long command line
 # arguments are easier with Invoke.
 
-from invoke import task, run
+import os
+import sys
 import ansible_runner
+from invoke import task, run
 
-# tasks run on deployer ------------------------------------------------------
+if os.getuid() == 0:
+    print ("ERROR: Do not run as root.")
+    sys.exit(1)
+
+print('\n')
+print(' --== Raspberry Pi Cluster administration ==-- ')
+print('\n')
+
+
+#
+# tasks for deployer (localhost)
+#
 
 @task
 def deployer_ansible(c):
-    """ ansible deployer role on Psi (localhost). """
+    """ Ansible deployer playbook on Psi (localhost). """
     print("Running playbook-rpi-deployer.yml")
     r = ansible_runner.run(private_data_dir='/home/pi/rpi_cluster/ansible', 
                            inventory='/etc/ansible/inventory/deploy', 
@@ -36,10 +49,13 @@ def deployer_upgrade(c):
     c.run('ansible-playbook --connection=local -i /etc/ansible/inventory/deploy -e "runtherole=upgrades" -v playbook-rpi-single-role.yml')
 
 
-
-# specific hosts ---------------------------------------------------------------
-# ex: invoke ansible-ping compute
-# ex: invoke ansible-ping all
+#
+# tasks for specific hosts. 
+# 
+# Examples:
+#
+# invoke ansible-ping compute
+# invoke ansible-ping all
 
 @task
 def ansible_ping(c, hostname):
@@ -52,27 +68,31 @@ def ansible_sshd(c, hostname):
     print("Running ssh-server role")
     c.run('ansible-playbook --limit "%s" -e "ansible_user=pi ansible_ssh_pass=raspberry host_key_checking=False runtherole=ssh-server" -v playbook-rpi-single-role.yml' % hostname)
 
-# serverspec test a host
 @task
 def serverspec_host(c, hostname):
     """ ServerSpec test a specific host. """
     print("Running ServerSpec")
     c.run("cd ../serverspec/ && bash run.sh %s" % hostname)
 
-# lanservices group ------------------------------------------------------------
+
+#
+# lanservices group
+#
 
 @task
 def lanservices_main_ansible(c):
-    """ ansible services-main playbook on Alpha and Beta. """
+    """ Ansible services-main playbook on Alpha and Beta. """
     print("Running playbook-rpi-lanservices.yml")
     c.run('ansible-playbook -v playbook-rpi-lanservices.yml')
 
 
-# compute cluster (x4 rpi) -----------------------------------------------------
+#
+# compute group
+#
 
 @task
 def compute_ansible_base(c):
-    """ ansible base playbook on compute group. """
+    """ Ansible base playbook on compute group. """
     print("Running playbook-rpi-compute.yml")
     r = ansible_runner.run(private_data_dir='/home/pi/rpi_cluster/ansible', 
                            playbook='playbook-rpi-compute.yml')
@@ -82,7 +102,7 @@ def compute_ansible_base(c):
 
 @task
 def compute_ansible_k3s(c):
-    """ Setup Lightweight Kubernetes cluster. """
+    """ Setup lightweight Kubernetes cluster. """
     print("Running playbook-rpi-compute-k3s.yml")
     r = ansible_runner.run(private_data_dir='/home/pi/rpi_cluster/ansible', 
                            playbook='playbook-rpi-compute-k3s.yml')
@@ -91,7 +111,9 @@ def compute_ansible_k3s(c):
     print(r.stats) 
 
 
-# tasks for all hosts  ----------------------------------------------------------
+#
+# tasks for all hosts
+#
 
 @task
 def ansible_gather_facts(c):
@@ -99,7 +121,6 @@ def ansible_gather_facts(c):
     print("Gathering facts")
     c.run('ansible all -m setup &> /dev/null')
 
-# R-Pi Cluster maint - excludes the Deployer R-Pi.
 @task
 def ansible_maint(c):
     """ upgrade all R-Pi server hosts (includes rolling reboots). """
@@ -110,11 +131,8 @@ def ansible_maint(c):
     print("Final status:")
     print(r.stats) 
 
-# test all nodes in the clsuter with ServerSpec
 @task
 def serverspec_cluster(c):
     """ ServerSpec tests. """
     print("Running ServerSpec")
     c.run('cd ../serverspec/ && bash run.sh')
-
-# end --------------------------------------------------------------------------

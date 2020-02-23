@@ -3,7 +3,7 @@ Setup guide
 
 Directions for bootstrapping this Raspberry Pi cluster.
 
-Tested on `2019-09-26-raspbian-buster-lite`
+Tested on `2020-02-13-raspbian-buster-lite`
 
 ---
 
@@ -50,10 +50,15 @@ pi@raspberrypi:~/rpi_cluster/ansible/setup $ nohup ./install-deploy-tools.sh >> 
 ```
 
 
-Setup keys and config
+Create some keys (PGP, SSH etc):
 
 ```
 pi@raspberrypi:~/rpi_cluster/ansible/setup $ ./setup-keys.sh
+```
+
+Copy deault ansible varibles to /etc/ansible/{group_vars,host_vars}/
+
+```
 pi@raspberrypi:~/rpi_cluster/ansible/setup $ ./setup-conf.sh
 ```
 

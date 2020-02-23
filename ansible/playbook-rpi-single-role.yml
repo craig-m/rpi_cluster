@@ -6,7 +6,7 @@
 #
 # Examples:
 #
-# $ ansible-playbook -e "runtherole=maintenance" playbook-rpi-single-role.yml
+# $ ansible-playbook -e "runtherole=upgrades" playbook-rpi-single-role.yml
 # $ ansible-playbook -e "runtherole=puppet-agent" --limit="compute" playbook-rpi-single-role.yml
 # $ ansible-playbook -e "runtherole=base-system" -i ~/temp.ini playbook-rpi-single-role.yml
 

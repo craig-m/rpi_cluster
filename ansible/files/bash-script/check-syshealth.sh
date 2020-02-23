@@ -38,6 +38,11 @@
   shellsnotty=$(/usr/bin/sudo ps -ef | awk '$6=="?"&&$8~/^(\/bin\/)?(ba|da|z|k|c|tc)*sh-?/{print}' | wc -l | grep "0")
 }
 
+@test "failed processes" {
+  run bash -c "/usr/bin/sudo systemctl --failed"
+  [ "$status" -eq 0 ]
+}
+
 
 # nagios monitoring plugins ----------------------------------------------------
 

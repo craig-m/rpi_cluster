@@ -15,3 +15,13 @@
     state: present
     update_cache: true
   become: true
+
+
+- name: copy apt config
+  copy:
+    src: etc/apt/apt.conf.d/00local-rpi-cluster
+    dest: /etc/apt/apt.conf.d/00local-rpi-cluster
+    mode: 0644
+    owner: root
+    group: root
+  become: true

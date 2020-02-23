@@ -12,9 +12,9 @@ See [doc/readme.md](https://github.com/craig-m/rpi_cluster/tree/master/doc) for 
 
 # Design decisions
 
-* Start with vanilla Raspbian installations, with default SSH access.
-* Ability to easily rebuild any failed R-Pi node, expect that nodes might randomly fail.
-* Operate all critical services in high availability.
+* Start with vanilla Raspbian installations, with default SSH access - just flash the SDCard.
+* Have the ability to easily rebuild any failed R-Pi node, expect that nodes might randomly fail (or be turned off).
+* Operate all critical services in high availability (in either active-active, or primary and failover).
 * The R-Pi cluster should be self contained, minimise any external DHCP + DNS dependencies.
 * No requirements on admin laptop - just need SSH client + a text editor + git (most OS's provide these).
 
@@ -39,15 +39,15 @@ The x8 R-Pi that I ended up with are of various models, I divided them into thes
   <td>Total</td>
 </tr>
 <tr>
-  <td>R-Pi Model:</td>
-  <td>B+</td>
-  <td>2 B</td>
-  <td>2 B</td>
-  <td>3 B</td>
+  <td>R-Pi Model</td>
+  <td>B Plus Rev 1.2</td>
+  <td>2 B Rev 1.1</td>
+  <td>2 B Rev 1.1</td>
+  <td>3 B Rev 1.2</td>
   <td>&nbsp;</td>
 </tr>
 <tr>
-  <td>quantity:</td>
+  <td>quantity</td>
   <td>2</td>
   <td>1</td>
   <td>1</td>
@@ -97,7 +97,7 @@ This SD card can be cloned onto a spare one as a backup option, a USB key can al
 
 ### LanServices - Main
 
-To provide redundant essential services for the LAN. Longer running infrastructure to handle services for the more ephemeral nodes.
+To provide redundant essential services for all hosts on this the LAN. Longer running infrastructure to handle services for the more ephemeral nodes.
 
 * isc.org [DHCP Server](https://www.isc.org/downloads/dhcp/) (in high availability)
 * isc.org [DNS Server](https://www.isc.org/downloads/bind/) (Bind with zone replication between primary and secondary)

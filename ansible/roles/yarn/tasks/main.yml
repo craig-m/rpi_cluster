@@ -3,24 +3,10 @@
 - debug: msg="deployer (yarn) "
 
 
-# src folder
-- name: create /opt/cluster/mysrc/yarn/
-  file:
-    path: /opt/cluster/mysrc/yarn/
-    state: directory
-    mode: 0755
-
-
-- name: copy yarn gpg key to server also
-  copy:
-    src: yarnkey.asc
-    dest: /opt/cluster/mysrc/yarn/yarnkey.asc
-    mode: 0644
-
 
 - name: Add yarn apt key
   apt_key:
-    data: "{{ lookup('file', '/opt/cluster/mysrc/yarn/yarnkey.asc') }}"
+    data: "{{ lookup('file', 'yarnkey.asc') }}"
     state: present
   become: true
 
@@ -30,7 +16,6 @@
     repo: deb https://dl.yarnpkg.com/debian/ stable main
     state: present
   become: true
-  register: yarnaddapt
 
 
 - name: yarn packages installed
